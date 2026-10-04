@@ -1,5 +1,15 @@
+import sqlite3
 import os, sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+
+def connect_db_with_retry(path):
+    conn = sqlite3.connect(path, timeout=30)
+    conn.execute("PRAGMA busy_timeout=30000")
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    return conn
+
+
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(BASE, "nile_ai.db")
@@ -18,7 +28,7 @@ PRODUCTS = [
 ]
 
 def conn():
-    c = sqlite3.connect(DB)
+    c = connect_db_with_retry(DB)
     c.row_factory = sqlite3.Row
     return c
 
