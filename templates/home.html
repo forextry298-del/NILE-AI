@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block content %}<div class="top">Welcome to Nile <span>🔔</span></div><div class="hero">Clean Energy. Bright Future. <b>NILE AI.</b></div><div class="container">
+<div class="statgrid"><div class="stat">{{"%.2f"|format(user.balance or 0)}}<small>Deposit details</small></div><div class="stat">{{"%.2f"|format(user.wallet or 0)}}<small>Withdraw details</small></div><div class="stat">0.00<small>AI Income</small></div><div class="stat">0.00<small>Today's earnings</small></div></div>
+<div class="card"><h2 class="green">Message</h2><div class="message">Welcome to NILE AI.</div><a class="btn" href="{{url_for('chat')}}">Open Customer Service</a></div></div>{% endblock %}

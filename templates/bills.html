@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<div class="top">‹ Bill</div><div class="container">{% for r in rows %}<div class="card"><h2>{{r.type}} <span class="cyan">UGX {{r.amount}}</span></h2>{{r.status}}<br>{{r.created_at}}</div>{% else %}<div class="card">No transactions.</div>{% endfor %}</div>{% endblock %}

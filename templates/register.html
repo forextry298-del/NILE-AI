@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block content %}<div class="auth"><div class="logo">NILE</div><h1>Welcome</h1>
+<form method="post"><input name="phone" placeholder="📱 Phone number" required><input name="password" type="password" placeholder="🔑 Set Password" required><input name="confirm" type="password" placeholder="🔑 Confirm Password" required><input name="invite" placeholder="↗ Invitation Code"><button class="btn">Register</button></form><a href="{{url_for('login')}}">‹ Login</a></div>{% endblock %}

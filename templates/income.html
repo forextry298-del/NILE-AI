@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<div class="top">Income</div><div class="container">{% for r in rows %}<div class="card"><b class="green">{{r.product}}</b><br>Price: UGX {{r.price}}<br>Daily: UGX {{r.daily}}<br>Total: UGX {{r.total}}</div>{% else %}<div class="card">No products yet.</div>{% endfor %}</div>{% endblock %}
