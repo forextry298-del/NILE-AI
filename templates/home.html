@@ -1,3 +1,112 @@
-{% extends "base.html" %}{% block content %}<div class="top">Welcome to Nile <span>🔔</span></div><div class="hero">Clean Energy. Bright Future. <b>NILE AI.</b></div><div class="container">
-<div class="statgrid"><div class="stat">{{"%.2f"|format(user.balance or 0)}}<small>Deposit details</small></div><div class="stat">{{"%.2f"|format(user.wallet or 0)}}<small>Withdraw details</small></div><div class="stat">0.00<small>AI Income</small></div><div class="stat">0.00<small>Today's earnings</small></div></div>
-<div class="card"><h2 class="green">Message</h2><div class="message">Welcome to NILE AI.</div><a class="btn" href="{{url_for('chat')}}">Open Customer Service</a></div></div>{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+<style>
+.nile{padding-bottom:20px}
+.nhead{display:flex;justify-content:space-between;align-items:center;padding:14px;font-size:21px;font-weight:bold}
+.bell{width:36px;height:36px;border:1px solid #08bdf5;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#08bdf5}
+.wallet{margin:0 14px 12px;padding:18px;border:1px solid #08bdf5;border-radius:18px;background:#030b12;box-shadow:0 0 14px rgba(8,189,245,.35)}
+.wallet small{color:#8c9aa0}
+.money{font-size:29px;font-weight:bold;color:#08bdf5;margin:6px 0}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.actions a{padding:10px;text-align:center;border:1px solid #08bdf5;border-radius:10px;color:#fff;text-decoration:none;font-size:12px}
+.actions a:first-child{background:#08bdf5;color:#001018;font-weight:bold}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 14px}
+.quick a{height:66px;background:#040c12;border:1px solid #08718f;border-radius:13px;color:#fff;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.quick b{font-size:22px;color:#08bdf5}
+.quick span{font-size:10px;margin-top:4px}
+.title{padding:15px 14px 8px;font-size:16px;font-weight:bold}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px}
+.stat{background:#040c12;border:1px solid #08627d;border-radius:13px;padding:12px}
+.stat small{display:block;color:#89979d;font-size:10px}
+.stat strong{display:block;color:#08bdf5;font-size:16px;margin-top:5px}
+.ai{margin:0 14px;padding:14px;border:1px solid #08bdf5;border-radius:16px;background:#030b12}
+.ai strong{font-size:16px}
+.ai p{font-size:11px;color:#8d9aa0;line-height:1.4}
+.ai a{display:inline-block;background:#08bdf5;color:#001018;text-decoration:none;border-radius:9px;padding:8px 12px;font-size:11px;font-weight:bold}
+.news{margin:0 14px;padding:14px;border:1px solid #08718f;border-radius:15px;background:#040c12}
+.news b{color:#08bdf5}
+.news p{margin:6px 0 0;color:#9ba8ad;font-size:11px;line-height:1.5}
+@media(max-width:390px){
+.quick{gap:6px}
+.quick a{height:62px}
+.quick span{font-size:9px}
+.money{font-size:26px}
+}
+</style>
+
+<div class="nile">
+
+  <div class="nhead">
+    <div>NILE AI <small style="font-size:10px;color:#08bdf5">MASTER</small></div>
+    <div class="bell">♢</div>
+  </div>
+
+  <div class="wallet">
+    <small>Available Balance</small>
+    <div class="money">UGX {{ "{:,.2f}".format((user.balance or 0) if user else 0) }}</div>
+    <small>NILE AI Wallet</small>
+
+    <div class="actions">
+      <a href="/deposit">＋ Deposit</a>
+      <a href="/withdraw">↗ Withdraw</a>
+    </div>
+  </div>
+
+  <div class="quick">
+    <a href="/deposit"><b>＋</b><span>Deposit</span></a>
+    <a href="/withdraw"><b>↗</b><span>Withdraw</span></a>
+    <a href="{{ url_for('products') }}"><b>AI</b><span>AI Products</span></a>
+    <a href="{{ url_for('income') }}"><b>₿</b><span>Income</span></a>
+
+    <a href="/team"><b>♙</b><span>My Team</span></a>
+    <a href="/vip-task"><b>★</b><span>VIP Task</span></a>
+    <a href="/bills"><b>▤</b><span>Bills</span></a>
+    <a href="/chat"><b>◉</b><span>Chat</span></a>
+
+    <a href="{{ url_for('my') }}"><b>●</b><span>My Account</span></a>
+    <a href="/settings"><b>⚙</b><span>Settings</span></a>
+    <a href="{{ url_for('products') }}"><b>▣</b><span>My AI</span></a>
+    <a href="{{ url_for('income') }}"><b>↗</b><span>Records</span></a>
+  </div>
+
+  <div class="title">Wallet Overview</div>
+
+  <div class="stats">
+    <div class="stat">
+      <small>Wallet Balance</small>
+      <strong>UGX {{ "{:,.2f}".format((user.balance or 0) if user else 0) }}</strong>
+    </div>
+
+    <div class="stat">
+      <small>Total Deposit</small>
+      <strong>UGX 0.00</strong>
+    </div>
+
+    <div class="stat">
+      <small>AI Income</small>
+      <strong>UGX 0.00</strong>
+    </div>
+
+    <div class="stat">
+      <small>Today's Earnings</small>
+      <strong>UGX 0.00</strong>
+    </div>
+  </div>
+
+  <div class="title">NILE AI Master</div>
+
+  <div class="ai">
+    <strong>AI Products</strong>
+    <p>Explore available AI products and manage your active products.</p>
+    <a href="{{ url_for('products') }}">Open AI Products →</a>
+  </div>
+
+  <div class="title">News & Announcements</div>
+
+  <div class="news">
+    <b>Welcome to NILE AI MASTER</b>
+    <p>Stay updated with platform announcements and important account information.</p>
+  </div>
+
+</div>
+{% endblock %}
