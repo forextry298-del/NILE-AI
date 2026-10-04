@@ -1,165 +1,191 @@
 {% extends "base.html" %}
 {% block content %}
 
-<style id="rectangular-final">
-/* NILE AI FINAL — WIDE COMPACT RECTANGULAR LAYOUT */
+<style id="final-100pct-30">
+/* NILE AI FINAL PROPORTIONS
+   WIDTH = 100% SCREEN
+   HEIGHT = 30% OF ELEMENT WIDTH
+*/
 
 .ref-home{
   width:100%!important;
   max-width:none!important;
   margin:0!important;
-  padding:0 0 82px!important;
+  padding:0 0 78px!important;
   overflow:hidden!important;
+  box-sizing:border-box!important;
 }
 
-/* WIDE SHORT RECTANGULAR SLIDER */
+/* 100% SCREEN WIDTH — HORIZONTAL 30% HEIGHT */
 .hero-area{
-  width:100%!important;
-  padding:0 14px!important;
+  width:100vw!important;
+  padding:0!important;
+  margin:0!important;
   box-sizing:border-box!important;
 }
 
 .slider{
-  width:100%!important;
-  height:250px!important;
-  aspect-ratio:auto!important;
-  border-radius:18px!important;
+  width:100vw!important;
+  height:30vw!important;
+  max-width:none!important;
+  max-height:none!important;
+  aspect-ratio:10 / 3!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:10px!important;
   overflow:hidden!important;
   box-sizing:border-box!important;
+  background:#000!important;
 }
 
 .track{
+  display:flex!important;
   width:400%!important;
   height:100%!important;
-  display:flex!important;
+  margin:0!important;
+  padding:0!important;
 }
 
 .slide{
+  flex:0 0 25%!important;
   width:25%!important;
   min-width:25%!important;
-  flex:0 0 25%!important;
   height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  background:#000!important;
 }
 
 .slide img{
+  display:block!important;
   width:100%!important;
   height:100%!important;
+  min-width:100%!important;
+  min-height:100%!important;
   object-fit:cover!important;
-  display:block!important;
+  object-position:center!important;
+  margin:0!important;
+  padding:0!important;
 }
 
-/* SMALL WIDE RECTANGULAR 2-COLUMN CARDS */
+/* 2 COLUMNS — EACH 50% WIDTH, ABOUT 30% HEIGHT */
 .grid2{
-  width:100%!important;
+  width:100vw!important;
+  grid-template-columns:repeat(2,1fr)!important;
+  gap:3px!important;
+  padding:3px 0 0!important;
+  margin:0!important;
   box-sizing:border-box!important;
-  grid-template-columns:1fr 1fr!important;
-  gap:10px!important;
-  padding:12px 14px 0!important;
 }
 
 .card2{
   width:100%!important;
-  height:92px!important;
-  min-height:92px!important;
-  border-radius:14px!important;
+  height:15vw!important;
+  min-height:15vw!important;
+  max-height:15vw!important;
+  border-radius:8px!important;
   overflow:hidden!important;
   box-sizing:border-box!important;
 }
 
 .card2 .num{
-  font-size:20px!important;
+  font-size:16px!important;
   line-height:1!important;
 }
 
 .card2 .lab{
-  height:32px!important;
-  min-height:32px!important;
-  font-size:13px!important;
-  line-height:32px!important;
+  height:5vw!important;
+  min-height:5vw!important;
+  line-height:5vw!important;
+  font-size:10px!important;
+  padding:0 2px!important;
   white-space:nowrap!important;
-  padding:0 4px!important;
 }
 
-/* SMALL WIDE RECTANGULAR 3-COLUMN CARDS */
+/* 3 COLUMNS — EACH 33.3% WIDTH, ABOUT 30% HEIGHT */
 .grid3{
-  width:100%!important;
-  box-sizing:border-box!important;
+  width:100vw!important;
   grid-template-columns:repeat(3,1fr)!important;
-  gap:9px!important;
-  padding:12px 14px 0!important;
+  gap:3px!important;
+  padding:3px 0 0!important;
+  margin:0!important;
+  box-sizing:border-box!important;
 }
 
 .card3{
   width:100%!important;
-  height:70px!important;
-  min-height:70px!important;
-  border-radius:13px!important;
+  height:10vw!important;
+  min-height:10vw!important;
+  max-height:10vw!important;
+  border-radius:7px!important;
   overflow:hidden!important;
   box-sizing:border-box!important;
 }
 
 .card3 .num{
-  font-size:16px!important;
+  font-size:13px!important;
   line-height:1!important;
 }
 
 .card3 .lab{
-  height:25px!important;
-  min-height:25px!important;
-  font-size:9px!important;
-  line-height:25px!important;
+  height:3vw!important;
+  min-height:3vw!important;
+  line-height:3vw!important;
+  font-size:8px!important;
+  padding:0 1px!important;
   white-space:nowrap!important;
-  padding:0 2px!important;
 }
 
-/* KEEP THE SLIDER CONTROLS COMPACT */
+/* SMALL SLIDER CONTROLS */
 .slider button{
-  width:58px!important;
-  height:58px!important;
+  width:42px!important;
+  height:42px!important;
   border-radius:50%!important;
 }
 
 .dots{
-  bottom:14px!important;
+  bottom:5px!important;
 }
 
-/* MOBILE — KEEP EVERYTHING WIDE AND SHORT */
+/* MOBILE */
 @media(max-width:600px){
-  .hero-area{
-    padding-left:8px!important;
-    padding-right:8px!important;
-  }
-
   .slider{
-    height:245px!important;
-    border-radius:16px!important;
+    width:100vw!important;
+    height:30vw!important;
+    aspect-ratio:10 / 3!important;
   }
 
   .grid2{
-    padding-left:8px!important;
-    padding-right:8px!important;
-    gap:9px!important;
+    width:100vw!important;
+    gap:3px!important;
+    padding-left:0!important;
+    padding-right:0!important;
   }
 
   .card2{
-    height:90px!important;
-    min-height:90px!important;
-    border-radius:13px!important;
+    height:15vw!important;
+    min-height:15vw!important;
+    max-height:15vw!important;
   }
 
   .grid3{
-    padding-left:8px!important;
-    padding-right:8px!important;
-    gap:8px!important;
+    width:100vw!important;
+    gap:3px!important;
+    padding-left:0!important;
+    padding-right:0!important;
   }
 
   .card3{
-    height:68px!important;
-    min-height:68px!important;
-    border-radius:12px!important;
+    height:10vw!important;
+    min-height:10vw!important;
+    max-height:10vw!important;
   }
 }
 </style>
+
+
+
 
 <style>
 body{background:#000!important;color:#fff}
@@ -222,165 +248,7 @@ body{background:#000!important;color:#fff}
 </div>
 </div>
 
-<style id="final-reference-fix">
-/* FINAL COMPACT REFERENCE PROPORTIONS */
-.ref-home{
-  width:100%;
-  max-width:720px;
-  margin:0 auto;
-  padding-bottom:84px;
-  overflow:hidden;
-}
 
-/* SHORT LANDSCAPE RECTANGULAR AUTO SLIDER */
-.hero-area{
-  padding:0 30px!important;
-}
-
-.slider{
-  width:100%!important;
-  height:345px!important;
-  aspect-ratio:16/9!important;
-  border-radius:25px!important;
-  overflow:hidden!important;
-  position:relative!important;
-}
-
-.track{
-  display:flex!important;
-  width:400%!important;
-  height:100%!important;
-  transition:transform .22s ease-in-out!important;
-}
-
-.slide{
-  flex:0 0 25%!important;
-  width:25%!important;
-  min-width:25%!important;
-  height:100%!important;
-  position:relative!important;
-  overflow:hidden!important;
-}
-
-.slide img{
-  width:100%!important;
-  height:100%!important;
-  object-fit:cover!important;
-  object-position:center!important;
-  display:block!important;
-}
-
-/* Keep each banner rectangular while moving */
-.slide:after{
-  content:""!important;
-  position:absolute!important;
-  inset:0!important;
-  background:linear-gradient(to top,rgba(0,0,0,.68),rgba(0,0,0,.08) 65%)!important;
-}
-
-.caption{
-  left:170px!important;
-  right:18px!important;
-  bottom:38px!important;
-  position:absolute!important;
-  z-index:3!important;
-}
-
-.caption h2{
-  font-size:17px!important;
-  line-height:1.1!important;
-  margin:0 0 4px!important;
-  white-space:nowrap!important;
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
-}
-
-.caption p{
-  font-size:11px!important;
-  line-height:1.25!important;
-  margin:0 0 8px!important;
-}
-
-.read{
-  padding:7px 13px!important;
-  border-radius:12px!important;
-  font-size:11px!important;
-}
-
-/* Small rectangular statistic cards */
-.grid2{
-  grid-template-columns:1fr 1fr!important;
-  gap:14px!important;
-  padding:22px 30px 0!important;
-}
-
-.card2{
-  height:105px!important;
-  min-height:105px!important;
-  border-radius:22px!important;
-}
-
-.card2 .num{
-  font-size:22px!important;
-}
-
-.card2 .lab{
-  height:34px!important;
-  min-height:34px!important;
-  font-size:14px!important;
-}
-
-/* Smaller rectangular team cards */
-.grid3{
-  grid-template-columns:repeat(3,1fr)!important;
-  gap:12px!important;
-  padding:18px 30px 0!important;
-}
-
-.card3{
-  height:82px!important;
-  min-height:82px!important;
-  border-radius:20px!important;
-}
-
-.card3 .num{
-  font-size:18px!important;
-}
-
-.card3 .lab{
-  height:28px!important;
-  min-height:28px!important;
-  font-size:10px!important;
-  white-space:nowrap!important;
-}
-
-/* Mobile */
-@media(max-width:500px){
-  .slider{
-    height:345px!important;
-  }
-
-  .grid2{
-    gap:14px!important;
-    padding-left:30px!important;
-    padding-right:30px!important;
-  }
-
-  .grid3{
-    gap:12px!important;
-    padding-left:30px!important;
-    padding-right:30px!important;
-  }
-
-  .card2{
-    height:105px!important;
-  }
-
-  .card3{
-    height:82px!important;
-  }
-}
-</style>
 
 <script>
 (function(){let n=0;const t=document.getElementById('nileTrack');const d=[...document.querySelectorAll('.dot')];function show(x){n=(x+4)%4;t.style.transform='translateX(-'+n*100+'%)';d.forEach((v,i)=>v.classList.toggle('on',i===n))}window.moveNile=x=>show(n+x);setInterval(()=>show(n+1),1000)})();
