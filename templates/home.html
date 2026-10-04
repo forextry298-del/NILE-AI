@@ -1,112 +1,76 @@
 {% extends "base.html" %}
 {% block content %}
 <style>
-.nile{padding-bottom:20px}
-.nhead{display:flex;justify-content:space-between;align-items:center;padding:14px;font-size:21px;font-weight:bold}
-.bell{width:36px;height:36px;border:1px solid #08bdf5;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#08bdf5}
-.wallet{margin:0 14px 12px;padding:18px;border:1px solid #08bdf5;border-radius:18px;background:#030b12;box-shadow:0 0 14px rgba(8,189,245,.35)}
-.wallet small{color:#8c9aa0}
-.money{font-size:29px;font-weight:bold;color:#08bdf5;margin:6px 0}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.actions a{padding:10px;text-align:center;border:1px solid #08bdf5;border-radius:10px;color:#fff;text-decoration:none;font-size:12px}
-.actions a:first-child{background:#08bdf5;color:#001018;font-weight:bold}
-.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 14px}
-.quick a{height:66px;background:#040c12;border:1px solid #08718f;border-radius:13px;color:#fff;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.quick b{font-size:22px;color:#08bdf5}
-.quick span{font-size:10px;margin-top:4px}
-.title{padding:15px 14px 8px;font-size:16px;font-weight:bold}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px}
-.stat{background:#040c12;border:1px solid #08627d;border-radius:13px;padding:12px}
-.stat small{display:block;color:#89979d;font-size:10px}
-.stat strong{display:block;color:#08bdf5;font-size:16px;margin-top:5px}
-.ai{margin:0 14px;padding:14px;border:1px solid #08bdf5;border-radius:16px;background:#030b12}
-.ai strong{font-size:16px}
-.ai p{font-size:11px;color:#8d9aa0;line-height:1.4}
-.ai a{display:inline-block;background:#08bdf5;color:#001018;text-decoration:none;border-radius:9px;padding:8px 12px;font-size:11px;font-weight:bold}
-.news{margin:0 14px;padding:14px;border:1px solid #08718f;border-radius:15px;background:#040c12}
-.news b{color:#08bdf5}
-.news p{margin:6px 0 0;color:#9ba8ad;font-size:11px;line-height:1.5}
-@media(max-width:390px){
-.quick{gap:6px}
-.quick a{height:62px}
-.quick span{font-size:9px}
-.money{font-size:26px}
-}
+:root{--cyan:#08bdf5}
+.nile-home{background:#000;min-height:calc(100vh - 90px);padding:10px 0 20px;font-family:Georgia,"Times New Roman",serif}
+.message{text-align:right;color:#fff;font-size:16px;padding:0 18px 8px}
+.slider{position:relative;margin:25px 14px 14px;height:350px;border-radius:27px;overflow:hidden;border:1px solid rgba(8,189,245,.55);box-shadow:0 0 22px rgba(8,189,245,.25);background:#02070b}
+.slides{display:flex;height:100%;transition:transform .45s ease}
+.slide{min-width:100%;height:100%;position:relative}
+.slide img{width:100%;height:100%;object-fit:cover;display:block}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:43px;height:43px;border:1px solid var(--cyan);border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:30px;line-height:38px;text-align:center}
+.prev{left:12px}.next{right:12px}
+.dots{position:absolute;bottom:10px;left:0;right:0;z-index:5;display:flex;justify-content:center;gap:7px}
+.dot{width:10px;height:10px;border-radius:50%;background:#aaa}.dot.active{width:32px;border-radius:8px;background:var(--cyan)}
+.stats4{display:grid;grid-template-columns:1fr 1fr;gap:24px 22px;margin:18px 32px}
+.stat4{height:132px;border-radius:25px;overflow:hidden;background:#fff;border:2px solid var(--cyan);box-shadow:0 0 13px rgba(8,189,245,.75);display:flex;flex-direction:column}
+.stat4 .num{flex:1;display:flex;align-items:center;justify-content:center;color:#10151a;font-size:29px;font-weight:bold}
+.stat4 .label{height:57px;background:linear-gradient(#08bdf5,#04b9f3);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;margin:18px 32px 28px}
+.stat3{height:112px;border-radius:24px;overflow:hidden;background:#fff;border:2px solid var(--cyan);box-shadow:0 0 13px rgba(8,189,245,.7);display:flex;flex-direction:column}
+.stat3 .num{flex:1;display:flex;align-items:center;justify-content:center;color:#10151a;font-size:27px;font-weight:bold}
+.stat3 .label{height:48px;background:linear-gradient(#08bdf5,#04b9f3);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-size:15px}
+.news{margin:0 31px;border:2px solid #087ca2;border-radius:20px;padding:17px 16px;background:#02080d;box-shadow:0 0 10px rgba(8,189,245,.3)}
+.news h2{margin:0 0 18px;font-size:27px;color:#fff}
+.news h2 span{color:var(--cyan)}
+.news-card{border:1px solid #08627d;border-radius:18px;padding:17px;background:#010508}
+.news-card h3{margin:0;color:var(--cyan);font-size:21px}
+.news-card p{color:#b7c0c5;font-size:13px;line-height:1.45}
+@media(max-width:430px){.slider{height:350px;margin-left:30px;margin-right:30px}.stats4{margin-left:32px;margin-right:32px}.stats3{margin-left:32px;margin-right:32px}.news{margin-left:31px;margin-right:31px}}
 </style>
-
-<div class="nile">
-
-  <div class="nhead">
-    <div>NILE AI <small style="font-size:10px;color:#08bdf5">MASTER</small></div>
-    <div class="bell">♢</div>
-  </div>
-
-  <div class="wallet">
-    <small>Available Balance</small>
-    <div class="money">UGX {{ "{:,.2f}".format((user.balance or 0) if user else 0) }}</div>
-    <small>NILE AI Wallet</small>
-
-    <div class="actions">
-      <a href="/deposit">＋ Deposit</a>
-      <a href="/withdraw">↗ Withdraw</a>
+<div class="nile-home">
+  <div class="message">Message</div>
+  <div class="slider">
+    <div class="slides" id="nileSlides">
+      <div class="slide"><img src="{{ url_for('static', filename='banners/banner1.jpg') }}" alt="NILE AI facility"></div>
+      <div class="slide"><img src="{{ url_for('static', filename='banners/banner2.jpg') }}" alt="NILE AI mining systems"></div>
+      <div class="slide"><img src="{{ url_for('static', filename='banners/banner3.jpg') }}" alt="NILE AI server facility"></div>
+      <div class="slide"><img src="{{ url_for('static', filename='banners/banner4.jpg') }}" alt="NILE AI technology facility"></div>
     </div>
+    <button class="arrow prev" type="button" onclick="nileMove(-1)">‹</button>
+    <button class="arrow next" type="button" onclick="nileMove(1)">›</button>
+    <div class="dots" id="nileDots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
   </div>
-
-  <div class="quick">
-    <a href="/deposit"><b>＋</b><span>Deposit</span></a>
-    <a href="/withdraw"><b>↗</b><span>Withdraw</span></a>
-    <a href="{{ url_for('products') }}"><b>AI</b><span>AI Products</span></a>
-    <a href="{{ url_for('income') }}"><b>₿</b><span>Income</span></a>
-
-    <a href="/team"><b>♙</b><span>My Team</span></a>
-    <a href="/vip-task"><b>★</b><span>VIP Task</span></a>
-    <a href="/bills"><b>▤</b><span>Bills</span></a>
-    <a href="/chat"><b>◉</b><span>Chat</span></a>
-
-    <a href="{{ url_for('my') }}"><b>●</b><span>My Account</span></a>
-    <a href="/settings"><b>⚙</b><span>Settings</span></a>
-    <a href="{{ url_for('products') }}"><b>▣</b><span>My AI</span></a>
-    <a href="{{ url_for('income') }}"><b>↗</b><span>Records</span></a>
+  <div class="stats4">
+    <div class="stat4"><div class="num">0.00</div><div class="label">Deposit details</div></div>
+    <div class="stat4"><div class="num">0.00</div><div class="label">Withdraw details</div></div>
+    <div class="stat4"><div class="num">0.00</div><div class="label">AI Income</div></div>
+    <div class="stat4"><div class="num">0.00</div><div class="label">Today's earnings</div></div>
   </div>
-
-  <div class="title">Wallet Overview</div>
-
-  <div class="stats">
-    <div class="stat">
-      <small>Wallet Balance</small>
-      <strong>UGX {{ "{:,.2f}".format((user.balance or 0) if user else 0) }}</strong>
-    </div>
-
-    <div class="stat">
-      <small>Total Deposit</small>
-      <strong>UGX 0.00</strong>
-    </div>
-
-    <div class="stat">
-      <small>AI Income</small>
-      <strong>UGX 0.00</strong>
-    </div>
-
-    <div class="stat">
-      <small>Today's Earnings</small>
-      <strong>UGX 0.00</strong>
-    </div>
+  <div class="stats3">
+    <div class="stat3"><div class="num">0</div><div class="label">Invite Count</div></div>
+    <div class="stat3"><div class="num">0</div><div class="label">Team Count</div></div>
+    <div class="stat3"><div class="num">0.00</div><div class="label">Team income</div></div>
   </div>
-
-  <div class="title">NILE AI Master</div>
-
-  <div class="ai">
-    <strong>AI Products</strong>
-    <p>Explore available AI products and manage your active products.</p>
-    <a href="{{ url_for('products') }}">Open AI Products →</a>
-  </div>
-
-  <div class="title">News & Announcements</div>
-
   <div class="news">
-    <b>Welcome to NILE AI MASTER</b>
-    <p>Stay updated with platform announcements and important account information.</p>
+    <h2>📣 <span>News &amp; Announcements</span></h2>
+    <div class="news-card">
+      <h3>📌 🔥 NILE AI MASTER</h3>
+      <p>Welcome to NILE AI MASTER. Important platform announcements will appear here.</p>
+    </div>
   </div>
-
 </div>
+<script>
+(function(){
+  let i=0;
+  const slides=document.getElementById("nileSlides");
+  const dots=[...document.querySelectorAll("#nileDots .dot")];
+  window.nileMove=function(dir){
+    i=(i+dir+4)%4;
+    slides.style.transform="translateX(-"+(i*100)+"%)";
+    dots.forEach((d,n)=>d.classList.toggle("active",n===i));
+  };
+  setInterval(()=>window.nileMove(1),1000);
+})();
+</script>
 {% endblock %}
