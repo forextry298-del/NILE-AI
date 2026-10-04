@@ -60,6 +60,167 @@ body{background:#000!important;color:#fff}
 <div class="card3"><div class="num">0.00</div><div class="lab">Team income</div></div>
 </div>
 </div>
+
+<style id="final-reference-fix">
+/* FINAL COMPACT REFERENCE PROPORTIONS */
+.ref-home{
+  width:100%;
+  max-width:720px;
+  margin:0 auto;
+  padding-bottom:84px;
+  overflow:hidden;
+}
+
+/* SHORT LANDSCAPE RECTANGULAR AUTO SLIDER */
+.hero-area{
+  padding:0 30px!important;
+}
+
+.slider{
+  width:100%!important;
+  height:345px!important;
+  aspect-ratio:16/9!important;
+  border-radius:25px!important;
+  overflow:hidden!important;
+  position:relative!important;
+}
+
+.track{
+  display:flex!important;
+  width:400%!important;
+  height:100%!important;
+  transition:transform .22s ease-in-out!important;
+}
+
+.slide{
+  flex:0 0 25%!important;
+  width:25%!important;
+  min-width:25%!important;
+  height:100%!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+
+.slide img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  display:block!important;
+}
+
+/* Keep each banner rectangular while moving */
+.slide:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:linear-gradient(to top,rgba(0,0,0,.68),rgba(0,0,0,.08) 65%)!important;
+}
+
+.caption{
+  left:170px!important;
+  right:18px!important;
+  bottom:38px!important;
+  position:absolute!important;
+  z-index:3!important;
+}
+
+.caption h2{
+  font-size:17px!important;
+  line-height:1.1!important;
+  margin:0 0 4px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+.caption p{
+  font-size:11px!important;
+  line-height:1.25!important;
+  margin:0 0 8px!important;
+}
+
+.read{
+  padding:7px 13px!important;
+  border-radius:12px!important;
+  font-size:11px!important;
+}
+
+/* Small rectangular statistic cards */
+.grid2{
+  grid-template-columns:1fr 1fr!important;
+  gap:14px!important;
+  padding:22px 30px 0!important;
+}
+
+.card2{
+  height:105px!important;
+  min-height:105px!important;
+  border-radius:22px!important;
+}
+
+.card2 .num{
+  font-size:22px!important;
+}
+
+.card2 .lab{
+  height:34px!important;
+  min-height:34px!important;
+  font-size:14px!important;
+}
+
+/* Smaller rectangular team cards */
+.grid3{
+  grid-template-columns:repeat(3,1fr)!important;
+  gap:12px!important;
+  padding:18px 30px 0!important;
+}
+
+.card3{
+  height:82px!important;
+  min-height:82px!important;
+  border-radius:20px!important;
+}
+
+.card3 .num{
+  font-size:18px!important;
+}
+
+.card3 .lab{
+  height:28px!important;
+  min-height:28px!important;
+  font-size:10px!important;
+  white-space:nowrap!important;
+}
+
+/* Mobile */
+@media(max-width:500px){
+  .slider{
+    height:345px!important;
+  }
+
+  .grid2{
+    gap:14px!important;
+    padding-left:30px!important;
+    padding-right:30px!important;
+  }
+
+  .grid3{
+    gap:12px!important;
+    padding-left:30px!important;
+    padding-right:30px!important;
+  }
+
+  .card2{
+    height:105px!important;
+  }
+
+  .card3{
+    height:82px!important;
+  }
+}
+</style>
+
 <script>
 (function(){let n=0;const t=document.getElementById('nileTrack');const d=[...document.querySelectorAll('.dot')];function show(x){n=(x+4)%4;t.style.transform='translateX(-'+n*100+'%)';d.forEach((v,i)=>v.classList.toggle('on',i===n))}window.moveNile=x=>show(n+x);setInterval(()=>show(n+1),1000)})();
 </script>
