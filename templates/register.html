@@ -1,2 +1,119 @@
-{% extends "base.html" %}{% block content %}<div class="auth"><div class="logo">NILE</div><h1>Welcome</h1>
+{% extends "base.html" %}{% block content %}
+
+<style id="register-reference-size">
+/* NILE AI — compact registration reference layout */
+.auth{
+  width:calc(100% - 76px)!important;
+  max-width:610px!important;
+  margin:34px auto 20px!important;
+  padding:0!important;
+}
+
+.auth h1{
+  font-size:34px!important;
+  line-height:1.1!important;
+  letter-spacing:.3px!important;
+  text-transform:uppercase!important;
+  margin:0 0 48px!important;
+  text-align:center!important;
+}
+
+.auth form{
+  width:100%!important;
+}
+
+.auth input,
+.auth select,
+.auth textarea{
+  height:58px!important;
+  min-height:58px!important;
+  box-sizing:border-box!important;
+  border-radius:25px!important;
+  font-size:14px!important;
+  padding:0 18px!important;
+}
+
+.auth input::placeholder,
+.auth select::placeholder,
+.auth textarea::placeholder{
+  font-size:14px!important;
+}
+
+.auth .field,
+.auth .form-group{
+  margin-bottom:20px!important;
+}
+
+.auth label{
+  font-size:13px!important;
+}
+
+.auth .btn,
+.auth button,
+.auth input[type="submit"]{
+  height:58px!important;
+  min-height:58px!important;
+  border-radius:25px!important;
+  font-size:25px!important;
+  padding:0 16px!important;
+  letter-spacing:.2px!important;
+}
+
+.auth .captcha,
+.auth .verification,
+.auth .code{
+  height:58px!important;
+  min-height:58px!important;
+  border-radius:25px!important;
+}
+
+.auth .captcha img,
+.auth .verification img,
+.auth img{
+  max-height:45px!important;
+  border-radius:7px!important;
+}
+
+.auth .links,
+.auth a{
+  font-size:14px!important;
+}
+
+.auth .icon,
+.auth svg,
+.auth i{
+  transform:scale(.82)!important;
+}
+
+@media(max-width:600px){
+  .auth{
+    width:calc(100% - 76px)!important;
+    margin-top:32px!important;
+  }
+
+  .auth h1{
+    font-size:32px!important;
+    margin-bottom:42px!important;
+  }
+
+  .auth input,
+  .auth select,
+  .auth textarea{
+    height:56px!important;
+    min-height:56px!important;
+    font-size:14px!important;
+    padding-left:18px!important;
+    padding-right:18px!important;
+  }
+
+  .auth .btn,
+  .auth button,
+  .auth input[type="submit"]{
+    height:56px!important;
+    min-height:56px!important;
+    font-size:24px!important;
+  }
+}
+</style>
+<div class="auth"><div class="logo">NILE</div><h1>WELCOME</h1>
 <form method="post"><input name="phone" placeholder="📱 Phone number" required><input name="password" type="password" placeholder="🔑 Set Password" required><input name="confirm" type="password" placeholder="🔑 Confirm Password" required><input name="invite" placeholder="↗ Invitation Code"><button class="btn">Register</button></form><a href="{{url_for('login')}}">‹ Login</a></div>{% endblock %}
