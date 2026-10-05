@@ -1,2 +1,621 @@
-{% extends "base.html" %}{% block content %}<div class="top">My</div><div class="container"><div class="card"><div class="statgrid"><div class="stat">{{user.balance or 0}}<small>Balance</small></div><div class="stat">{{refs|length}}<small>Invite Count</small></div></div></div>
-<a class="btn" href="{{url_for('deposit')}}">💳 Deposit</a><a class="btn" href="{{url_for('withdraw')}}">💵 Withdraw</a><a class="btn" href="{{url_for('team')}}">👥 My team</a><a class="btn" href="{{url_for('vip_task')}}">★ VIP Task</a><a class="btn" href="{{url_for('bills')}}">▣ Bill</a><a class="btn" href="{{url_for('chat')}}">🎧 Manager</a><a class="btn" href="{{url_for('settings')}}">⚙ Settings</a></div>{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* =========================================================
+   NILE AI — MY PAGE
+   EXACT REFERENCE STYLE
+   Responsive: Android / iPhone / PC
+   ========================================================= */
+
+.my-page{
+  width:100%;
+  min-height:calc(100vh - 76px);
+  padding:28px 30px 100px;
+  margin:0;
+  color:#fff;
+  font-family:Georgia,"Times New Roman",serif;
+  background-color:#000;
+  background-image:
+    radial-gradient(circle,rgba(8,189,245,.18) 1px,transparent 1.5px);
+  background-size:27px 27px;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+
+/* TOP PROFILE */
+.profile{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:27px;
+}
+
+.profile-left{
+  min-width:0;
+}
+
+.welcome{
+  color:#08bdf5;
+  font-size:32px;
+  line-height:1.15;
+  margin:0 0 27px;
+  font-weight:400;
+}
+
+.phone{
+  color:#fff;
+  font-size:24px;
+  line-height:1.1;
+  margin:0;
+  letter-spacing:.3px;
+}
+
+.profile-right{
+  width:110px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+/* CYAN VIP / AVATAR CIRCLE */
+.avatar{
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  border:3px solid #08bdf5;
+  box-shadow:
+    0 0 12px rgba(8,189,245,.65),
+    inset 0 0 10px rgba(8,189,245,.35);
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      #fff 0deg 5deg,
+      transparent 5deg 10deg
+    );
+}
+
+.avatar:after{
+  content:"";
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#050505;
+  box-shadow:0 0 8px #000;
+}
+
+.vip{
+  min-width:105px;
+  height:38px;
+  padding:0 15px;
+  border:1px solid #08bdf5;
+  border-radius:22px;
+  background:rgba(0,30,45,.65);
+  color:#08bdf5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:16px;
+  font-weight:bold;
+  box-shadow:0 0 10px rgba(8,189,245,.45);
+  white-space:nowrap;
+}
+
+/* WALLET */
+.wallet-card{
+  width:100%;
+  min-height:270px;
+  border:1px solid #08bdf5;
+  border-radius:25px;
+  background:rgba(0,0,0,.35);
+  box-shadow:
+    0 0 12px rgba(8,189,245,.45),
+    inset 0 0 12px rgba(8,189,245,.08);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  position:relative;
+  box-sizing:border-box;
+  margin-bottom:30px;
+}
+
+.wallet-side{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.wallet-label{
+  color:#aaa;
+  font-size:25px;
+  margin-bottom:16px;
+}
+
+.wallet-number{
+  color:#fff;
+  font-size:39px;
+  font-weight:900;
+}
+
+.wallet-arrow{
+  position:absolute;
+  left:50%;
+  bottom:42px;
+  transform:translateX(-50%);
+  color:#08bdf5;
+  font-family:Arial,sans-serif;
+  font-size:46px;
+  line-height:20px;
+  font-weight:300;
+}
+
+/* MAIN MENU */
+.menu-card{
+  width:100%;
+  border:1px solid #08bdf5;
+  border-radius:25px;
+  background:rgba(0,0,0,.30);
+  box-shadow:
+    0 0 12px rgba(8,189,245,.45),
+    inset 0 0 12px rgba(8,189,245,.08);
+  padding:31px 30px 35px;
+  box-sizing:border-box;
+  margin-bottom:30px;
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  column-gap:20px;
+  row-gap:28px;
+}
+
+.menu-item{
+  min-width:0;
+  color:#fff;
+  text-decoration:none;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.menu-icon{
+  width:84px;
+  height:84px;
+  border-radius:18px;
+  background:#08bdf5;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Arial,sans-serif;
+  font-size:43px;
+  font-weight:400;
+  box-shadow:0 0 10px rgba(8,189,245,.35);
+  margin-bottom:9px;
+  flex-shrink:0;
+}
+
+.menu-name{
+  color:#fff;
+  font-size:18px;
+  line-height:1.1;
+  text-align:center;
+  white-space:nowrap;
+}
+
+.menu-name.small{
+  white-space:normal;
+  max-width:100px;
+}
+
+/* LOWER EXISTING CONTENT — KEEP FUNCTIONAL */
+.lower-card{
+  width:100%;
+  border:1px solid #08bdf5;
+  border-radius:25px;
+  background:rgba(0,0,0,.35);
+  padding:22px;
+  box-sizing:border-box;
+  margin-bottom:25px;
+}
+
+.tw{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  text-align:center;
+}
+
+.muted{
+  color:#aaa;
+}
+
+.big{
+  font-size:28px;
+  font-weight:900;
+  margin:8px;
+}
+
+.button{
+  display:block;
+  background:#08bdf5;
+  color:#fff;
+  text-align:center;
+  padding:15px;
+  border-radius:15px;
+  text-decoration:none;
+  margin-top:15px;
+  font-weight:bold;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  border-top:1px solid #08bdf566;
+  padding:13px 0;
+}
+
+.out{
+  display:block;
+  text-align:center;
+  border:1px solid #e22;
+  color:#f34;
+  padding:14px;
+  border-radius:15px;
+  text-decoration:none;
+  margin-top:15px;
+}
+
+.ref{
+  text-align:center;
+  color:#aaa;
+  margin-top:20px;
+}
+
+.ref b{
+  color:#08cfff;
+}
+
+/* PHONE */
+@media(max-width:600px){
+
+  .my-page{
+    padding:27px 30px 96px;
+  }
+
+
+  .profile{
+    margin-bottom:27px;
+  }
+
+  .welcome{
+    font-size:29px;
+    margin-bottom:27px;
+  }
+
+  .phone{
+    font-size:23px;
+  }
+
+  .profile-right{
+    width:105px;
+  }
+
+  .avatar{
+    width:78px;
+    height:78px;
+  }
+
+  .vip{
+    min-width:104px;
+    height:38px;
+    font-size:16px;
+  }
+
+  .wallet-card{
+    min-height:270px;
+    border-radius:24px;
+    margin-bottom:30px;
+  }
+
+  .wallet-label{
+    font-size:25px;
+    margin-bottom:15px;
+  }
+
+  .wallet-number{
+    font-size:38px;
+  }
+
+  .menu-card{
+    padding:31px 24px 35px;
+    border-radius:24px;
+  }
+
+  .menu-grid{
+    column-gap:12px;
+    row-gap:28px;
+  }
+
+  .menu-icon{
+    width:84px;
+    height:84px;
+    border-radius:18px;
+    font-size:40px;
+  }
+
+  .menu-name{
+    font-size:17px;
+  }
+}
+
+/* VERY SMALL PHONES */
+@media(max-width:380px){
+
+  .my-page{
+    padding-left:18px;
+    padding-right:18px;
+  }
+
+  .welcome{
+    font-size:25px;
+  }
+
+  .phone{
+    font-size:20px;
+  }
+
+  .profile-right{
+    width:92px;
+  }
+
+  .avatar{
+    width:68px;
+    height:68px;
+  }
+
+  .vip{
+    min-width:88px;
+    font-size:13px;
+  }
+
+  .menu-card{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .menu-grid{
+    column-gap:7px;
+  }
+
+  .menu-icon{
+    width:67px;
+    height:67px;
+    border-radius:15px;
+    font-size:32px;
+  }
+
+  .menu-name{
+    font-size:13px;
+  }
+}
+
+/* TABLET / PC */
+@media(min-width:601px){
+
+  .my-page{
+    max-width:900px;
+    margin:0 auto;
+  }
+
+  .menu-icon{
+    width:82px;
+    height:82px;
+  }
+}
+</style>
+
+<div class="my-page">
+
+  <div class="profile">
+
+    <div class="profile-left">
+      <h1 class="welcome">Welcome to NILE AI</h1>
+      <div class="phone">{{ user.phone }}</div>
+    </div>
+
+    <div class="profile-right">
+      <div class="avatar"></div>
+      <div class="vip">★ VIP 0</div>
+    </div>
+
+  </div>
+
+  <div class="wallet-card">
+
+    <div class="wallet-side">
+      <div class="wallet-label">Wallet</div>
+      <div class="wallet-number">
+        {{ "{:,.2f}".format(user.wallet or 0) }}
+      </div>
+    </div>
+
+    <div class="wallet-side">
+      <div class="wallet-label">Balance</div>
+      <div class="wallet-number">
+        {{ "{:,.2f}".format(user.balance or 0) }}
+      </div>
+    </div>
+
+    <div class="wallet-arrow">⌄</div>
+
+  </div>
+
+  <div class="menu-card">
+
+    <div class="menu-grid">
+
+      <a class="menu-item" href="{{url_for('deposit')}}">
+        <div class="menu-icon">▣</div>
+        <div class="menu-name">Deposit</div>
+      </a>
+
+      <a class="menu-item" href="{{url_for('withdraw')}}">
+        <div class="menu-icon">♢</div>
+        <div class="menu-name">Withdraw</div>
+      </a>
+
+      <a class="menu-item" href="#">
+        <div class="menu-icon">▤</div>
+        <div class="menu-name">Card</div>
+      </a>
+
+      <a class="menu-item" href="{{url_for('bills')}}">
+        <div class="menu-icon">＄</div>
+        <div class="menu-name">Bill</div>
+      </a>
+
+      <a class="menu-item" href="#">
+        <div class="menu-icon">♙</div>
+        <div class="menu-name">Invite</div>
+      </a>
+
+      <a class="menu-item" href="{{url_for('team')}}">
+        <div class="menu-icon">♧</div>
+        <div class="menu-name">My team</div>
+      </a>
+
+      <a class="menu-item" href="{{url_for('vip_task')}}">
+        <div class="menu-icon">☆</div>
+        <div class="menu-name">VIP Task</div>
+      </a>
+
+      <a class="menu-item" href="#">
+        <div class="menu-icon">🎁</div>
+        <div class="menu-name">Reward</div>
+      </a>
+
+      <a class="menu-item" href="#">
+        <div class="menu-icon">🎟</div>
+        <div class="menu-name">Gift code</div>
+      </a>
+
+      <a class="menu-item" href="#">
+        <div class="menu-icon">▣</div>
+        <div class="menu-name">Raffle</div>
+      </a>
+
+      <a class="menu-item" href="#">
+        <div class="menu-icon">↓</div>
+        <div class="menu-name small">Download<br>App</div>
+      </a>
+
+      <a class="menu-item" href="{{url_for('chat')}}">
+        <div class="menu-icon">♧</div>
+        <div class="menu-name">Manager</div>
+      </a>
+
+      <a class="menu-item" href="{{url_for('settings')}}">
+        <div class="menu-icon">⚙</div>
+        <div class="menu-name">Settings</div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="lower-card">
+    <div class="tw">
+      <div>
+        <div class="muted">Last months salary</div>
+        <div class="big">0.00</div>
+      </div>
+      <div>
+        <div class="muted">This months salary</div>
+        <div class="big">0.00</div>
+      </div>
+    </div>
+    <a class="button" href="#">Get last months salary</a>
+  </div>
+
+  <div class="lower-card">
+    <div class="tw">
+      <div>
+        <div class="muted">Invited last month</div>
+        <div class="big">0</div>
+      </div>
+      <div>
+        <div class="muted">Invited this month</div>
+        <div class="big">0</div>
+      </div>
+    </div>
+
+    <p class="muted">
+      Only your direct invites (level 1) who made a deposit are counted.
+    </p>
+
+    <a class="button" href="#">Get last months
+ reward</a>
+  </div>
+
+  <div class="lower-card">
+    <div class="tw">
+      <div>
+        <div class="muted">Invited last month</div>
+        <div class="big">0</div>
+      </div>
+      <div>
+        <div class="muted">Invited this month</div>
+        <div class="big">0</div>
+      </div>
+    </div>
+
+    <p class="muted">
+      Only your direct invites (level 1) who made a deposit are counted.
+    </p>
+
+    <a class="button" href="#">Get last months reward</a>
+
+    <div class="row">
+      <span>Invite</span>
+      <span>Reward</span>
+    </div>
+
+    <div class="row">
+      <span>6</span>
+      <span>Z-1　Next</span>
+    </div>
+
+    <div class="row">
+      <span>15</span>
+      <span>Z-2</span>
+    </div>
+
+    <div class="row">
+      <span>30</span>
+      <span>Z-3</span>
+    </div>
+
+    <div class="row">
+      <span>60</span>
+      <span>Z-4</span>
+    </div>
+  </div>
+
+  <a class="out" href="{{url_for('logout')}}">⇥　Sign out</a>
+
+  <div class="ref">
+    Your referral code: <b>{{user.invite_code}}</b>
+  </div>
+
+</div>
+
+{% endblock %}
