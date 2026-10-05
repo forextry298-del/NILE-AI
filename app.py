@@ -6,7 +6,7 @@ DB="nile_ai.db"
 def db():
  c=sqlite3.connect(DB);c.row_factory=sqlite3.Row;return c
 def init_db():
- c=db();c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT,phone TEXT UNIQUE NOT NULL,password TEXT NOT NULL,nickname TEXT DEFAULT  ,points INTEGER DEFAULT 0)");c.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,points INTEGER)");c.executemany("INSERT OR IGNORE INTO tasks(id,name,points) VALUES(?,?,?)",[(1,"AI Learning",50),(2,"Daily Check-in",20),(3,"Complete Profile",30)]);c.commit();c.close()
+ c=db();c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT,phone TEXT UNIQUE NOT NULL,password TEXT NOT NULL,nickname TEXT DEFAULT '' ,points INTEGER DEFAULT 0)");c.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,points INTEGER)");c.executemany("INSERT OR IGNORE INTO tasks(id,name,points) VALUES(?,?,?)",[(1,"AI Learning",50),(2,"Daily Check-in",20),(3,"Complete Profile",30)]);c.commit();c.close()
 init_db()
 @app.route("/")
 def index(): return redirect(url_for("home" if session.get("uid") else "login"))
@@ -21,7 +21,7 @@ def register():
 def login():
  if request.method=="POST":
   c=db();u=c.execute("SELECT * FROM users WHERE phone=? AND password=?",(request.form["phone"],request.form["password"])).fetchone();c.close()
-  if u:session["uid"]=u["id"];return redirect(url_for("home"))
+  if u:session["uid"]=u["id"];session["welcome_popup"]=True;return redirect(url_for("home"))
   return "Invalid login"
  return render_template("login.html")
 def current_user():
@@ -32,6 +32,10 @@ def home():
  u=current_user()
  if not u:return redirect(url_for("login"))
  return render_template("home.html",user=u)
+@app.route("/announcement")
+def announcement():
+ if not current_user():return redirect(url_for("login"))
+ return render_template("announcement.html")
 @app.route("/logout")
 def logout():session.clear();return redirect(url_for("login"))
 @app.route("/ai")
