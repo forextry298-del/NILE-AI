@@ -1,2 +1,0 @@
-{% extends "base.html" %}{% block content %}<div class="top">AI <span class="green">NILE</span></div><div class="container"><div class="card"><span class="green">All</span>　E series</div>
-{% for p in products %}<a href="{{url_for('product',name=p.name)}}"><div class="product"><div class="pic"></div><div class="info"><div class="title">{{p.name}}</div>Lock: {{p.days}} Days<br>Price: {{p.price}}.00<br>Daily reward: {{p.daily}}.00<br>Total reward: {{p.total}}.00</div></div></a>{% endfor %}</div>{% endblock %}

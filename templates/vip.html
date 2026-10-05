@@ -1,1 +1,0 @@
-{% extends "base.html" %}{% block content %}<div class="top">‹ VIP Task</div><div class="container">{% for level,count,reward in tasks %}<div class="vip"><strong>VIP - {{level}}</strong>Invite <b>{{count}}</b> members in Lv1 to purchase device<br><br>Task progress: 0/{{count}}<br>VIP Rewards: UGX {{"{:,.2f}".format(reward)}}</div>{% endfor %}</div>{% endblock %}
