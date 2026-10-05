@@ -4,7 +4,7 @@ app=Flask(__name__)
 app.secret_key=os.getenv("SECRET_KEY","nile-ai-secret")
 DB="nile_ai.db"
 def db():
- c=sqlite3.connect(DB);c.row_factory=sqlite3.Row;return c
+ c=sqlite3.connect(DB,timeout=30);c.row_factory=sqlite3.Row;c.execute("PRAGMA busy_timeout=30000");c.execute("PRAGMA journal_mode=WAL");return c
 def init_db():
  c=db();c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT,phone TEXT UNIQUE NOT NULL,password TEXT NOT NULL,nickname TEXT DEFAULT '' ,points INTEGER DEFAULT 0)");c.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,points INTEGER)");c.executemany("INSERT OR IGNORE INTO tasks(id,name,points) VALUES(?,?,?)",[(1,"AI Learning",50),(2,"Daily Check-in",20),(3,"Complete Profile",30)]);c.commit();c.close()
 init_db()
