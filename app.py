@@ -56,6 +56,21 @@ def tasks():
  u=current_user()
  if not u:return redirect(url_for("login"))
  c=db();items=c.execute("SELECT * FROM tasks").fetchall();c.close();return render_template("tasks.html",tasks=items,user=u)
+@app.route("/raffle")
+def raffle():
+ u=current_user()
+ if not u:return redirect(url_for("login"))
+ return render_template("raffle.html",user=u)
+@app.route("/settings")
+def settings():
+ u=current_user()
+ if not u:return redirect(url_for("login"))
+ return render_template("settings.html",user=u)
+@app.route("/invite")
+def invite():
+ u=current_user()
+ if not u:return redirect(url_for("login"))
+ return render_template("invite.html",user=u)
 @app.route("/profile")
 def profile():
  u=current_user()
