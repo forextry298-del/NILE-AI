@@ -4,7 +4,7 @@ app=Flask(__name__)
 app.secret_key=os.getenv("SECRET_KEY","nile-ai-secret")
 DB="nile_ai.db"
 def db():
- c=sqlite3.connect(DB,timeout=30);c.row_factory=sqlite3.Row;c.execute("PRAGMA busy_timeout=30000");c.execute("PRAGMA journal_mode=WAL");return c
+ c=sqlite3.connect(DB,timeout=30);c.row_factory=sqlite3.Row;c.execute("PRAGMA busy_timeout=30000");return c
 def init_db():
  c=db();c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT,phone TEXT UNIQUE NOT NULL,password TEXT NOT NULL,nickname TEXT DEFAULT '' ,points INTEGER DEFAULT 0)");c.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,points INTEGER)");c.executemany("INSERT OR IGNORE INTO tasks(id,name,points) VALUES(?,?,?)",[(1,"AI Learning",50),(2,"Daily Check-in",20),(3,"Complete Profile",30)]);c.commit();c.close()
 init_db()
@@ -13,16 +13,25 @@ def index(): return redirect(url_for("home" if session.get("uid") else "login"))
 @app.route("/register",methods=["GET","POST"])
 def register():
  if request.method=="POST":
+  phone=request.form.get("phone","").strip()
+  password=request.form.get("password","")
+  confirm=request.form.get("confirm_password","")
+  nickname=request.form.get("nickname","Anon").strip() or "Anon"
+  if len(password)<8 or not any(c.isupper() for c in password) or not any(c.islower() for c in password) or not any(c.isdigit() for c in password):
+   return render_template("register.html",error="Password must be at least 8 characters and contain uppercase, lowercase and a number.")
+  if password!=confirm:
+   return render_template("register.html",error="Passwords do not match.")
   try:
-   c=db();c.execute("INSERT INTO users(phone,password,nickname) VALUES(?,?,?)",(request.form["phone"],request.form["password"],request.form.get("nickname","Anon")));c.commit();c.close();return redirect(url_for("login"))
-  except sqlite3.IntegrityError:return "Phone already registered"
+   c=db();c.execute("INSERT INTO users(phone,password,nickname) VALUES(?,?,?)",(phone,password,nickname));c.commit();c.close();return render_template("login.html",success="Registration Successful")
+  except sqlite3.IntegrityError:
+   return render_template("register.html",error="Phone already registered")
  return render_template("register.html")
 @app.route("/login",methods=["GET","POST"])
 def login():
  if request.method=="POST":
   c=db();u=c.execute("SELECT * FROM users WHERE phone=? AND password=?",(request.form["phone"],request.form["password"])).fetchone();c.close()
-  if u:session["uid"]=u["id"];session["welcome_popup"]=True;return redirect(url_for("home"))
-  return "Invalid login"
+  if u:session["uid"]=u["id"];session["welcome_popup"]=True;return render_template("login.html",success="Login successful",redirect_home=True)
+  return render_template("login.html",error="Please provide valid information to continue")
  return render_template("login.html")
 def current_user():
  if not session.get("uid"):return None
