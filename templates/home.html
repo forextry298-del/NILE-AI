@@ -1,91 +1,490 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<style>
-.home{padding:0 0 12px;font-family:Georgia,'Times New Roman',serif}
-.home-head{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 18px}
-.home-brand{display:flex;align-items:center;gap:10px;font-size:30px;font-weight:bold;letter-spacing:.4px}
-.brand-mark{width:52px;height:52px;border:1px solid #1683ff;border-radius:15px;background:#061522;display:flex;align-items:center;justify-content:center;color:#00c8ff;font-size:24px;font-weight:bold;box-shadow:0 0 14px rgba(0,190,255,.18)}
-.brand-copy small{display:block;color:#00baff;font-size:12px;letter-spacing:2px;margin-top:2px}
-.message-link{text-decoration:none;color:#fff;text-align:center;min-width:58px}
-.message-icon{font-size:39px;line-height:38px}.message-label{font-size:14px;margin-top:5px}
-.hero2{position:relative;overflow:hidden;border:1px solid #008dcc;border-radius:22px;background:#000;box-shadow:0 0 18px rgba(0,190,255,.14);height:255px;margin-bottom:22px}
-.hero2-slide{position:absolute;inset:0;opacity:0;transition:opacity .3s ease;pointer-events:none}.hero2-slide.active{opacity:1;pointer-events:auto}
-.hero2-slide img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.52);transform-origin:center center}.hero2-slide.active:first-child img{animation:axeAutoMove 4.8s ease-in-out infinite}.hero2-slide.active:nth-child(2) img{animation:robotAutoMove 6.5s ease-in-out infinite alternate}.hero2-slide.active:nth-child(3) img{animation:heroPan 8s ease-in-out infinite alternate-reverse}@keyframes axeAutoMove{0%{transform:scale(1.02) translate3d(0,0,0) rotate(-1deg)}25%{transform:scale(1.06) translate3d(-2px,-3px,0) rotate(1deg)}50%{transform:scale(1.10) translate3d(3px,0,0) rotate(-1deg)}75%{transform:scale(1.06) translate3d(-2px,3px,0) rotate(1deg)}100%{transform:scale(1.02) translate3d(0,0,0) rotate(-1deg)}}@keyframes robotAutoMove{from{transform:scale(1.02) translate3d(-1%,0,0)}to{transform:scale(1.10) translate3d(1%,-1%,0)}}@keyframes heroPan{from{transform:scale(1.03) translateX(-1%)}to{transform:scale(1.10) translateX(1%)}}
-.hero2-overlay{position:absolute;left:18px;right:18px;bottom:20px}.hero2-title{font-size:21px;color:#09c8ff;font-weight:bold;margin-bottom:7px}.hero2-text{font-size:14px;line-height:1.45;color:#fff}
-.hero2-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border:1px solid #00baff;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;font-size:29px;line-height:34px;z-index:3;cursor:pointer}.hero2-arrow.left{left:10px}.hero2-arrow.right{right:10px}
-.hero2-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}.hero2-dot{width:8px;height:8px;border-radius:50%;background:#777}.hero2-dot.active{width:25px;border-radius:7px;background:#08bde8}
-.home-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.stat-card{display:block;text-decoration:none;color:#111;background:#fff;border-radius:13px;overflow:hidden;box-shadow:0 0 10px rgba(0,190,255,.10);min-height:82px}.stat-value{display:flex;align-items:center;justify-content:center;min-height:50px;padding:6px 4px;font-size:18px;font-weight:bold;word-break:break-word}.stat-label{background:#08bde8;color:#fff;text-align:center;padding:7px 4px;font-size:12px;min-height:32px}
-.home-stats.three{grid-template-columns:repeat(3,1fr);gap:8px}.home-stats.three .stat-card{min-height:78px}.home-stats.three .stat-value{min-height:46px;font-size:17px}.home-stats.three .stat-label{font-size:10px;padding:7px 2px;min-height:30px}
-.news{border:1px solid #008dcc;border-radius:17px;background:rgba(0,0,0,.58);padding:15px;margin-top:2px}.news-head{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:bold;margin-bottom:14px}.news-head .more{margin-left:auto;color:#08bde8;text-decoration:none;font-size:15px}.news-head span{color:#08bde8;font-size:29px}.news-item{border:1px solid #123c50;border-radius:12px;padding:10px;margin-top:10px;background:rgba(0,0,0,.42)}.news-item strong{color:#9befff;display:block;margin-bottom:6px}.news-item p{margin:0;color:#ddd;line-height:1.35;font-size:12px}
-@media(max-width:480px){.home-brand{font-size:25px}.brand-mark{width:47px;height:47px}.hero2{height:250px}.hero2-title{font-size:19px}.hero2-text{font-size:13px}.stat-value{font-size:17px}.stat-label{font-size:11px}.home-stats.three .stat-value{font-size:16px}.home-stats.three .stat-label{font-size:9px}}
+
+<style id="exact-futureaihub-home">
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  width:100%;
+  min-width:100%;
+  max-width:100%;
+  margin:0;
+  padding:0;
+  overflow-x:hidden!important;
+  background:#000!important;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  min-height:100vh;
+}
+
+/* =========================================
+   FULL RESPONSIVE HOME
+   ========================================= */
+
+.ref-home{
+  width:100%!important;
+  max-width:none!important;
+  min-height:100vh;
+  margin:0!important;
+  padding:0 0 82px!important;
+  overflow:hidden!important;
+  background:#000!important;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.ref-home .home-header,
+.ref-home .top-header,
+.ref-home .dashboard-header{
+  width:100%!important;
+  min-height:92px!important;
+  padding:20px 30px 12px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  box-sizing:border-box!important;
+}
+
+.ref-home .home-title,
+.ref-home .brand-title{
+  color:#fff!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(28px,4vw,42px)!important;
+  font-weight:700!important;
+  letter-spacing:.3px!important;
+}
+
+/* =========================================
+   MESSAGE
+   ========================================= */
+
+.ref-home .message-link,
+.ref-home .message{
+  color:#fff!important;
+  text-decoration:none!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(13px,2vw,18px)!important;
+}
+
+.ref-home .message-link svg,
+.ref-home .message svg,
+.ref-home .message-link i{
+  width:36px!important;
+  height:36px!important;
+  font-size:36px!important;
+}
+
+/* =========================================
+   HERO / AUTO MOVEMENT
+   ========================================= */
+
+.hero-area{
+  width:100%!important;
+  padding:0 30px!important;
+  margin:8px 0 0!important;
+  box-sizing:border-box!important;
+}
+
+.slider{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:2.05 / 1!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid #08bdf5!important;
+  border-radius:28px!important;
+  overflow:hidden!important;
+  position:relative!important;
+  background:#000!important;
+  box-shadow:
+    0 0 12px rgba(8,189,245,.55),
+    inset 0 0 12px rgba(8,189,245,.16)!important;
+}
+
+.track{
+  display:flex!important;
+  width:400%!important;
+  height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  transition:transform .65s ease-in-out!important;
+}
+
+.slide{
+  flex:0 0 25%!important;
+  width:25%!important;
+  min-width:25%!important;
+  height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  position:relative!important;
+  overflow:hidden!important;
+  background:#000!important;
+}
+
+.slide img{
+  width:100%!important;
+  height:100%!important;
+  display:block!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+.slide:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,.72),
+    rgba(0,0,0,.06) 65%
+  )!important;
+  pointer-events:none!important;
+}
+
+/* =========================================
+   SLIDER TEXT
+   =================================
+
+/* SLIDER TEXT */
+
+.caption{
+  position:absolute!important;
+  z-index:4!important;
+  left:22px!important;
+  right:22px!important;
+  bottom:25px!important;
+  margin:0!important;
+}
+
+.caption h2{
+  margin:0 0 6px!important;
+  color:#08bdf5!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(16px,2.7vw,27px)!important;
+  line-height:1.1!important;
+}
+
+.caption p{
+  margin:0!important;
+  color:#fff!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(11px,1.8vw,18px)!important;
+  line-height:1.35!important;
+}
+
+.read{
+  display:none!important;
+}
+
+.slider button{
+  width:54px!important;
+  height:54px!important;
+  min-width:54px!important;
+  border:1px solid #08bdf5!important;
+  border-radius:50%!important;
+  background:rgba(0,0,0,.38)!important;
+  color:#fff!important;
+  font-size:30px!important;
+  z-index:6!important;
+}
+
+.dots{
+  bottom:9px!important;
+  z-index:7!important;
+}
+
+.dots span{
+  display:inline-block!important;
+  width:9px!important;
+  height:9px!important;
+  border-radius:50%!important;
+  margin:0 5px!important;
+  background:#aaa!important;
+}
+
+.dots span.active{
+  width:35px!important;
+  border-radius:8px!important;
+  background:#08bdf5!important;
+}
+
+.grid2{
+  width:100%!important;
+  padding:28px 30px 0!important;
+  margin:0!important;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:24px!important;
+}
+
+.card2{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:2.45 / 1!important;
+  border-radius:25px!important;
+  overflow:hidden!important;
+  background:#fff!important;
+  box-shadow:0 0 12px rgba(8,189,245,.65)!important;
+}
+
+.card2 .num{
+  height:68%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:#090909!important;
+  background:#fff!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(20px,3vw,32px)!important;
+  font-weight:700!important;
+}
+
+.card2 .lab{
+  height:32%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:#fff!important;
+  background:#08bdf5!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(12px,1.9vw,20px)!important;
+  white-space:nowrap!important;
+}
+
+.grid3{
+  width:100%!important;
+  padding:24px 30px 0!important;
+  margin:0!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:20px!important;
+}
+
+.card3{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:2.25 / 1!important;
+  border-radius:21px!important;
+  overflow:hidden!important;
+  background:#fff!important;
+  box-shadow:0 0 10px rgba(8,189,245,.6)!important;
+}
+
+.card3 .num{
+  height:68%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:#090909!important;
+  background:#fff!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(16px,2.3vw,25px)!important;
+  font-weight:700!important;
+}
+
+.card3 .lab{
+  height:32%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:#fff!important;
+  background:#08bdf5!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(9px,1.4vw,16px)!important;
+  white-space:nowrap!important;
+}
+
+.news,
+.news-section,
+.announcements{
+  width:calc(100% - 60px)!important;
+  margin:30px auto 0!important;
+  padding:25px!important;
+  border:1px solid #08bdf5!important;
+  border-radius:24px!important;
+  background:#000!important;
+  box-shadow:0 0 10px rgba(8,189,245,.35)!important;
+}
+
+.news h2,
+.news-section h2,
+.announcements h2{
+  color:#fff!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+}
+
+.bottom-nav{
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  width:100%!important;
+  height:76px!important;
+  z-index:9999!important;
+  display:grid!important;
+  grid-template-columns:repeat(6,1fr)!important;
+  background:#000!important;
+  border-top:1px solid #08bdf5!important;
+  box-shadow:0 -3px 14px rgba(8,189,245,.18)!important;
+  padding-bottom:env(safe-area-inset-bottom)!important;
+}
+
+.bottom-nav a{
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:2px!important;
+  color:#fff!important;
+  text-decoration:none!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(9px,1.7vw,16px)!important;
+}
+
+.bottom-nav a.active{
+  color:#08bdf5!important;
+}
+
+@media(max-width:600px){
+
+  .ref-home{
+    padding-bottom:84px!important;
+  }
+
+  .hero-area{
+    padding:0 30px!important;
+  }
+
+  .slider{
+    aspect-ratio:1.92 / 1!important;
+    border-radius:25px!important;
+  }
+
+  .grid2{
+    padding:27px 30px 0!important;
+    gap:22px!important;
+
+  }
+
+  .grid3{
+    padding:24px 30px 0!important;
+    gap:16px!important;
+  }
+
+  .news,
+  .news-section,
+  .announcements{
+    width:calc(100% - 60px)!important;
+  }
+
+  .bottom-nav{
+    height:76px!important;
+  }
+}
+
+@media(min-width:601px){
+  .ref-home{
+    padding-bottom:96px!important;
+  }
+
+  .bottom-nav{
+    height:82px!important;
+  }
+}
+
 </style>
 
-<div class="home">
-  <div class="home-head">
-    <div class="home-brand"><div class="brand-mark">CX</div><div class="brand-copy">NILE AI<small>AI PLATFORM</small></div></div>
-    <a class="message-link" href="{{ url_for('support') }}" aria-label="Open customer support"><div class="message-icon">♧</div><div class="message-label">Message</div></a>
-  </div>
 
-  <div class="hero2" id="homeHero">
-    <div class="hero2-slide active"><img src="/static/NILE_a6_axe.jpg" alt="NILE-A6 AI mining machine"><div class="hero2-overlay"><div class="hero2-title">NILE-A6 AI MINING</div><div class="hero2-text">Watch the NILE-A6 machine move automatically while you manage your AI platform.</div></div></div>
-    <div class="hero2-slide"><img src="/static/NILE_a6_robot.png" alt="NILE AI giant robot"><div class="hero2-overlay"><div class="hero2-title">NILE AI ROBOT</div><div class="hero2-text">Meet the NILE AI giant machine built for the next generation of the platform.</div></div></div>
-    <div class="hero2-slide"><img src="/static/server.jpg" alt="AI machines"><div class="hero2-overlay"><div class="hero2-title">Your AI Machines</div><div class="hero2-text">Open AI to view products, active machines and your mining activity.</div></div></div>
-    <div class="hero2-slide"><img src="/static/server.jpg" alt="NILE AI dashboard"><div class="hero2-overlay"><div class="hero2-title">Stay Connected</div><div class="hero2-text">Use Message for support and the navigation bar to reach every section.</div></div></div>
-    <button class="hero2-arrow left" type="button" aria-label="Previous" onclick="heroMove(-1)">‹</button><button class="hero2-arrow right" type="button" aria-label="Next" onclick="heroMove(1)">›</button>
-    <div class="hero2-dots"><span class="hero2-dot active"></span><span class="hero2-dot"></span><span class="hero2-dot"></span><span class="hero2-dot"></span></div>
-  </div>
 
-  <div class="home-stats">
-    <a class="stat-card" href="{{ url_for('deposit') }}">
-      <div class="stat-value">
-        {% if latest_deposit %}
-          UGX {{ '{:,.0f}'.format(latest_deposit.amount) }}
-        {% else %}
-          UGX 0
-        {% endif %}
-      </div>
-      <div class="stat-label">Deposit details</div>
-      {% if latest_deposit %}<small>{{ latest_deposit.status }}</small>{% endif %}
-    </a>
 
-    <a class="stat-card" href="{{ url_for('withdraw') }}">
-      <div class="stat-value">
-        {% if pending_withdrawal %}
-          UGX {{ '{:,.0f}'.format(pending_withdrawal.amount) }}
-        {% else %}
-          UGX 0
-        {% endif %}
-      </div>
-      <div class="stat-label">Withdraw details</div>
-      {% if pending_withdrawal %}<small>{{ pending_withdrawal.status }}</small>{% endif %}
-    </a>
-    <a class="stat-card" href="{{ url_for('income') }}"><div class="stat-value">UGX {{ '{:,.0f}'.format(ai_income) }}</div><div class="stat-label">AI Income</div></a>
-    <a class="stat-card" href="{{ url_for('income') }}"><div class="stat-value">UGX {{ '{:,.0f}'.format(today) }}</div><div class="stat-label">Today's earnings</div></a>
-  </div>
 
-  <div class="home-stats three">
-    <a class="stat-card" href="{{ url_for('invite') }}"><div class="stat-value">{{ invite_count }}</div><div class="stat-label">Invite Count</div></a>
-    <a class="stat-card" href="{{ url_for('my_team') }}"><div class="stat-value">{{ team_count }}</div><div class="stat-label">Team Count</div></a>
-    <a class="stat-card" href="{{ url_for('income') }}"><div class="stat-value">UGX {{ '{:,.0f}'.format(team_income) }}</div><div class="stat-label">Team income</div></a>
-  </div>
 
-  <div class="news">
-    <div class="news-head"><span>♧</span> Message <a class="more" href="{{ url_for('support') }}">More</a></div>
-    {% if announcement %}
-    <div class="news-item">
-      <strong>{{ announcement.title }}</strong>
-      <p>{{ announcement.message }}</p>
-    </div>
-    {% endif %}
-    <div class="news-item"><strong>Deposit</strong><p>Open Deposit details to submit and track your deposit request.</p></div>
-  </div>
+
+<style>
+body{background:#000!important;color:#fff}
+.ref-home{min-height:100vh;padding-bottom:92px;background:#000}
+.msg{height:52px;background:#000;display:flex;justify-content:flex-end;align-items:center;padding:0 18px;font-size:23px}
+.hero-area{padding:0 30px}
+.slider{position:relative;height:285px;border:1px solid #08bdf5;border-radius:27px;overflow:hidden;box-shadow:0 0 16px rgba(8,189,245,.48);background:#020609}
+.track{height:100%;display:flex;transition:transform .38s ease}
+.slide{min-width:100%;height:100%;position:relative}
+.slide img{width:100%;height:100%;object-fit:cover;display:block}
+.slide:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,.08) 65%,rgba(0,0,0,.12))}
+.caption{position:absolute;left:150px;right:12px;bottom:34px;z-index:2}
+.caption h2{font-size:15px;color:#08bdf5;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.caption p{font-size:11px;margin:0 0 10px;color:#ddd}
+.read{display:inline-block;background:#08bdf5;color:#fff;text-decoration:none;border-radius:12px;padding:6px 12px;font-size:10px}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:50px;height:50px;border:2px solid #08bdf5;border-radius:50%;background:rgba(0,0,0,.48);color:#fff;font-size:31px;line-height:1}
+.left{left:9px}.right{right:9px}
+.dots{position:absolute;bottom:9px;left:0;right:0;z-index:5;display:flex;justify-content:center;gap:7px}
+.dot{width:9px;height:9px;background:#bbb;border-radius:50%}.dot.on{width:34px;border-radius:8px;background:#08bdf5}
+.grid2{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;padding:20px 30px 0!important}
+.card2{height:72px!important;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 0 13px rgba(8,189,245,.72);display:flex;flex-direction:column;text-align:center;color:#111}
+.card2 .num{flex:1;display:flex;align-items:center;justify-content:center;font:bold 17px Georgia,serif}
+.card2 .lab{height:30px!important;background:#08bdf5;color:#fff;display:flex;align-items:center;justify-content:center;font:13px Georgia,serif}
+.grid3{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important;padding:16px 30px 0!important}
+.card3{height:88px!important;background:#fff;border-radius:23px;overflow:hidden;box-shadow:0 0 13px rgba(8,189,245,.72);display:flex;flex-direction:column;text-align:center;color:#111}
+.card3 .num{flex:1;display:flex;align-items:center;justify-content:center;font:bold 17px Georgia,serif}
+.card3 .lab{height:25px!important;background:#08bdf5;color:#fff;display:flex;align-items:center;justify-content:center;font:10px Georgia,serif;padding:2px}
+@media(max-width:390px){
+.hero-area{padding:0 28px}.slider{height:275px}
+.grid2{padding-left:28px;padding-right:28px;gap:18px}
+.grid3{padding-left:28px;padding-right:28px;gap:18px}
+.card2{height:88px!important}.card3{height:88px!important}
+.card2 .lab{font-size:11px!important}.card3 .lab{font-size:10px!important}
+}
+</style>
+<div class="ref-home">
+<div class="msg">Message</div>
+<div class="hero-area">
+<div class="slider">
+<div class="track" id="nileTrack">
+<div class="slide"><img src="{{ url_for('static', filename='banners/banner4.jpg') }}'static', filename='banners/banner3.jpg') }}'static', filename='banners/banner2.jpg') }}'static', filename='banners/banner1.jpg') }}'static',filename='banners/banner1.jpg') }}"><div class="caption"><h2>NILE AI Technology Update</h2><p>Powering the next generation of AI infrastructure.</p><a class="read" href="{{ url_for('products') }}">View report</a></div></div>
+<div class="slide"><img src="{{ url_for('static',filename='banners/banner2.jpg') }}"><div class="caption"><h2>Advanced Computing</h2><p>Modern computing infrastructure for the NILE AI platform.</p><a class="read" href="{{ url_for('products') }}">View report</a></div></div>
+<div class="slide"><img src="{{ url_for('static',filename='banners/banner3.jpg') }}"><div class="caption"><h2>AI Infrastructure</h2><p>Explore the technology behind NILE AI.</p><a class="read" href="{{ url_for('products') }}">View report</a></div></div>
+<div class="slide"><img src="{{ url_for('static',filename='banners/banner4.jpg') }}"><div class="caption"><h2>Future AI Systems</h2><p>Discover the NILE AI product environment.</p><a class="read" href="{{ url_for('products') }}">View report</a></div></div>
+</div>
+<button class="arrow left" type="button" onclick="moveNile(-1)">‹</button><button class="arrow right" type="button" onclick="moveNile(1)">›</button>
+<div class="dots"><i class="dot on"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
+</div>
+</div>
+<div class="grid2">
+<div class="card2"><div class="num">0.00</div><div class="lab">Deposit details</div></div>
+<div class="card2"><div class="num">0.00</div><div class="lab">Withdraw details</div></div>
+<div class="card2"><div class="num">0.00</div><div class="lab">AI Income</div></div>
+<div class="card2"><div class="num">0.00</div><div class="lab">Today's earnings</div></div>
+</div>
+<div class="grid3">
+<div class="card3"><div class="num">0</div><div class="lab">Invite Count</div></div>
+<div class="card3"><div class="num">0</div><div class="lab">Team Count</div></div>
+<div class="card3"><div class="num">0.00</div><div class="lab">Team income</div></div>
+</div>
 </div>
 
+
+
 <script>
-(function(){
-  const slides=document.querySelectorAll('.hero2-slide'),dots=document.querySelectorAll('.hero2-dot');let i=0;
-  window.heroMove=function(step){slides[i].classList.remove('active');dots[i].classList.remove('active');i=(i+step+slides.length)%slides.length;slides[i].classList.add('active');dots[i].classList.add('active')};
-  setInterval(function(){heroMove(1)},6000);
-})();
+(function(){let n=0;const t=document.getElementById('nileTrack');const d=[...document.querySelectorAll('.dot')];function show(x){n=(x+4)%4;t.style.transform='translateX(-'+n*100+'%)';d.forEach((v,i)=>v.classList.toggle('on',i===n))}window.moveNile=x=>show(n+x);setInterval(()=>show(n+1),4000)})();
 </script>
 {% endblock %}
