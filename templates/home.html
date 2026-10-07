@@ -37,7 +37,7 @@
 
   <section class="nmh-panel">
     <div class="nmh-section-title"><span>📣</span> News &amp; Announcements</div>
-    {% for a in announcements[:4] %}
+    {% for a in ([announcement] if announcement else [])[:4] %}
       <div class="nmh-news">
         <b>📌 {{ a.title }}</b>
         <p>{{ a.message }}</p>
