@@ -684,6 +684,11 @@ def home():
 
     return render_template("home.html",user=current_user(),products=products,ai_income=ai_income,today=today,invite_count=invite_count,team_count=team_count,team_income=team_income,announcement=announcement,pending_withdrawal=pending_withdrawal,latest_deposit=latest_deposit,show_announcement=show_announcement,announcement_popup=popup)
 
+@app.route("/wallet")
+@required
+def wallet():
+    return render_template("wallet.html",user=current_user(),active="Wallet")
+
 @app.route("/my")
 @required
 def my():

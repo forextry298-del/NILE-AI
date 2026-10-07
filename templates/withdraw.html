@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="withdraw-page">
-  <div class="page-head"><a class="back-btn" href="/my">←</a><h1>Withdraw</h1><div class="head-spacer"></div></div>
+  <section class="panel"><small>NILE AI WITHDRAWAL</small><h2>Withdraw Funds</h2><p>Move your available income to your saved payout destination.</p></section>
 
   {% if pending_withdrawal %}
-  <section class="withdraw-card" style="margin-bottom:16px">
+  <section class="panel" style="margin-bottom:16px">
     <h2>Withdraw Under Review</h2>
     <p>Your withdrawal request has been submitted and is waiting for administrator approval.</p>
     <div class="withdraw-summary">
@@ -16,13 +16,13 @@
   </section>
   {% endif %}
 
-  <section class="balance-card">
+  <section class="wallet">
     <div class="balance-label">Available balance</div>
     <div class="balance-number">{{ '{:,.2f}'.format(user.balance) }}</div>
   </section>
 
   <form method="post" action="/withdraw" id="withdrawForm" class="withdraw-form">
-    <section class="withdraw-card">
+    <section class="panel">
       <div class="form-label">Payout method</div>
       <div class="method-grid">
         <button type="button" class="method-btn active" data-method="MTN UG">MTN UG</button>
@@ -51,11 +51,11 @@
         <div class="receive"><span>You receive</span><b id="summaryReceive">0.00</b></div>
       </div>
 
-      <button class="button primary withdraw-submit" type="submit">WITHDRAW</button>
+      <button class="machine-btn withdraw-submit" type="submit">WITHDRAW</button>
     </section>
   </form>
 
-  <section class="withdraw-note">
+  <section class="panel">
     <b>Withdrawal processing</b>
     <p>Your request is recorded as pending. An administrator must approve it before it is completed.</p>
   </section>
