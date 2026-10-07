@@ -1,1 +1,100 @@
-{% extends "base.html" %}{% block content %}<div class="nile-wrap"><header class="nile-header"><div><div class="nile-brand">NILE AI</div><div class="nile-sub">AI INVESTMENT CENTER</div></div><div class="nile-avatar">◈</div></header><section class="core"><div class="core-title">AI Wallet</div><strong>UGX {{ "{:,.2f}".format(user.wallet or 0) }}</strong><small>READY FOR AI MACHINES</small></section><div class="actions"><a href="/deposit">＋ DEPOSIT</a><a href="/withdraw">↗ WITHDRAW</a></div><div class="stats"><div class="stat"><span>AI Machines</span><strong>{{ products|length }}</strong></div><div class="stat"><span>AI Income</span><strong>UGX {{ "{:,.0f}".format(ai_income or 0) }}</strong></div><div class="stat"><span>Today</span><strong>UGX {{ "{:,.0f}".format(today or 0) }}</strong></div><div class="stat"><span>Team</span><strong>{{ team_count }}</strong></div></div><div class="section-title">AI MACHINE CENTER</div><section class="panel"><div class="icon-grid"><a class="icon-item" href="/invest"><div class="icon-box">AI</div><span>AI Machines</span></a><a class="icon-item" href="/income"><div class="icon-box">↗</div><span>Income</span></a><a class="icon-item" href="/invite"><div class="icon-box">♧</div><span>Invite</span></a><a class="icon-item" href="/my-team"><div class="icon-box">♟</div><span>My Team</span></a><a class="icon-item" href="/reward"><div class="icon-box">★</div><span>Rewards</span></a><a class="icon-item" href="/gift-code"><div class="icon-box">◆</div><span>Gift Code</span></a><a class="icon-item" href="/raffle"><div class="icon-box">♢</div><span>Raffle</span></a><a class="icon-item" href="/support"><div class="icon-box">✉</div><span>Support</span></a></div></section><div class="section-title">NETWORK</div><section class="panel"><div class="stats"><div class="stat"><span>Invites</span><strong>{{ invite_count }}</strong></div><div class="stat"><span>Team</span><strong>{{ team_count }}</strong></div><div class="stat"><span>Team Income</span><strong>UGX {{ "{:,.0f}".format(team_income or 0) }}</strong></div></div></section></div>{% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/nile-home.css') }}">
+<div class="nile-mobile-home">
+  <header class="nmh-top">
+    <div>
+      <div class="nmh-brand">NILE AI</div>
+      <div class="nmh-sub">AI COMMAND CENTER</div>
+    </div>
+    <a class="nmh-msg" href="/support" aria-label="Messages">✉</a>
+  </header>
+
+  <section class="nmh-slider" aria-label="NILE AI highlights">
+    <div class="nmh-track" id="nileSlider">
+      <a class="nmh-slide" href="/invest"><img src="{{ url_for('static', filename='img/nile-slide-1.jpg') }}" alt="AI data center"><div class="nmh-caption"><b>NILE AI DATA CENTER</b><span>Powering next-generation AI machines</span></div></a>
+      <a class="nmh-slide" href="/invest"><img src="{{ url_for('static', filename='img/nile-slide-2.jpg') }}" alt="AI server facility"><div class="nmh-caption"><b>NILE AI SERVER CORE</b><span>Built for high-performance computing</span></div></a>
+      <a class="nmh-slide" href="/invest"><img src="{{ url_for('static', filename='img/nile-slide-3.jpg') }}" alt="AI mining machines"><div class="nmh-caption"><b>NILE AI MACHINE GRID</b><span>Explore the active machine series</span></div></a>
+      <a class="nmh-slide" href="/invest"><img src="{{ url_for('static', filename='img/nile-slide-4.jpg') }}" alt="Digital computing facility"><div class="nmh-caption"><b>NILE AI DIGITAL CORE</b><span>Technology powering your dashboard</span></div></a>
+    </div>
+    <button class="nmh-arrow nmh-prev" type="button" aria-label="Previous">‹</button>
+    <button class="nmh-arrow nmh-next" type="button" aria-label="Next">›</button>
+    <div class="nmh-dots" id="nileDots"></div>
+  </section>
+
+  <section class="nmh-grid nmh-grid-2">
+    <a href="/wallet" class="nmh-stat"><strong>{{ "{:,.2f}".format(user.wallet or 0) }}</strong><span>Deposit details</span></a>
+    <a href="/withdraw" class="nmh-stat"><strong>{{ "{:,.2f}".format(user.balance or 0) }}</strong><span>Withdraw details</span></a>
+    <a href="/income" class="nmh-stat"><strong>{{ "{:,.2f}".format(ai_income or 0) }}</strong><span>AI Income</span></a>
+    <a href="/income" class="nmh-stat"><strong>{{ "{:,.2f}".format(today or 0) }}</strong><span>Today's earnings</span></a>
+  </section>
+
+  <section class="nmh-grid nmh-grid-3">
+    <a href="/invite" class="nmh-stat nmh-small"><strong>{{ invite_count or 0 }}</strong><span>Invite Count</span></a>
+    <a href="/my-team" class="nmh-stat nmh-small"><strong>{{ team_count or 0 }}</strong><span>Team Count</span></a>
+    <a href="/income" class="nmh-stat nmh-small"><strong>{{ "{:,.2f}".format(team_income or 0) }}</strong><span>Team income</span></a>
+  </section>
+
+  <section class="nmh-panel">
+    <div class="nmh-section-title"><span>📣</span> News &amp; Announcements</div>
+    {% for a in announcements[:4] %}
+      <div class="nmh-news">
+        <b>📌 {{ a.title }}</b>
+        <p>{{ a.message }}</p>
+      </div>
+    {% else %}
+      <div class="nmh-news"><b>🔥 NILE AI</b><p>Welcome to your AI command center.</p></div>
+    {% endfor %}
+  </section>
+
+  <section class="nmh-panel">
+    <div class="nmh-section-title"><span>⚡</span> Quick Access</div>
+    <div class="nmh-actions">
+      <a href="/invest"><i>AI</i><span>Machines</span></a>
+      <a href="/income"><i>↗</i><span>Income</span></a>
+      <a href="/invite"><i>↗</i><span>Invite</span></a>
+      <a href="/my-team"><i>◎</i><span>My Team</span></a>
+      <a href="/reward"><i>★</i><span>Reward</span></a>
+      <a href="/gift-code"><i>✦</i><span>Gift Code</span></a>
+      <a href="/raffle"><i>◈</i><span>Raffle</span></a>
+      <a href="/support"><i>☏</i><span>Chats</span></a>
+    </div>
+  </section>
+
+  <div class="nmh-space"></div>
+</div>
+
+<script>
+(function(){
+  const track=document.getElementById('nileSlider');
+  const slides=[...document.querySelectorAll('.nmh-slide')];
+  const dots=document.getElementById('nileDots');
+  if(!track || !slides.length) return;
+  let index=0, timer;
+  slides.forEach((_,i)=>{
+    const d=document.createElement('button');
+    d.type='button'; d.className='nmh-dot'+(i===0?' active':'');
+    d.setAttribute('aria-label','Slide '+(i+1));
+    d.onclick=()=>go(i,true);
+    dots.appendChild(d);
+  });
+  const update=()=>[...dots.children].forEach((d,i)=>d.classList.toggle('active',i===index));
+  function go(i,manual){
+    index=(i+slides.length)%slides.length;
+    track.style.transform='translateX(-'+(index*100)+'%)';
+    update();
+    if(manual) restart();
+  }
+  function restart(){ clearInterval(timer); timer=setInterval(()=>go(index+1,false),3500); }
+  document.querySelector('.nmh-next').onclick=()=>go(index+1,true);
+  document.querySelector('.nmh-prev').onclick=()=>go(index-1,true);
+  let startX=0;
+  track.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});
+  track.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-startX;
+    if(Math.abs(dx)>45) go(index+(dx<0?1:-1),true);
+  },{passive:true});
+  restart();
+})();
+</script>
+{% endblock %}
