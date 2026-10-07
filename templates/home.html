@@ -1,1 +1,91 @@
-<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>NILE AI HUB</title><style>body{background:#000103!important;background-image:radial-gradient(rgba(10,204,246,.28) 1px,transparent 1px)!important;background-size:20px 20px!important;background-attachment:fixed!important}*{box-sizing:border-box}html,body{margin:0;padding:0;width:100%;min-height:100%;background:#041018;background-image:radial-gradient(rgba(25,221,255,.32) 1px,transparent 1px);background-size:20px 20px;animation:nileDots 7s linear infinite;color:#fff;font-family:Arial,sans-serif;overflow-x:hidden}.wrap{width:100%;max-width:560px;margin:auto;padding:12px 12px 85px}.logo{font-size:25px;font-weight:900;color:#0ACCF6;margin:7px 4px 14px;text-shadow:0 0 12px #00bfe8}.hero{width:100%;height:210px;border-radius:20px;overflow:hidden;border:1px solid #12647b;box-shadow:0 0 24px #003c50;position:relative;background:#050A12}.track{height:100%;display:flex;transition:transform .65s ease}.slide{min-width:100%;height:100%;position:relative}.slide img{width:100%;height:100%;display:block;object-fit:cover}.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.5),transparent 65%,rgba(0,0,0,.2))}.hero-title{position:absolute;left:18px;bottom:18px;font-size:20px;font-weight:800;text-shadow:0 2px 8px #000}.dots{position:absolute;bottom:9px;right:15px;display:flex;gap:6px}.dot{width:8px;height:8px;border-radius:50%;background:#79909a}.dot.active{width:23px;border-radius:8px;background:#0ACCF6}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.card{background:#fff;color:#071018;border:1px solid #18cfee;border-radius:16px;overflow:hidden;text-align:center;box-shadow:0 0 14px rgba(10,204,246,.35);box-shadow:0 0 12px #003747}.value{font-size:23px;font-weight:800;padding:13px 4px 9px;background:#fff;color:#071018}.label{background:#0ACCF6;color:#fff;padding:9px 3px;font-size:13px}.section{margin-top:18px;border:1px solid #12647b;border-radius:18px;padding:16px;background:#0A0E14}.section h2{margin:0 0 10px;color:#fff;font-size:21px}.news{border:1px solid #113c4b;border-radius:13px;padding:14px;color:#0ACCF6}.nav{position:fixed;z-index:20;bottom:0;left:0;right:0;height:68px;background:#050A12;border-top:1px solid #175466;display:grid;grid-template-columns:repeat(6,1fr);max-width:560px;margin:auto}.nav a{text-align:center;padding:10px 2px 5px;color:#fff;text-decoration:none;font-size:11px}.nav b{display:block;font-size:23px;line-height:25px;color:#fff}.nav a:first-child,.nav a:nth-child(2){color:#0ACCF6}.nav a:first-child b{color:#0ACCF6}@media(max-width:380px){.hero{height:175px}.value{font-size:22px}.label{font-size:12px}.nav b{font-size:20px}}@media(min-width:561px){.nav{left:50%;transform:translateX(-50%);right:auto;width:560px}}@keyframes nileDots{0%{background-position:0 0}50%{background-position:20px 10px}100%{background-position:40px 20px}} </style><link rel="stylesheet" href="{{ url_for("static",filename="css/nile-waves.css") }}"><style>.nav{position:fixed!important;bottom:0!important;left:0!important;right:0!important;z-index:9999!important;height:58px!important}.nav a{font-size:9px!important;padding:4px 1px 2px!important}.nav b{font-size:19px!important;line-height:22px!important}.wrap{padding-bottom:72px!important}h1{font-size:20px!important}h2{font-size:17px!important}p,.news,.notice,.item span{font-size:11px!important}.logo{font-size:20px!important}.value{font-size:18px!important}.label{font-size:10px!important;padding:7px 2px!important}</style></head><body><canvas id="nileWaveCanvas" aria-hidden="true"></canvas><script src="{{ url_for("static",filename="js/nile-waves.js") }}"></script><div class="wrap"><div class="logo">NILE AI HUB</div><div class="hero"><div class="track" id="track"><div class="slide"><img src="{{ url_for("static",filename="banners/banner4.jpg") }}"><div class="shade"></div><div class="hero-title">NILE AI • Future Computing</div></div><div class="slide"><img src="{{ url_for("static",filename="banners/banner2.jpg") }}"><div class="shade"></div><div class="hero-title">Advanced Computing</div></div><div class="slide"><img src="{{ url_for("static",filename="banners/banner3.jpg") }}"><div class="shade"></div><div class="hero-title">AI Infrastructure</div></div></div><div class="dots"><span class="dot active" id="d0"></span><span class="dot" id="d1"></span><span class="dot" id="d2"></span></div></div><div class="grid2"><div class="card"><div class="value">{{ "%.2f"|format(0) }}</div><div class="label">Deposit details</div></div><div class="card"><div class="value">{{ user.points }}</div><div class="label">Withdraw details</div></div><div class="card"><div class="value">0</div><div class="label">AI Income</div></div><div class="card"><div class="value">0</div><div class="label">Today's earnings</div></div></div><div class="grid3"><div class="card"><div class="value">0</div><div class="label">Invite Count</div></div><div class="card"><div class="value">0</div><div class="label">Team Count</div></div><div class="card"><div class="value">0</div><div class="label">Team Count Income</div></div></div><div class="section"><h2>✦ NEWS & ANNOUNCEMENTS</h2><a href="/announcement" class="news" style="display:block;text-decoration:none">WELCOME TO NILE AI<br><small>Tap to read announcement</small></a></div></div><nav class="nav"><a class="live" href="/home"><b>⌂</b>Home</a><a href="/raffle"><b>♧</b>Raffle</a><a class="dead" href="#"><b>◫</b>Chats</a><a class="dead" href="#"><b>◉</b>AI</a><a class="dead" href="#"><b>₿</b>Income</a><a class="live" href="/profile"><b>♙</b>My</a></nav><script>let i=0;const t=document.getElementById("track"),dots=[document.getElementById("d0"),document.getElementById("d1"),document.getElementById("d2")];function move(){i=(i+1)%3;t.style.transform="translateX(-"+i*100+"%)";dots.forEach((d,n)=>d.classList.toggle("active",n===i))}setInterval(move,4000);</script>{% if session.get("welcome_popup") %}<div id="welcomePopup" style="position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:99;display:flex;align-items:center;justify-content:center;padding:20px"><div style="max-width:430px;width:100%;background:#08131d;border:1px solid #0ACCF6;border-radius:16px;padding:25px;box-shadow:0 0 35px #00647a;text-align:center"><h2 style="color:#0ACCF6">WELCOME TO NILE AI</h2><p style="line-height:1.6">NILE AI is a new version of AI platform that provide users with investment opportunity to invest in our machines and attain financial services.</p><a href="/announcement" style="display:block;background:#00B7FF;color:#001015;padding:14px;border-radius:12px;font-weight:bold;text-decoration:none">VIEW ANNOUNCEMENT</a><a href="/home" style="display:block;margin-top:12px;color:#9bb5bd;text-decoration:none;padding:10px">CLOSE</a></div></div>{% set _=session.pop("welcome_popup",None) %}{% endif %}</body></html>
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.home{padding:0 0 12px;font-family:Georgia,'Times New Roman',serif}
+.home-head{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 18px}
+.home-brand{display:flex;align-items:center;gap:10px;font-size:30px;font-weight:bold;letter-spacing:.4px}
+.brand-mark{width:52px;height:52px;border:1px solid #1683ff;border-radius:15px;background:#061522;display:flex;align-items:center;justify-content:center;color:#00c8ff;font-size:24px;font-weight:bold;box-shadow:0 0 14px rgba(0,190,255,.18)}
+.brand-copy small{display:block;color:#00baff;font-size:12px;letter-spacing:2px;margin-top:2px}
+.message-link{text-decoration:none;color:#fff;text-align:center;min-width:58px}
+.message-icon{font-size:39px;line-height:38px}.message-label{font-size:14px;margin-top:5px}
+.hero2{position:relative;overflow:hidden;border:1px solid #008dcc;border-radius:22px;background:#000;box-shadow:0 0 18px rgba(0,190,255,.14);height:255px;margin-bottom:22px}
+.hero2-slide{position:absolute;inset:0;opacity:0;transition:opacity .3s ease;pointer-events:none}.hero2-slide.active{opacity:1;pointer-events:auto}
+.hero2-slide img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.52);transform-origin:center center}.hero2-slide.active:first-child img{animation:axeAutoMove 4.8s ease-in-out infinite}.hero2-slide.active:nth-child(2) img{animation:robotAutoMove 6.5s ease-in-out infinite alternate}.hero2-slide.active:nth-child(3) img{animation:heroPan 8s ease-in-out infinite alternate-reverse}@keyframes axeAutoMove{0%{transform:scale(1.02) translate3d(0,0,0) rotate(-1deg)}25%{transform:scale(1.06) translate3d(-2px,-3px,0) rotate(1deg)}50%{transform:scale(1.10) translate3d(3px,0,0) rotate(-1deg)}75%{transform:scale(1.06) translate3d(-2px,3px,0) rotate(1deg)}100%{transform:scale(1.02) translate3d(0,0,0) rotate(-1deg)}}@keyframes robotAutoMove{from{transform:scale(1.02) translate3d(-1%,0,0)}to{transform:scale(1.10) translate3d(1%,-1%,0)}}@keyframes heroPan{from{transform:scale(1.03) translateX(-1%)}to{transform:scale(1.10) translateX(1%)}}
+.hero2-overlay{position:absolute;left:18px;right:18px;bottom:20px}.hero2-title{font-size:21px;color:#09c8ff;font-weight:bold;margin-bottom:7px}.hero2-text{font-size:14px;line-height:1.45;color:#fff}
+.hero2-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border:1px solid #00baff;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;font-size:29px;line-height:34px;z-index:3;cursor:pointer}.hero2-arrow.left{left:10px}.hero2-arrow.right{right:10px}
+.hero2-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}.hero2-dot{width:8px;height:8px;border-radius:50%;background:#777}.hero2-dot.active{width:25px;border-radius:7px;background:#08bde8}
+.home-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.stat-card{display:block;text-decoration:none;color:#111;background:#fff;border-radius:13px;overflow:hidden;box-shadow:0 0 10px rgba(0,190,255,.10);min-height:82px}.stat-value{display:flex;align-items:center;justify-content:center;min-height:50px;padding:6px 4px;font-size:18px;font-weight:bold;word-break:break-word}.stat-label{background:#08bde8;color:#fff;text-align:center;padding:7px 4px;font-size:12px;min-height:32px}
+.home-stats.three{grid-template-columns:repeat(3,1fr);gap:8px}.home-stats.three .stat-card{min-height:78px}.home-stats.three .stat-value{min-height:46px;font-size:17px}.home-stats.three .stat-label{font-size:10px;padding:7px 2px;min-height:30px}
+.news{border:1px solid #008dcc;border-radius:17px;background:rgba(0,0,0,.58);padding:15px;margin-top:2px}.news-head{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:bold;margin-bottom:14px}.news-head .more{margin-left:auto;color:#08bde8;text-decoration:none;font-size:15px}.news-head span{color:#08bde8;font-size:29px}.news-item{border:1px solid #123c50;border-radius:12px;padding:10px;margin-top:10px;background:rgba(0,0,0,.42)}.news-item strong{color:#9befff;display:block;margin-bottom:6px}.news-item p{margin:0;color:#ddd;line-height:1.35;font-size:12px}
+@media(max-width:480px){.home-brand{font-size:25px}.brand-mark{width:47px;height:47px}.hero2{height:250px}.hero2-title{font-size:19px}.hero2-text{font-size:13px}.stat-value{font-size:17px}.stat-label{font-size:11px}.home-stats.three .stat-value{font-size:16px}.home-stats.three .stat-label{font-size:9px}}
+</style>
+
+<div class="home">
+  <div class="home-head">
+    <div class="home-brand"><div class="brand-mark">CX</div><div class="brand-copy">NILE AI<small>AI PLATFORM</small></div></div>
+    <a class="message-link" href="{{ url_for('support') }}" aria-label="Open customer support"><div class="message-icon">♧</div><div class="message-label">Message</div></a>
+  </div>
+
+  <div class="hero2" id="homeHero">
+    <div class="hero2-slide active"><img src="/static/NILE_a6_axe.jpg" alt="NILE-A6 AI mining machine"><div class="hero2-overlay"><div class="hero2-title">NILE-A6 AI MINING</div><div class="hero2-text">Watch the NILE-A6 machine move automatically while you manage your AI platform.</div></div></div>
+    <div class="hero2-slide"><img src="/static/NILE_a6_robot.png" alt="NILE AI giant robot"><div class="hero2-overlay"><div class="hero2-title">NILE AI ROBOT</div><div class="hero2-text">Meet the NILE AI giant machine built for the next generation of the platform.</div></div></div>
+    <div class="hero2-slide"><img src="/static/server.jpg" alt="AI machines"><div class="hero2-overlay"><div class="hero2-title">Your AI Machines</div><div class="hero2-text">Open AI to view products, active machines and your mining activity.</div></div></div>
+    <div class="hero2-slide"><img src="/static/server.jpg" alt="NILE AI dashboard"><div class="hero2-overlay"><div class="hero2-title">Stay Connected</div><div class="hero2-text">Use Message for support and the navigation bar to reach every section.</div></div></div>
+    <button class="hero2-arrow left" type="button" aria-label="Previous" onclick="heroMove(-1)">‹</button><button class="hero2-arrow right" type="button" aria-label="Next" onclick="heroMove(1)">›</button>
+    <div class="hero2-dots"><span class="hero2-dot active"></span><span class="hero2-dot"></span><span class="hero2-dot"></span><span class="hero2-dot"></span></div>
+  </div>
+
+  <div class="home-stats">
+    <a class="stat-card" href="{{ url_for('deposit') }}">
+      <div class="stat-value">
+        {% if latest_deposit %}
+          UGX {{ '{:,.0f}'.format(latest_deposit.amount) }}
+        {% else %}
+          UGX 0
+        {% endif %}
+      </div>
+      <div class="stat-label">Deposit details</div>
+      {% if latest_deposit %}<small>{{ latest_deposit.status }}</small>{% endif %}
+    </a>
+
+    <a class="stat-card" href="{{ url_for('withdraw') }}">
+      <div class="stat-value">
+        {% if pending_withdrawal %}
+          UGX {{ '{:,.0f}'.format(pending_withdrawal.amount) }}
+        {% else %}
+          UGX 0
+        {% endif %}
+      </div>
+      <div class="stat-label">Withdraw details</div>
+      {% if pending_withdrawal %}<small>{{ pending_withdrawal.status }}</small>{% endif %}
+    </a>
+    <a class="stat-card" href="{{ url_for('income') }}"><div class="stat-value">UGX {{ '{:,.0f}'.format(ai_income) }}</div><div class="stat-label">AI Income</div></a>
+    <a class="stat-card" href="{{ url_for('income') }}"><div class="stat-value">UGX {{ '{:,.0f}'.format(today) }}</div><div class="stat-label">Today's earnings</div></a>
+  </div>
+
+  <div class="home-stats three">
+    <a class="stat-card" href="{{ url_for('invite') }}"><div class="stat-value">{{ invite_count }}</div><div class="stat-label">Invite Count</div></a>
+    <a class="stat-card" href="{{ url_for('my_team') }}"><div class="stat-value">{{ team_count }}</div><div class="stat-label">Team Count</div></a>
+    <a class="stat-card" href="{{ url_for('income') }}"><div class="stat-value">UGX {{ '{:,.0f}'.format(team_income) }}</div><div class="stat-label">Team income</div></a>
+  </div>
+
+  <div class="news">
+    <div class="news-head"><span>♧</span> Message <a class="more" href="{{ url_for('support') }}">More</a></div>
+    {% if announcement %}
+    <div class="news-item">
+      <strong>{{ announcement.title }}</strong>
+      <p>{{ announcement.message }}</p>
+    </div>
+    {% endif %}
+    <div class="news-item"><strong>Deposit</strong><p>Open Deposit details to submit and track your deposit request.</p></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const slides=document.querySelectorAll('.hero2-slide'),dots=document.querySelectorAll('.hero2-dot');let i=0;
+  window.heroMove=function(step){slides[i].classList.remove('active');dots[i].classList.remove('active');i=(i+step+slides.length)%slides.length;slides[i].classList.add('active');dots[i].classList.add('active')};
+  setInterval(function(){heroMove(1)},6000);
+})();
+</script>
+{% endblock %}

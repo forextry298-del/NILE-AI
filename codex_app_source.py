@@ -5,7 +5,7 @@ from functools import wraps
 from flask import Flask, request, redirect, session, render_template, flash, url_for, send_from_directory
 
 BASE=os.path.dirname(os.path.abspath(__file__))
-DB=os.path.join(BASE,"nile_ai.db")
+DB=os.path.join(BASE,"codex700.db")
 app=Flask(__name__)
 app.secret_key=os.environ.get("SECRET_KEY","change-this-before-production")
 
@@ -29,7 +29,7 @@ REWARDS=[(120,750000),(100,500000),(60,275000),(30,150000),(15,98000),(6,45000)]
 
 
 
-# NILE_AI_A1_A2_A6
+# CODEX_A1_A2_A6
 PLANS.update({
     "A1": {
         "series": "AI series",
@@ -113,7 +113,7 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         phone TEXT UNIQUE NOT NULL,
-        role TEXT NOT NULL DEFAULT 'NILE AI Manager',
+        role TEXT NOT NULL DEFAULT 'CODEX Manager',
         avatar TEXT NOT NULL DEFAULT '👤',
         enabled INTEGER NOT NULL DEFAULT 1
     );
@@ -127,12 +127,12 @@ def init_db():
     );
 
     INSERT OR IGNORE INTO managers(id,name,phone,role,avatar,enabled) VALUES
-    (1,'Lucy','+256 740 062648','NILE AI Manager','👩',1),
-    (2,'Elrie','+256 789 590432','NILE AI Manager','👩',1),
-    (3,'Phubie','+256 749 942060','NILE AI Manager','👩',1),
-    (4,'Happy','+256 708 579380','NILE AI Manager','👩',1),
-    (5,'Imran','+256 724 018143','NILE AI Manager','👨',1),
-    (6,'Anna','+256 700 880252','NILE AI Manager','👩',1);
+    (1,'Lucy','+256 740 062648','CODEX Manager','👩',1),
+    (2,'Elrie','+256 789 590432','CODEX Manager','👩',1),
+    (3,'Phubie','+256 749 942060','CODEX Manager','👩',1),
+    (4,'Happy','+256 708 579380','CODEX Manager','👩',1),
+    (5,'Imran','+256 724 018143','CODEX Manager','👨',1),
+    (6,'Anna','+256 700 880252','CODEX Manager','👩',1);
     """)
     pcols={r[1] for r in con.execute("PRAGMA table_info(products)").fetchall()}
     for col,typ in [("last_income_at","TEXT"),("earned_income","REAL NOT NULL DEFAULT 0"),("earned_days","INTEGER NOT NULL DEFAULT 0")]:
@@ -166,7 +166,7 @@ def required(fn):
         if not u:return redirect(url_for("login"))
         if "is_blocked" in u.keys() and u["is_blocked"]:
             session.clear()
-            return "Your account has been blocked. Please contact NILE AI support.",403
+            return "Your account has been blocked. Please contact CODEX support.",403
         return fn(*a,**k)
     return w
 
@@ -594,7 +594,7 @@ def award_referral_points(referred_uid):
 
 @app.route("/ping")
 def ping():
-    return "OK NILE AI Alive - 200", 200
+    return "OK Codex Alive - 200", 200
 
 @app.route("/")
 def index(): return redirect(url_for("home") if current_user() else url_for("login"))
@@ -1090,12 +1090,12 @@ def bills(): return render_template("simple.html",title="Bills",content="<h2>Bil
 @required
 def vip_tasks(): return render_template("simple.html",title="VIP Task",content="<h2>VIP Tasks</h2><p>No tasks are currently assigned.</p>",active="My")
 MANAGERS = [
-    {"id":"lucy","name":"Lucy","phone":"+256740062648","role":"NILE AI Manager","avatar":"👩🏻"},
-    {"id":"elrie","name":"Elrie","phone":"+256789590432","role":"NILE AI Manager","avatar":"👩🏽"},
-    {"id":"phubie","name":"Phubie","phone":"+256749942060","role":"NILE AI Manager","avatar":"👩🏾"},
-    {"id":"happy","name":"Happy","phone":"+256708579380","role":"NILE AI Manager","avatar":"👩🏼"},
-    {"id":"imran","name":"Imran","phone":"+256724018143","role":"NILE AI Manager","avatar":"👩🏿"},
-    {"id":"anna","name":"Anna","phone":"+256700880252","role":"NILE AI Manager","avatar":"👩🏻"},
+    {"id":"lucy","name":"Lucy","phone":"+256740062648","role":"CODEX Manager","avatar":"👩🏻"},
+    {"id":"elrie","name":"Elrie","phone":"+256789590432","role":"CODEX Manager","avatar":"👩🏽"},
+    {"id":"phubie","name":"Phubie","phone":"+256749942060","role":"CODEX Manager","avatar":"👩🏾"},
+    {"id":"happy","name":"Happy","phone":"+256708579380","role":"CODEX Manager","avatar":"👩🏼"},
+    {"id":"imran","name":"Imran","phone":"+256724018143","role":"CODEX Manager","avatar":"👩🏿"},
+    {"id":"anna","name":"Anna","phone":"+256700880252","role":"CODEX Manager","avatar":"👩🏻"},
 ]
 
 @app.route("/manager", methods=["GET","POST"])
@@ -1613,7 +1613,7 @@ def admin_manager_edit():
     mid=request.form.get("id","").strip()
     name=request.form.get("name","").strip()
     phone=request.form.get("phone","").strip()
-    role=request.form.get("role","NILE AI Manager").strip()
+    role=request.form.get("role","CODEX Manager").strip()
     avatar=request.form.get("avatar","👤").strip() or "👤"
     if not mid or not name or not phone:
         flash("Manager name and phone are required.","error")
