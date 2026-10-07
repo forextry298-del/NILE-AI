@@ -4,7 +4,7 @@
 .nmh-brand{font-weight:900;letter-spacing:2px;font-size:22px;color:#08cfff;text-shadow:0 0 12px rgba(8,207,255,.5)}
 .nmh-sub{font-size:9px;letter-spacing:2.5px;color:#91a9b6;margin-top:2px}
 .nmh-msg{width:36px;height:36px;border:1px solid #08cfff;border-radius:12px;display:grid;place-items:center;color:#fff;text-decoration:none;background:rgba(0,10,16,.82);box-shadow:0 0 12px rgba(8,207,255,.2)}
-.nmh-slider{position:relative;overflow:hidden;border:1px solid rgba(8,207,255,.8);border-radius:18px;background:#02080c;box-shadow:0 0 18px rgba(8,207,255,.18);aspect-ratio:16/7;margin-bottom:12px}
+.nmh-slider{position:relative;overflow:hidden;border:1px solid rgba(8,207,255,.8);border-radius:15px;background:#02080c;box-shadow:0 0 14px rgba(8,207,255,.18);aspect-ratio:16/6;margin-bottom:9px}
 .nmh-track{display:flex;width:100%;height:100%;transition:transform .55s ease}
 .nmh-slide{position:relative;flex:0 0 100%;height:100%;overflow:hidden;text-decoration:none;color:#fff}
 .nmh-slide img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.68) saturate(.9)}
@@ -40,3 +40,4 @@
 @media(min-width:700px){.nmh-slider{aspect-ratio:16/6.5}.nmh-stat{min-height:92px}.nmh-stat strong{font-size:22px}.nmh-stat span{font-size:14px}}
 /* Keep the existing global navigation fixed and above page content */
 .bottom-nav{position:fixed!important;left:50%!important;bottom:0!important;transform:translateX(-50%)!important;width:min(100%,760px)!important;z-index:9999!important}
+.nile-mobile-home{max-width:720px;margin:auto;padding:0 8px 78px;box-sizing:border-box}.nmh-panel{padding:10px;margin-top:9px}.nmh-grid{gap:7px;margin-bottom:7px}
