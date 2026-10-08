@@ -1,1 +1,391 @@
-{% extends "base.html" %}{% block content %}<div class="nile-wrap"><header class="nile-header"><div><div class="nile-brand">NILE AI</div><div class="nile-sub">ACTIVITY CENTER</div></div><div class="nile-avatar">↗</div></header><section class="panel"><small>NILE AI ACTIVITY</small><h2>Activity Center</h2><p>Track your income, transactions and active AI engines.</p></section>{% if tx %}{% for t in tx[:12] %}<section class="panel"><h2>{{ t.kind }}</h2><p>UGX {{ "{:,.2f}".format(t.amount or 0) }} · {{ t.created_at }}</p></section>{% endfor %}{% else %}<section class="panel"><p>No activity recorded yet.</p></section>{% endif %}{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+
+<div class="invite-screen">
+
+  <header class="invite-header">
+    <a href="/my" class="back-btn">←</a>
+    <h1>Invite Friends</h1>
+  </header>
+
+  <div class="invite-card">
+
+    <h2>Invitation link</h2>
+
+    <div class="invite-link" id="inviteLink">
+      {{ request.url_root.rstrip('/') }}/register?ref={{ user.invite_code }}
+    </div>
+
+    <div class="invite-buttons">
+      <button onclick="copyInvite()">▣ &nbsp; Copy link</button>
+      <button class="share-btn" onclick="shareInvite()">♧ &nbsp; Share</button>
+    </div>
+
+  </div>
+
+  <div class="invite-card qr-card">
+
+    <h2>Scan to register</h2>
+
+    <div class="qr-box">
+      <img
+        id="inviteQR"
+        src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ (request.url_root.rstrip('/') ~ '/register?ref=' ~ user.invite_code)|urlencode }}"
+        alt="Registration QR Code">
+    </div>
+
+    <p>
+      Friends scan this code with their phone camera to open your
+      registration link.
+    </p>
+
+    <div class="invite-buttons">
+      <button onclick="saveQR()">⇩ &nbsp; Save QR</button>
+      <button onclick="shareInvite()">♧ &nbsp; Share link</button>
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+.invite-screen{
+  min-height:100vh;
+  box-sizing:border-box;
+  padding:12px 10px 90px;
+  background:
+    radial-gradient(circle at 20% 20%,#06303b33 1px,transparent 2px),
+    radial-gradient(circle at 70% 40%,#06303b33 1px,transparent 2px),
+    #020609;
+  background-size:42px 42px;
+  color:#fff;
+  font-family:Georgia,serif;
+}
+
+.invite-header{
+  height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  border-bottom:1px solid #00dfff;
+}
+
+.invite-header h1{
+  margin:0;
+  color:#18dfff;
+  font-size:28px;
+  text-shadow:0 0 8px #00dfff66;
+}
+
+.back-btn{
+  position:absolute;
+  left:8px;
+  top:10px;
+  width:64px;
+  height:64px;
+  border:2px solid #00dfff;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#00dfff;
+  text-decoration:none;
+  font-family:Arial,sans-serif;
+  font-size:43px;
+  box-shadow:0 0 12px #00dfff55;
+}
+.invite-card{
+  max-width:625px;
+  margin:30px auto;
+  padding:30px;
+  box-sizing:border-box;
+  border:2px solid #00dfff;
+  border-radius:22px;
+  background:#020609cc;
+  box-shadow:0 0 15px #00dfff44;
+}
+
+.invite-card h2{
+  margin:0 0 20px;
+  color:#dce4e8;
+  font-size:25px;
+  font-weight:normal;
+}
+
+.invite-link{
+  min-height:70px;
+  padding:14px;
+  box-sizing:border-box;
+  border-radius:10px;
+  background:#071018;
+  color:#f2f5f7;
+  font-family:monospace;
+  font-size:20px;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+  display:flex;
+  align-items:center;
+}
+
+.invite-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-top:16px;
+}
+
+.invite-buttons button{
+  min-height:68px;
+  border:2px solid #00dfff;
+  border-radius:20px;
+  background:transparent;
+  color:#fff;
+  font-family:Georgia,serif;
+  font-size:22px;
+  box-shadow:0 0 8px #00dfff33;
+}
+
+.invite-buttons .share-btn{
+  background:#12bfe8;
+  border-color:#12bfe8;
+  box-shadow:0 0 15px #00dfff66;
+}
+
+.qr-card{
+  text-align:center;
+}
+
+.qr-card h2{
+  text-align:center;
+}
+
+.qr-box{
+  width:365px;
+  max-width:90%;
+  margin:25px auto;
+  padding:18px;
+  box-sizing:border-box;
+  background:#fff;
+  border-radius:30px;
+}
+
+.qr-box img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.qr-card p{
+  max-width:540px;
+  margin:20px auto 5px;
+  color:#cfd4d8;
+  font-size:18px;
+  line-height:1.5;
+}
+
+@media(max-width:500px){
+  .invite-screen{
+    padding-left:7px;
+    padding-right:7px;
+  }
+
+  .invite-header h1{
+    font-size:24px;
+  }
+
+  .back-btn{
+    width:60px;
+    height:60px;
+    font-size:38px;
+  }
+
+  .invite-card{
+    margin:25px auto;
+    padding:30px 16px;
+    border-radius:20px;
+  }
+
+  .invite-card h2{
+    font-size:22px;
+  }
+
+  .invite-link{
+    font-size:17px;
+  }
+
+  .invite-buttons{
+    gap:10px;
+  }
+
+  .invite-buttons button{
+    min-height:58px;
+    font-size:18px;
+    border-radius:17px;
+  }
+
+  .qr-box{
+    max-width:92%;
+    padding:15px;
+  }
+
+  .qr-card p{
+    font-size:16px;
+  }
+}
+</style>
+
+<script>
+function getInviteLink(){
+  return document.getElementById("inviteLink").innerText.trim();
+}
+
+function copyInvite(){
+  const link = getInviteLink();
+
+  navigator.clipboard.writeText(link).then(function(){
+    alert("Invitation link copied!");
+  }).catch(function(){
+    alert("Copy failed. Please copy the link manually.");
+  });
+}
+
+function shareInvite(){
+  const link = getInviteLink();
+
+  if(navigator.share){
+    navigator.share({
+      title:"Invite Friends",
+      text:"Join NILE AI using my invitation link:",
+      url:link
+    });
+  }else{
+    copyInvite();
+  }
+}
+
+function saveQR(){
+  const img = document.getElementById("inviteQR");
+
+  const a = document.createElement("a");
+  a.href = img.src;
+  a.download = "NILE-AI-Invite-QR.png";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+</script>
+
+{% endblock %}
+<style>
+.invite-screen{
+  padding:7px 6px 75px;
+}
+
+.invite-header{
+  height:58px;
+}
+
+.invite-header h1{
+  font-size:20px;
+}
+
+.back-btn{
+  width:46px;
+  height:46px;
+  top:5px;
+  left:4px;
+  border-radius:13px;
+  font-size:30px;
+  border-width:1px;
+}
+
+.invite-card{
+  max-width:360px;
+  margin:14px auto;
+  padding:15px 12px;
+  border-width:1px;
+  border-radius:14px;
+}
+
+.invite-card h2{
+  margin-bottom:11px;
+  font-size:17px;
+}
+
+.invite-link{
+  min-height:50px;
+  padding:9px;
+  font-size:13px;
+  border-radius:7px;
+}
+
+.invite-buttons{
+  gap:7px;
+  margin-top:9px;
+}
+
+.invite-buttons button{
+  min-height:44px;
+  border-width:1px;
+  border-radius:11px;
+  font-size:14px;
+}
+
+.qr-box{
+  width:220px;
+  max-width:75%;
+  margin:14px auto;
+  padding:10px;
+  border-radius:18px;
+}
+
+.qr-card p{
+  margin:12px auto 2px;
+  font-size:13px;
+  line-height:1.35;
+}
+
+@media(max-width:390px){
+  .invite-header{
+    height:54px;
+  }
+
+  .invite-header h1{
+    font-size:19px;
+  }
+
+  .back-btn{
+    width:43px;
+    height:43px;
+    font-size:28px;
+  }
+
+  .invite-card{
+    max-width:350px;
+    margin:12px auto;
+    padding:13px 10px;
+  }
+
+  .invite-card h2{
+    font-size:16px;
+  }
+
+  .invite-link{
+    font-size:12px;
+  }
+
+  .invite-buttons button{
+    min-height:41px;
+    font-size:13px;
+  }
+
+  .qr-box{
+    width:205px;
+  }
+
+  .qr-card p{
+    font-size:12px;
+  }
+}
+</style>

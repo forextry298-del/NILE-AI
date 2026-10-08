@@ -1,1 +1,271 @@
-{% extends "base.html" %}{% block content %}<div class="nile-wrap my-page"><header class="nile-header"><div><div class="nile-brand">NILE<span>AI</span></div><div class="nile-sub">MY ACCOUNT</div></div><div class="nile-avatar">MY</div></header><div class="my-agent">0758878297 <span>★ VIP 0</span></div><section class="panel my-balance"><div><div class="my-label">Wallet</div><strong>UGX {{ "{:,.2f}".format(user.wallet or 0) }}</strong></div><div><div class="my-label">Balance</div><strong>UGX {{ "{:,.2f}".format(user.balance or 0) }}</strong></div></section><section class="panel my-menu"><div class="my-grid"><a href="/deposit"><i>▣</i><span>Deposit</span></a><a href="/withdraw"><i>♢</i><span>Withdraw</span></a><a href="/card"><i>▤</i><span>Card</span></a><a href="/wallet"><i>$</i><span>Bill</span></a><a href="/invite"><i>♙</i><span>Invite</span></a><a href="/my-team"><i>♧</i><span>My Team</span></a><a href="/invest"><i>☆</i><span>VIP Task</span></a><a href="/reward"><i>♔</i><span>Reward</span></a><a href="/gift"><i>🎟</i><span>Gift Code</span></a><a href="/raffle"><i>◇</i><span>Raffle</span></a><a href="whatsapp://send?phone=255669953346" target="_blank" rel="noopener"><i>♧</i><span>Manager</span></a><a href="/settings"><i>⚙</i><span>Settings</span></a></div></section><section class="panel my-share"><h2>NILE SHARES</h2><div class="share-line"></div><strong>UGX {{ "{:,.2f}".format(ai_income or 0) }}</strong></section><section class="panel my-salary"><div><span>Last Month's Salary</span><strong>UGX 0.00</strong></div><div><span>This Month's Salary</span><strong>UGX {{ "{:,.2f}".format(today or 0) }}</strong></div><a href="/reward" class="my-wide-btn">Get Last Month's Salary</a></section><section class="panel my-invites"><div><span>Invited Last Month</span><strong>{{ invite_count or 0 }}</strong></div><div><span>Invited This Month</span><strong>{{ invite_count or 0 }}</strong></div><p>Only your direct invites (level 1) who made a deposit are counted.</p><a href="/reward" class="my-wide-btn">Get Last Month's Reward</a></section><section class="panel my-rewards"><div class="reward-head"><span>Invite</span><span>Reward</span></div><div class="reward-row"><span>6</span><span>Z-1</span></div><div class="reward-row"><span>15</span><span>Z-2</span></div><div class="reward-row"><span>30</span><span>Z-3</span></div><div class="reward-row"><span>60</span><span>Z-4</span></div></section><a class="my-signout" href="/logout">⇥ Sign Out</a><div class="my-referral">Your referral code: <b>{{ user.invite_code }}</b></div></div>{% endblock %}
+{% extends "base.html" %}{% block content %}<div class="nile-wrap my-page"><header class="nile-header"><div><div class="nile-brand">NILE<span>AI</span></div><div class="nile-sub">MY ACCOUNT</div></div><div class="nile-avatar">MY</div></header><div class="my-agent">0758878297 <span>★ VIP 0</span></div><section class="panel my-balance"><div><div class="my-label">Wallet</div><strong>UGX {{ "{:,.2f}".format(user.wallet or 0) }}</strong></div><div><div class="my-label">Balance</div><strong>UGX {{ "{:,.2f}".format(user.balance or 0) }}</strong></div></section><section class="panel my-menu"><div class="my-grid"><a href="/deposit"><i>▣</i><span>Deposit</span></a><a href="/withdraw"><i>♢</i><span>Withdraw</span></a><a href="/card"><i>▤</i><span>Card</span></a><a href="/wallet"><i>$</i><span>Bill</span></a><a href="/invite"><i>♙</i><span>Invite</span></a><a href="/my-team"><i>♧</i><span>My Team</span></a><a href="/invest"><i>☆</i><span>VIP Task</span></a><a href="/reward"><i>♔</i><span>Reward</span></a><a href="/gift-code"><i>🎟</i><span>Gift Code</span></a><a href="/raffle"><i>◇</i><span>Raffle</span></a><a href="whatsapp://send?phone=255669953346" target="_blank" rel="noopener"><i>♧</i><span>Manager</span></a><a href="/settings"><i>⚙</i><span>Settings</span></a></div></section><section class="panel my-share"><h2>NILE SHARES</h2><div class="share-line"></div><strong>UGX {{ "{:,.2f}".format(ai_income or 0) }}</strong></section><section class="panel my-salary"><div><span>Last Month's Salary</span><strong>UGX 0.00</strong></div><div><span>This Month's Salary</span><strong>UGX {{ "{:,.2f}".format(today or 0) }}</strong></div><a href="/reward" class="my-wide-btn">Get Last Month's Salary</a></section><section class="panel my-invites"><div><span>Invited Last Month</span><strong>{{ invite_count or 0 }}</strong></div><div><span>Invited This Month</span><strong>{{ invite_count or 0 }}</strong></div><p>Only your direct invites (level 1) who made a deposit are counted.</p><a href="/reward" class="my-wide-btn">Get Last Month's Reward</a></section><section class="panel my-rewards"><div class="reward-head"><span>Invite</span><span>Reward</span></div><div class="reward-row"><span>6</span><span>Z-1</span></div><div class="reward-row"><span>15</span><span>Z-2</span></div><div class="reward-row"><span>30</span><span>Z-3</span></div><div class="reward-row"><span>60</span><span>Z-4</span></div></section><a class="my-signout" href="/logout">⇥ Sign Out</a><div class="my-referral">Your referral code: <b>{{ user.invite_code }}</b></div></div><style>
+/* COMPACT MOBILE MY PAGE */
+.my-page{
+  padding:12px 12px 82px!important;
+  min-height:calc(100vh - 60px)!important;
+}
+.profile{
+  min-height:135px!important;
+  margin-bottom:8px!important;
+}
+.welcome{
+  font-size:21px!important;
+  margin:0 0 16px!important;
+  line-height:1.1!important;
+}
+.phone{
+  font-size:18px!important;
+}
+.profile-right{
+  width:82px!important;
+  top:8px!important;
+}
+.avatar{
+  width:55px!important;
+  height:55px!important;
+  border-width:2px!important;
+}
+.avatar:after{
+  width:21px!important;
+  height:21px!important;
+}
+.vip{
+  min-width:78px!important;
+  height:28px!important;
+  padding:0 8px!important;
+  font-size:12px!important;
+}
+.wallet-card{
+  height:175px!important;
+  min-height:175px!important;
+  border-radius:17px!important;
+  margin-bottom:14px!important;
+}
+.wallet-label{
+  font-size:18px!important;
+  margin-bottom:8px!important;
+}
+.wallet-number{
+  font-size:28px!important;
+}
+.wallet-arrow{
+  bottom:22px!important;
+  font-size:34px!important;
+}
+.menu-card{
+  padding:16px 8px 20px!important;
+  border-radius:17px!important;
+  margin-bottom:16px!important;
+}
+.menu-grid{
+  column-gap:3px!important;
+  row-gap:16px!important;
+}
+.menu-icon{
+  width:54px!important;
+  height:54px!important;
+  border-radius:13px!important;
+  font-size:27px!important;
+  margin-bottom:5px!important;
+}
+.menu-name{
+  font-size:12px!important;
+  line-height:1.05!important;
+}
+.menu-name.small{
+  max-width:65px!important;
+}
+.lower-card{
+  padding:14px!important;
+  margin-bottom:55px!important;
+  border-radius:17px!important;
+}
+.lower-card .big{
+  font-size:22px!important;
+}
+.lower-card .muted{
+  font-size:13px!important;
+}
+.button,.out{
+  padding:10px!important;
+  border-radius:11px!important;
+}
+.ref{
+  font-size:12px!important;
+}
+@media(max-width:380px){
+  .my-page{padding-left:8px!important;padding-right:8px!important}
+  .welcome{font-size:19px!important}
+  .phone{font-size:16px!important}
+  .profile-right{width:74px!important}
+  .avatar{width:50px!important;height:50px!important}
+  .vip{min-width:70px!important;height:25px!important;font-size:11px!important}
+  .wallet-card{height:160px!important;min-height:160px!important}
+  .wallet-label{font-size:16px!important}
+  .wallet-number{font-size:25px!important}
+  .menu-card{padding-left:5px!important;padding-right:5px!important}
+  .menu-icon{width:50px!important;height:50px!important;font-size:24px!important}
+  .menu-name{font-size:11px!important}
+}
+</style>
+{% endblock %}<style>
+.my-screen{
+  min-height:100vh;
+  background:#02070b;
+  color:#fff;
+  padding:12px 10px 85px;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
+.my-currency{
+  width:100%;
+  max-width:360px;
+  margin:0 auto 12px;
+  text-align:center;
+}
+.my-currency-text{
+  font-size:11px;
+  color:#b9c8d0;
+  margin-bottom:5px;
+}
+.my-switch{
+  width:165px;
+  margin:auto;
+  display:flex;
+  border:1px solid #00eaff;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 0 8px #00eaff55;
+}
+.my-switch span{
+  flex:1;
+  padding:6px 0;
+  font-size:11px;
+}
+.my-switch .active{
+  background:#00dff0;
+  color:#001015;
+  font-weight:bold;
+}
+.my-profile{
+  max-width:360px;
+  margin:auto;
+  position:relative;
+  padding:4px 5px 12px;
+}
+.my-welcome{
+  color:#00eaff;
+  font-size:22px;
+  font-weight:bold;
+  margin:5px 0;
+}
+.my-phone{
+  font-size:19px;
+  margin-top:3px;
+}
+.my-avatar{
+  position:absolute;
+  right:5px;
+  top:0;
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  border:2px solid #00eaff;
+  box-shadow:0 0 14px #00eaff88;
+  background:radial-gradient(circle,#183f50,#071017 60%,#00dff0);
+}
+.my-vip{
+  display:inline-block;
+  margin-top:6px;
+  padding:3px 10px;
+  border-radius:12px;
+  background:#00dff0;
+  color:#001015;
+  font-size:11px;
+  font-weight:bold;
+}
+.my-card{
+  max-width:360px;
+  margin:8px auto;
+  border:1px solid #00dff0;
+  border-radius:10px;
+  background:#061117;
+  box-shadow:0 0 10px #00dff033;
+  box-sizing:border-box;
+}
+.my-balance{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  padding:13px 12px;
+  position:relative;
+}
+.my-balance>div{
+  text-align:center;
+}
+.my-label{
+  color:#91a5ad;
+  font-size:11px;
+  margin-bottom:5px;
+}
+.my-balance strong{
+  color:#fff;
+  font-size:17px;
+}
+.my-arrow{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#00eaff;
+  font-size:20px;
+}
+.my-services{
+  padding:12px 8px;
+}
+.my-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px 7px;
+}
+.my-service{
+  text-decoration:none;
+  color:#fff;
+  text-align:center;
+  font-size:10px;
+}
+.my-icon{
+  width:52px;
+  height:52px;
+  margin:0 auto 5px;
+  border:1px solid #00eaff;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#00eaff;
+  background:#041015;
+  box-shadow:0 0 8px #00eaff33;
+}
+.my-icon svg{
+  width:27px;
+  height:27px;
+  stroke:#00eaff;
+  fill:none;
+  stroke-width:1.7;
+}
+.my-name{
+  line-height:13px;
+}
+@media(max-width:390px){
+  .my-screen{padding-left:7px;padding-right:7px}
+  .my-welcome{font-size:20px}
+  .my-phone{font-size:17px}
+  .my-icon{width:48px;height:48px}
+  .my-grid{gap:8px 5px}
+}
+@media(max-width:350px){
+  .my-icon{width:44px;height:44px}
+  .my-welcome{font-size:19px}
+  .my-phone{font-size:16px}
+}
+</style>

@@ -335,7 +335,7 @@ def settle_team_income(uid):
 
 
 def referral_deposit_commission(referred_uid,deposit_amount,deposit_tx_id):
-    """Direct inviter receives 20% of an approved deposit exactly once."""
+    """Direct inviter receives 10% of an approved deposit exactly once. Level 2 and Level 3 receive 0%."""
     con=db()
 
     row=con.execute(
@@ -347,16 +347,16 @@ def referral_deposit_commission(referred_uid,deposit_amount,deposit_tx_id):
         con.close()
         return
 
-    ref=f"DEP-20-{deposit_tx_id}"
+    ref=f"DEP-10-{deposit_tx_id}"
 
     if con.execute("""
         SELECT 1 FROM transactions
-        WHERE uid=? AND kind='REFERRAL_DEPOSIT_20' AND reference=?
+        WHERE uid=? AND kind='REFERRAL_DEPOSIT_10' AND reference=?
     """,(row["invited_by"],ref)).fetchone():
         con.close()
         return
 
-    amount=round(float(deposit_amount)*0.20,2)
+    amount=round(float(deposit_amount)*0.10,2)
 
     con.execute(
         "UPDATE users SET balance=balance+? WHERE id=?",
@@ -369,7 +369,7 @@ def referral_deposit_commission(referred_uid,deposit_amount,deposit_tx_id):
         VALUES(?,?,?,?,?,?)
     """,(
         row["invited_by"],
-        "REFERRAL_DEPOSIT_20",
+        "REFERRAL_DEPOSIT_10",
         amount,
         "APPROVED",
         ref,
@@ -725,22 +725,26 @@ def my_team():
     u=current_user()
     con=db()
 
-    users=con.execute("""
-        SELECT DISTINCT
+    members=con.execute("""
+        SELECT
             u.id,
             u.phone,
-            u.created_at
+            u.created_at,
+            COALESCE((
+                SELECT SUM(d.amount)
+                FROM transactions d
+                WHERE d.uid=u.id
+                  AND d.kind='DEPOSIT'
+                  AND d.status='APPROVED'
+            ),0) AS deposit_amount
         FROM users u
-        JOIN transactions d ON d.uid=u.id
         WHERE u.invited_by=?
-          AND d.kind='DEPOSIT'
-          AND d.status='APPROVED'
         ORDER BY u.id DESC
     """,(u["id"],)).fetchall()
 
     rows=[]
 
-    for member in users:
+    for member in members:
         machines=con.execute("""
             SELECT code,name,price,purchased_at,lock_days,status
             FROM products
@@ -773,14 +777,21 @@ def my_team():
         rows.append({
             "phone":member["phone"],
             "created_at":member["created_at"],
+            "deposit_amount":float(member["deposit_amount"] or 0),
+            "deposited":float(member["deposit_amount"] or 0)>0,
             "machines":machine_rows
         })
+
+    total_members=len(rows)
+    deposited_members=sum(1 for r in rows if r["deposited"])
 
     con.close()
 
     return render_template(
         "team.html",
         rows=rows,
+        total_members=total_members,
+        deposited_members=deposited_members,
         active="My"
     )
 
@@ -1085,9 +1096,42 @@ def account():
         con=db(); con.execute("UPDATE users SET display_name=?,mtn_number=?,airtel_number=?,usdt_wallet=?,notifications_enabled=? WHERE id=?",(request.form.get("display_name","").strip(),request.form.get("mtn_number","").strip(),request.form.get("airtel_number","").strip(),request.form.get("usdt_wallet","").strip(),1 if request.form.get("notifications") else 0,u["id"])); con.commit(); con.close(); flash("Settings saved.","success"); return redirect(url_for("account"))
     return render_template("settings.html",user=u,active="My")
 
-@app.route("/card")
+@app.route("/card",methods=["GET","POST"])
 @required
-def card(): return render_template("card.html",title="Card",user=current_user(),active="My")
+def card():
+    u=current_user()
+
+    if request.method=="POST":
+        mtn_number=request.form.get("mtn_number","").strip()
+        mtn_name=request.form.get("mtn_name","").strip()
+        airtel_number=request.form.get("airtel_number","").strip()
+        airtel_name=request.form.get("airtel_name","").strip()
+
+        con=db()
+        con.execute("""
+            UPDATE users
+            SET mtn_number=?,
+                mtn_name=?,
+                airtel_number=?,
+                airtel_name=?
+            WHERE id=?
+        """,(mtn_number,mtn_name,airtel_number,airtel_name,u["id"]))
+        con.commit()
+        con.close()
+
+        flash("Withdrawal card details saved successfully.","success")
+        return redirect(url_for("card"))
+
+    con=db()
+    user=con.execute("SELECT * FROM users WHERE id=?",(u["id"],)).fetchone()
+    con.close()
+
+    return render_template(
+        "card.html",
+        title="My Card",
+        user=user,
+        active="My"
+    )
 @app.route("/bills")
 @required
 def bills(): return render_template("simple.html",title="Bills",content="<h2>Bills</h2><p>Bill payment providers are not connected yet. No money is charged from this page.</p>",active="My")
@@ -1201,78 +1245,111 @@ def manager_chat(manager_id):
 def reward(): return render_template("reward.html",rewards=REWARDS,active="My")
 
 @app.route("/gift-code",methods=["GET","POST"])
-@required
 def gift_code():
-    u=current_user()
-    con=db()
+    u = current_user()
+    con = db()
 
-    if request.method=="POST":
-        code=request.form.get("code","").strip().upper()
-        g=con.execute("SELECT * FROM gift_codes WHERE code=?",(code,)).fetchone()
+    deposited_count = deposited_team_count(u["id"])
+
+    if request.method == "POST":
+        code = request.form.get("code","").strip().upper()
+
+        # Gift codes are only available after 6 direct invited
+        # members have made an approved deposit.
+        if deposited_count < 6:
+            con.close()
+            flash(
+                f"You need 6 deposited members to claim a gift code. "
+                f"You currently have {deposited_count}.",
+                "error"
+            )
+            return redirect(url_for("gift_code"))
+
+        if not code:
+            con.close()
+            flash("Please enter a gift code.","error")
+            return redirect(url_for("gift_code"))
+
+        g = con.execute(
+            "SELECT * FROM gift_codes WHERE code=?",
+            (code,)
+        ).fetchone()
 
         if not g:
+            con.close()
             flash("Gift code not found.","error")
+            return redirect(url_for("gift_code"))
 
-        elif "enabled" in g.keys() and not g["enabled"]:
+        if "enabled" in g.keys() and not g["enabled"]:
+            con.close()
             flash("This gift code has expired or been disabled.","error")
+            return redirect(url_for("gift_code"))
 
-        else:
-            claims=con.execute(
-                "SELECT COUNT(*) AS n FROM gift_code_claims WHERE code=?",
+        max_uses = g["max_uses"] if "max_uses" in g.keys() else 1
+
+        claims = con.execute(
+            "SELECT COUNT(*) AS n FROM gift_code_claims WHERE code=?",
+            (code,)
+        ).fetchone()["n"]
+
+        already = con.execute(
+            "SELECT 1 FROM gift_code_claims WHERE code=? AND uid=?",
+            (code,u["id"])
+        ).fetchone()
+
+        if already:
+            con.close()
+            flash("You have already used this gift code.","error")
+            return redirect(url_for("gift_code"))
+
+        if claims >= max_uses:
+            con.close()
+            flash("This gift code has reached its claim limit.","error")
+            return redirect(url_for("gift_code"))
+
+        amount = float(g["amount"])
+
+        con.execute(
+            "INSERT INTO gift_code_claims(code,uid,claimed_at) VALUES(?,?,?)",
+            (code,u["id"],now())
+        )
+
+        con.execute(
+            "UPDATE users SET balance=balance+? WHERE id=?",
+            (amount,u["id"])
+        )
+
+        con.execute(
+            """INSERT INTO transactions
+               (uid,kind,amount,status,reference,created_at)
+               VALUES(?,?,?,?,?,?)""",
+            (u["id"],"GIFT_CODE",amount,"APPROVED",code,now())
+        )
+
+        if claims + 1 >= max_uses and "enabled" in g.keys():
+            con.execute(
+                "UPDATE gift_codes SET enabled=0 WHERE code=?",
                 (code,)
-            ).fetchone()["n"]
+            )
 
-            already=con.execute(
-                "SELECT 1 FROM gift_code_claims WHERE code=? AND uid=?",
-                (code,u["id"])
-            ).fetchone()
+        con.commit()
+        con.close()
 
-            limit=g["max_uses"] if "max_uses" in g.keys() else 1
-
-            if already:
-                flash("You have already used this gift code.","error")
-
-            elif claims >= limit:
-                con.execute(
-                    "UPDATE gift_codes SET enabled=0 WHERE code=?",
-                    (code,)
-                )
-                con.commit()
-                flash("This gift code has reached its claim limit.","error")
-
-            else:
-                con.execute(
-                    "INSERT INTO gift_code_claims(code,uid,claimed_at) VALUES(?,?,?)",
-                    (code,u["id"],now())
-                )
-
-                con.execute(
-                    "UPDATE users SET balance=balance+? WHERE id=?",
-                    (g["amount"],u["id"])
-                )
-
-                con.execute(
-                    "INSERT INTO transactions(uid,kind,amount,status,reference,created_at) VALUES(?,?,?,?,?,?)",
-                    (u["id"],"GIFT_CODE",g["amount"],"APPROVED",code,now())
-                )
-
-                newclaims=claims+1
-
-                if newclaims >= limit:
-                    con.execute(
-                        "UPDATE gift_codes SET enabled=0 WHERE code=?",
-                        (code,)
-                    )
-
-                con.commit()
-
-                flash(
-                    f"Reward claimed! UGX {g["amount"]:,.0f} has been added directly to your balance.",
-                    "success"
-                )
+        flash(
+            f"Reward claimed! UGX {amount:,.0f} has been added to your balance.",
+            "success"
+        )
+        return redirect(url_for("gift_code"))
 
     con.close()
-    return render_template("gift.html",active="My")
+
+    return render_template(
+        "gift.html",
+        active="My",
+        user=u,
+        deposited_count=deposited_count,
+        required_deposits=6
+    )
 
 @app.route("/ai-mining")
 @required

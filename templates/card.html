@@ -1,13 +1,202 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="nile-wrap"><header class="nile-header"><div><div class="nile-brand">NILE AI</div><div class="nile-sub">PAYMENT CARD</div></div><div class="nile-avatar">▣</div></header>
-<section class="panel card-save">
-  <h2>Withdrawal details</h2>
-  <p class="muted">These details are used by the Withdraw page as your payout destination.</p>
-  <div class="saved-row"><span>MTN UG</span><b>{{ user.mtn_number or 'Not saved' }}</b></div>
-  <div class="saved-row"><span>Airtel UG</span><b>{{ user.airtel_number or 'Not saved' }}</b></div>
-  <div class="saved-row"><span>USDT TRC20</span><b class="wallet-text">{{ user.usdt_wallet or 'Not saved' }}</b></div>
-  <a class="machine-btn" href="/account">EDIT CARD DETAILS</a>
-  <a class="machine-btn" href="/withdraw">BACK TO WITHDRAW</a>
+
+<div class="card-screen">
+
+<header class="card-header">
+  <a href="/my" class="card-back">‹</a>
+  <div class="card-title">My Card</div>
+</header>
+
+<p class="card-note">
+  Save your withdrawal details once — the withdraw page will use them automatically.
+</p>
+
+<form method="POST">
+
+<section class="card-box">
+  <h2>MTN Uganda</h2>
+
+  <label>Mobile number</label>
+  <input
+    type="tel"
+    name="mtn_number"
+    value="{{ user.mtn_number or '' }}"
+    placeholder="0770000000"
+    inputmode="tel"
+  >
+
+  <label>Registered name</label>
+  <input
+    type="text"
+    name="mtn_name"
+    value="{{ user.mtn_name or '' }}"
+    placeholder="Name on the SIM"
+  >
 </section>
+
+<section class="card-box">
+  <h2>Airtel Uganda</h2>
+
+  <label>Mobile number</label>
+  <input
+    type="tel"
+    name="airtel_number"
+    value="{{ user.airtel_number or '' }}"
+    placeholder="0750000000"
+    inputmode="tel"
+  >
+
+  <label>Registered name</label>
+  <input
+    type="text"
+    name="airtel_name"
+    value="{{ user.airtel_name or '' }}"
+    placeholder="Name on the SIM"
+  >
+</section>
+
+<button class="save-card" type="submit">SAVE CARD DETAILS</button>
+
+</form>
+
+</div>
+
+<style>
+.card-screen{
+  min-height:100vh;
+  padding:0 8px 85px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(0,210,255,.12),transparent 30%),
+    radial-gradient(circle at 80% 45%,rgba(0,130,255,.08),transparent 30%),
+    #020812;
+}
+
+.card-header{
+  height:105px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  border-bottom:1px solid #07566b;
+}
+
+.card-back{
+  position:absolute;
+  left:2px;
+  top:21px;
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #00d9ff;
+  border-radius:12px;
+  color:#00eaff;
+  text-decoration:none;
+  font-size:31px;
+  box-shadow:0 0 13px rgba(0,220,255,.28);
+}
+
+.card-title{
+  color:#00eaff;
+  font-size:20px;
+  font-weight:900;
+}
+
+.card-note{
+  max-width:600px;
+  margin:36px auto 34px;
+  color:#b8c4ca;
+  font-size:15px;
+  line-height:1.6;
+}
+
+.card-box{
+  max-width:600px;
+  margin:0 auto 28px;
+  padding:25px 30px;
+  border:1px solid #08738b;
+  border-radius:18px;
+  background:rgba(2,12,20,.88);
+  box-shadow:0 0 15px rgba(0,220,255,.12);
+}
+
+.card-box h2{
+  color:#00d9ff;
+  font-size:23px;
+  margin:0 0 25px;
+}
+
+.card-box label{
+  display:block;
+  color:#fff;
+  font-size:16px;
+  margin:0 0 9px;
+}
+
+.card-box input{
+  width:100%;
+  box-sizing:border-box;
+  height:58px;
+  margin:0 0 25px;
+  padding:0 20px;
+  border:1px solid #08738b;
+  border-radius:15px;
+  background:#07101a;
+  color:#fff;
+  font-size:16px;
+  outline:none;
+}
+
+.card-box input:focus{
+  border-color:#00eaff;
+  box-shadow:0 0 12px rgba(0,220,255,.2);
+}
+
+.card-box input::placeholder{
+  color:#71808a;
+}
+
+.save-card{
+  display:block;
+  width:calc(100% - 8px);
+  max-width:600px;
+  margin:4px auto;
+  min-height:54px;
+  border:1px solid #00eaff;
+  border-radius:14px;
+  background:#04b9e8;
+  color:#fff;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+
+@media(max-width:390px){
+  .card-note{
+    margin:28px 22px 25px;
+    font-size:13px;
+  }
+
+  .card-box{
+    margin-bottom:20px;
+    padding:20px 18px;
+    border-radius:15px;
+  }
+
+  .card-box h2{
+    font-size:20px;
+    margin-bottom:20px;
+  }
+
+  .card-box input{
+    height:53px;
+    margin-bottom:20px;
+    font-size:14px;
+  }
+}
+</style>
+
 {% endblock %}
