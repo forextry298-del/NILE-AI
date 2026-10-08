@@ -1,1 +1,58 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>NILE AI</title><link rel="stylesheet" href="{{ url_for("static",filename="css/nile.css") }}"></head><body><header><b>NILE<span>AI</span></b><small>AI COMMAND CENTER</small></header><main>{% block content %}{% endblock %}</main><nav class="bottom"><a href="/home"><span class="nav-icon">⌂</span><small>Home</small></a><a href="/invest"><span class="nav-icon">◇</span><small>AI</small></a><a class="wallet-nav" href="/wallet"><span class="wallet-icon">◉</span><small>Wallet</small></a><a href="/income"><span class="nav-icon">◌</span><small>Activity</small></a><a href="/my"><span class="nav-icon">◉</span><small>My</small></a></nav><script src="{{ url_for("static",filename="js/nile.js") }}"></script></body></html>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>NILE AI</title><link rel="stylesheet" href="{{ url_for("static",filename="css/nile.css") }}"></head><body>
+<canvas id="live-dots"></canvas>
+<style>
+#live-dots{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:-1;
+  pointer-events:none;
+  background:#020812;
+}
+body{
+  background:transparent !important;
+}
+</style>
+<script>
+(function(){
+  const c=document.getElementById("live-dots");
+  if(!c)return;
+  const x=c.getContext("2d");
+  let dots=[];
+  let w=0,h=0;
+
+  function resize(){
+    w=c.width=innerWidth;
+    h=c.height=innerHeight;
+    const n=Math.min(75,Math.max(35,Math.floor(w*h/9000)));
+    dots=Array.from({length:n},()=>({
+      x:Math.random()*w,
+      y:Math.random()*h,
+      vx:(Math.random()-.5)*.28,
+      vy:(Math.random()-.5)*.28,
+      r:Math.random()*1.5+.7
+    }));
+  }
+
+  function draw(){
+    x.clearRect(0,0,w,h);
+    for(const d of dots){
+      d.x+=d.vx;
+      d.y+=d.vy;
+      if(d.x<0||d.x>w)d.vx*=-1;
+      if(d.y<0||d.y>h)d.vy*=-1;
+
+      x.beginPath();
+      x.arc(d.x,d.y,d.r,0,Math.PI*2);
+      x.fillStyle="rgba(255,255,255,.9)";
+      x.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  addEventListener("resize",resize);
+  resize();
+  draw();
+})();
+</script><header><b>NILE<span>AI</span></b><small>AI COMMAND CENTER</small></header><main>{% block content %}{% endblock %}</main><nav class="bottom"><a href="/home"><span class="nav-icon">⌂</span><small>Home</small></a><a href="/invest"><span class="nav-icon">◇</span><small>AI</small></a><a class="wallet-nav" href="/wallet"><span class="wallet-icon">◉</span><small>Wallet</small></a><a href="/income"><span class="nav-icon">◌</span><small>Activity</small></a><a href="/my"><span class="nav-icon">◉</span><small>My</small></a></nav><script src="{{ url_for("static",filename="js/nile.js") }}"></script></body></html>

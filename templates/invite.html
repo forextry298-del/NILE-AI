@@ -52,77 +52,80 @@
 .invite-screen{
   min-height:100vh;
   box-sizing:border-box;
-  padding:12px 10px 90px;
-  background:
-    radial-gradient(circle at 20% 20%,#06303b33 1px,transparent 2px),
-    radial-gradient(circle at 70% 40%,#06303b33 1px,transparent 2px),
-    #020609;
-  background-size:42px 42px;
+  padding:8px 7px 85px;
   color:#fff;
-  font-family:Georgia,serif;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(0,210,255,.12),transparent 30%),
+    radial-gradient(circle at 80% 45%,rgba(0,130,255,.08),transparent 30%),
+    #020812;
 }
 
 .invite-header{
-  height:78px;
+  height:58px;
   display:flex;
   align-items:center;
   justify-content:center;
   position:relative;
-  border-bottom:1px solid #00dfff;
+  border-bottom:1px solid #07566b;
+  margin-bottom:9px;
 }
 
 .invite-header h1{
   margin:0;
-  color:#18dfff;
-  font-size:28px;
-  text-shadow:0 0 8px #00dfff66;
+  color:#00eaff;
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:1px;
+  text-shadow:0 0 8px rgba(0,220,255,.35);
 }
 
 .back-btn{
   position:absolute;
-  left:8px;
-  top:10px;
-  width:64px;
-  height:64px;
-  border:2px solid #00dfff;
-  border-radius:18px;
+  left:2px;
+  top:7px;
+  width:40px;
+  height:40px;
+  border:1px solid #00d9ff;
+  border-radius:11px;
   display:flex;
   align-items:center;
   justify-content:center;
-  color:#00dfff;
+  color:#00eaff;
   text-decoration:none;
   font-family:Arial,sans-serif;
-  font-size:43px;
-  box-shadow:0 0 12px #00dfff55;
+  font-size:29px;
+  box-shadow:0 0 12px rgba(0,220,255,.25);
 }
+
 .invite-card{
-  max-width:625px;
-  margin:30px auto;
-  padding:30px;
+  max-width:520px;
+  margin:9px auto;
+  padding:13px;
   box-sizing:border-box;
-  border:2px solid #00dfff;
-  border-radius:22px;
-  background:#020609cc;
-  box-shadow:0 0 15px #00dfff44;
+  border:1px solid #08738b;
+  border-radius:12px;
+  background:rgba(3,17,29,.92);
+  box-shadow:inset 0 0 14px #031b27;
 }
 
 .invite-card h2{
-  margin:0 0 20px;
-  color:#dce4e8;
-  font-size:25px;
-  font-weight:normal;
+  margin:0 0 9px;
+  color:#00eaff;
+  font-size:14px;
+  font-weight:900;
 }
 
 .invite-link{
-  min-height:70px;
-  padding:14px;
+  min-height:48px;
+  padding:9px;
   box-sizing:border-box;
-  border-radius:10px;
+  border:1px solid #07566b;
+  border-radius:8px;
   background:#071018;
-  color:#f2f5f7;
+  color:#dcebef;
   font-family:monospace;
-  font-size:20px;
-  line-height:1.45;
+  font-size:11px;
+  line-height:1.35;
   overflow-wrap:anywhere;
   display:flex;
   align-items:center;
@@ -131,25 +134,26 @@
 .invite-buttons{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-top:16px;
+  gap:7px;
+  margin-top:8px;
 }
 
 .invite-buttons button{
-  min-height:68px;
-  border:2px solid #00dfff;
-  border-radius:20px;
+  min-height:42px;
+  border:1px solid #00dfff;
+  border-radius:10px;
   background:transparent;
   color:#fff;
-  font-family:Georgia,serif;
-  font-size:22px;
-  box-shadow:0 0 8px #00dfff33;
+  font-family:Arial,sans-serif;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:0 0 8px rgba(0,220,255,.12);
 }
 
 .invite-buttons .share-btn{
-  background:#12bfe8;
-  border-color:#12bfe8;
-  box-shadow:0 0 15px #00dfff66;
+  background:#04aeda;
+  border-color:#00dfff;
+  box-shadow:0 0 12px rgba(0,220,255,.25);
 }
 
 .qr-card{
@@ -161,13 +165,13 @@
 }
 
 .qr-box{
-  width:365px;
-  max-width:90%;
-  margin:25px auto;
-  padding:18px;
+  width:220px;
+  max-width:75%;
+  margin:12px auto;
+  padding:10px;
   box-sizing:border-box;
   background:#fff;
-  border-radius:30px;
+  border-radius:16px;
 }
 
 .qr-box img{
@@ -177,60 +181,68 @@
 }
 
 .qr-card p{
-  max-width:540px;
-  margin:20px auto 5px;
-  color:#cfd4d8;
-  font-size:18px;
-  line-height:1.5;
+  max-width:390px;
+  margin:10px auto 3px;
+  color:#9eb1ba;
+  font-size:10px;
+  line-height:1.4;
 }
 
-@media(max-width:500px){
+@media(max-width:390px){
   .invite-screen{
-    padding-left:7px;
-    padding-right:7px;
+    padding-left:6px;
+    padding-right:6px;
+  }
+
+  .invite-header{
+    height:55px;
   }
 
   .invite-header h1{
-    font-size:24px;
-  }
-
-  .back-btn{
-    width:60px;
-    height:60px;
-    font-size:38px;
-  }
-
-  .invite-card{
-    margin:25px auto;
-    padding:30px 16px;
-    border-radius:20px;
-  }
-
-  .invite-card h2{
-    font-size:22px;
-  }
-
-  .invite-link{
     font-size:17px;
   }
 
+  .back-btn{
+    width:38px;
+    height:38px;
+    top:7px;
+    font-size:27px;
+  }
+
+  .invite-card{
+    margin:8px auto;
+    padding:11px;
+    border-radius:11px;
+  }
+
+  .invite-card h2{
+    font-size:13px;
+  }
+
+  .invite-link{
+    min-height:45px;
+    font-size:10px;
+  }
+
   .invite-buttons{
-    gap:10px;
+    gap:6px;
   }
 
   .invite-buttons button{
-    min-height:58px;
-    font-size:18px;
-    border-radius:17px;
+    min-height:39px;
+    font-size:11px;
+    border-radius:9px;
   }
 
   .qr-box{
-    max-width:92%;
-    padding:15px;
+    width:190px;
+    max-width:70%;
+    padding:8px;
+    border-radius:13px;
   }
 
   .qr-card p{
-    font-size:16px;
+    font-size:9px;
   }
 }
 </style>
