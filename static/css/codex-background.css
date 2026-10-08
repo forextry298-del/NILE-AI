@@ -1,0 +1,152 @@
+.codex-lightning-bg{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+}
+.codex-lightning-bg .bolt{
+    position:absolute;
+    top:-12%;
+    width:3px;
+    height:135%;
+    opacity:0;
+    transform-origin:top center;
+    background:linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(90,220,255,.95) 18%,
+        #fff 48%,
+        rgba(0,190,255,.9) 72%,
+        transparent 100%
+    );
+    filter:drop-shadow(0 0 4px #00baff) drop-shadow(0 0 12px rgba(0,190,255,.85));
+    clip-path:polygon(
+        50% 0%,58% 8%,42% 17%,63% 25%,45% 34%,
+        67% 43%,43% 52%,60% 62%,39% 72%,57% 82%,
+        44% 91%,50% 100%
+    );
+    animation:codexLightning 6s infinite;
+}
+.codex-lightning-bg .bolt::before,
+.codex-lightning-bg .bolt::after{
+    content:"";
+    position:absolute;
+    width:2px;
+    height:48%;
+    top:20%;
+    background:linear-gradient(to bottom,transparent,#fff,rgba(0,190,255,.85),transparent);
+    filter:drop-shadow(0 0 5px #00baff);
+}
+.codex-lightning-bg .bolt::before{
+    left:-18px;
+    transform:rotate(31deg);
+}
+.codex-lightning-bg .bolt::after{
+    right:-20px;
+    top:43%;
+    transform:rotate(-28deg);
+}
+.codex-lightning-bg .bolt:nth-of-type(1){left:5%;transform:rotate(-9deg);animation-delay:-.8s;animation-duration:5.8s}
+.codex-lightning-bg .bolt:nth-of-type(2){left:15%;transform:rotate(7deg);animation-delay:-4.1s;animation-duration:7.2s}
+.codex-lightning-bg .bolt:nth-of-type(3){left:27%;transform:rotate(-5deg);animation-delay:-2.4s;animation-duration:6.4s}
+.codex-lightning-bg .bolt:nth-of-type(4){left:39%;transform:rotate(8deg);animation-delay:-5.3s;animation-duration:8s}
+.codex-lightning-bg .bolt:nth-of-type(5){left:51%;transform:rotate(-7deg);animation-delay:-1.7s;animation-duration:6.9s}
+.codex-lightning-bg .bolt:nth-of-type(6){left:63%;transform:rotate(6deg);animation-delay:-6s;animation-duration:7.6s}
+.codex-lightning-bg .bolt:nth-of-type(7){left:75%;transform:rotate(-8deg);animation-delay:-3.2s;animation-duration:5.5s}
+.codex-lightning-bg .bolt:nth-of-type(8){left:87%;transform:rotate(7deg);animation-delay:-4.8s;animation-duration:6.7s}
+.codex-lightning-bg .flash{
+    position:absolute;
+    inset:0;
+    background:rgba(80,210,255,.055);
+    opacity:0;
+    animation:codexSkyFlash 4.8s infinite;
+}
+.codex-lightning-bg .flash:nth-child(10){animation-delay:-2.1s}
+.codex-lightning-bg .flash:nth-child(11){animation-delay:-3.7s}
+
+@keyframes codexLightning{
+    0%,88%,100%{opacity:0}
+    89%{opacity:.15}
+    89.4%{opacity:1}
+    89.8%{opacity:.12}
+    90.2%{opacity:.9}
+    90.7%{opacity:.08}
+    91.4%{opacity:.65}
+    92.5%{opacity:0}
+}
+@keyframes codexSkyFlash{
+    0%,88%,100%{opacity:0}
+    89.3%{opacity:.18}
+    89.8%{opacity:0}
+    90.3%{opacity:.12}
+    91%{opacity:0}
+}
+
+
+/* Global live green waves — background only */
+.codex-green-waves{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:1;
+    opacity:.68;
+}
+
+.green-wave{
+    position:absolute;
+    left:-8%;
+    width:116%;
+    height:18vh;
+    border:0;
+    border-top:1px solid rgba(35,255,115,.34);
+    border-bottom:1px solid rgba(35,255,115,.12);
+    border-radius:50%;
+    box-shadow:
+        0 0 16px rgba(35,255,115,.10),
+        0 0 34px rgba(35,255,115,.045);
+    animation:codexSnakeWave 6s ease-in-out infinite;
+    will-change:transform;
+}
+
+.green-wave::after{
+    content:"";
+    position:absolute;
+    inset:18% -2%;
+    border-top:1px solid rgba(105,255,165,.20);
+    border-radius:50%;
+}
+
+/* Twelve staggered horizontal snake waves */
+.wave-1{top:2%;animation-duration:6.2s;animation-delay:-.4s}
+.wave-2{top:10%;animation-duration:7.1s;animation-delay:-2.1s}
+.wave-3{top:18%;animation-duration:5.8s;animation-delay:-4.3s}
+.wave-4{top:26%;animation-duration:7.8s;animation-delay:-1.2s}
+.wave-5{top:34%;animation-duration:6.5s;animation-delay:-3.7s}
+.wave-6{top:42%;animation-duration:8.1s;animation-delay:-5.1s}
+.wave-7{top:50%;animation-duration:6s;animation-delay:-2.8s}
+.wave-8{top:58%;animation-duration:7.4s;animation-delay:-4.7s}
+.wave-9{top:66%;animation-duration:5.7s;animation-delay:-1.7s}
+.wave-10{top:74%;animation-duration:8.3s;animation-delay:-6s}
+.wave-11{top:82%;animation-duration:6.7s;animation-delay:-3.1s}
+.wave-12{top:90%;animation-duration:7.6s;animation-delay:-5.5s}
+
+@keyframes codexSnakeWave{
+    0%{
+        transform:translateX(-5%) translateY(0) rotate(-3deg) scaleY(.88);
+    }
+    25%{
+        transform:translateX(4%) translateY(-13px) rotate(4deg) scaleY(1.05);
+    }
+    50%{
+        transform:translateX(8%) translateY(2px) rotate(-4deg) scaleY(.90);
+    }
+    75%{
+        transform:translateX(-2%) translateY(13px) rotate(4deg) scaleY(1.07);
+    }
+    100%{
+        transform:translateX(-7%) translateY(0) rotate(-3deg) scaleY(.90);
+    }
+}
+

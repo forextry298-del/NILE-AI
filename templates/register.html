@@ -1,3 +1,321 @@
 {% extends "base.html" %}{% block content %}
 
-<section class="auth-card"><div class="robot-zone" aria-hidden="true"></div><div class="auth-logo">NILE<span>AI</span></div><small>AI COMMAND CENTER</small><h2>Create Account</h2><p>Join the  network.</p><form method="post"><input class="auth-input" name="phone" placeholder="Phone Number" required><input class="auth-input" type="password" name="password" placeholder="Set Password" required><input class="auth-input" type="password" name="confirm" placeholder="Confirm Password" required><div class="captcha-row"><input class="auth-input" name="captcha_input" placeholder="Verification code" required><span>{{real_captcha}}</span></div><input type="hidden" name="real_captcha" value="{{real_captcha}}"><input class="auth-input" name="invite" value="{{invite}}" placeholder="Invitation Code"><button class="auth-btn" type="submit">CREATE ACCOUNT</button></form><div class="auth-links"><a href="/login">Already have an account?</a></div></section>{% endblock %}
+<section class="auth-card"><div class="auth-logo">NILE<span>AI</span></div><small>AI COMMAND CENTER</small><h2>Create Account</h2><p>Join the  network.</p><form method="post"><input class="auth-input" name="phone" placeholder="Phone Number" required><input class="auth-input" type="password" name="password" placeholder="Set Password" required><input class="auth-input" type="password" name="confirm" placeholder="Confirm Password" required><div class="captcha-row"><input class="auth-input" name="captcha_input" placeholder="Verification code" required><span>{{real_captcha}}</span></div><input type="hidden" name="real_captcha" value="{{real_captcha}}"><input class="auth-input" name="invite" value="{{invite}}" placeholder="Invitation Code"><button class="auth-btn" type="submit">CREATE ACCOUNT</button></form><div class="auth-links"><a href="/login">Already have an account?</a></div></section>{% endblock %}
+
+<style id="nile-register-final-theme">
+/* ===== REGISTER PAGE FINAL REFERENCE THEME ===== */
+
+/* BLACK PAGE — remove old navy */
+html,
+body {
+    background: #000000 !important;
+    background-color: #000000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+}
+
+/* Remove inherited animated backgrounds/glows */
+body::before,
+body::after,
+main::before,
+main::after {
+    background-image: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Remove the large FIRST hero/robot image */
+body > img:first-of-type,
+main > img:first-of-type,
+.register-container > img:first-of-type,
+.register-card > img:first-of-type,
+.auth-container > img:first-of-type,
+.auth-card > img:first-of-type {
+    display: none !important;
+}
+
+/* Hide common hero/banner containers */
+.hero-banner,
+.hero-image,
+.ai-hero,
+.top-banner,
+.banner-image,
+.register-hero,
+.auth-hero {
+    display: none !important;
+}
+
+/* Main rectangular area */
+.register-container,
+.register-card,
+.register-box,
+.auth-container,
+.auth-card,
+.auth-box,
+.form-container {
+    background: #000000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border: 1px solid #087FA0 !important;
+    box-shadow: none !important;
+}
+
+/* Input rectangles */
+input,
+select,
+textarea {
+    background: #020202 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border: 1px solid #087FA0 !important;
+    box-shadow: none !important;
+}
+
+/* White words */
+label,
+p,
+span,
+small,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+
+/* Bright reference button */
+button[type="submit"],
+input[type="submit"],
+.register-btn,
+.signup-btn,
+.create-account-btn,
+.submit-btn {
+    background: linear-gradient(
+        90deg,
+        #08BDEA 0%,
+        #159ED2 100%
+    ) !important;
+    color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Links */
+a {
+    color: #08BDEA !important;
+}
+
+/* Remove old cyan/neon glow */
+* {
+    text-shadow: none !important;
+}
+</style>
+
+
+<style id="nile-register-final-fix">
+
+/* ===== NILE AI REGISTER FINAL FIX ===== */
+
+/* Entire register page */
+html,
+body {
+    background: #000000 !important;
+    background-color: #000000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+}
+
+/* Remove the global dotted/glowing overlay */
+body::before,
+body::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* REMOVE THE LARGE ROBOT / TOP BANNER */
+.hero-banner,
+.hero-image,
+.ai-hero,
+.top-banner,
+.banner-image,
+.register-hero,
+.auth-hero {
+    display: none !important;
+}
+
+/* Register card */
+.auth-card,
+.register-card,
+.register-container,
+.register-box {
+    background: #000000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border: 1px solid #087FA0 !important;
+    box-shadow: none !important;
+}
+
+/* Remove card-generated logo/command-center duplicates */
+.auth-card::before,
+.auth-card::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* White text */
+.auth-card h1,
+.auth-card h2,
+.auth-card h3,
+.auth-card h4,
+.auth-card p,
+.auth-card label,
+.auth-card span,
+.auth-card small {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+
+/* Input rectangles */
+.auth-input,
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
+    background: #020202 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border: 1px solid #087FA0 !important;
+    box-shadow: none !important;
+}
+
+/* Placeholder */
+.auth-input::placeholder,
+.auth-card input::placeholder {
+    color: #ffffff !important;
+    opacity: .55 !important;
+}
+
+/* Main button */
+.auth-btn,
+.auth-card button[type="submit"],
+.auth-card input[type="submit"] {
+    background: linear-gradient(
+        90deg,
+        #08BDEA 0%,
+        #159ED2 100%
+    ) !important;
+    color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Links */
+.auth-links a,
+.auth-card a {
+    color: #08BDEA !important;
+}
+
+/* Captcha */
+.captcha-row span {
+    background: #ffffff !important;
+    color: #2870D0 !important;
+}
+
+/* Stop inherited neon effects */
+.auth-card *,
+.auth-card {
+    text-shadow: none !important;
+}
+
+</style>
+
+<style id="NILE-FORCE-THEME">
+html,body{
+    background:#000000!important;
+    background-image:none!important;
+    color:#ffffff!important;
+}
+
+body:before,
+body:after{
+    display:none!important;
+    content:none!important;
+}
+
+.hero-banner,
+.hero-image,
+.ai-hero,
+.top-banner,
+.banner-image,
+.register-hero,
+.auth-hero{
+    display:none!important;
+}
+
+.auth-card{
+    background:#000000!important;
+    background-image:none!important;
+    border:1px solid #087FA0!important;
+    box-shadow:none!important;
+    color:#ffffff!important;
+}
+
+.auth-card:before,
+.auth-card:after{
+    display:none!important;
+    content:none!important;
+}
+
+.auth-card h1,
+.auth-card h2,
+.auth-card h3,
+.auth-card p,
+.auth-card label,
+.auth-card span,
+.auth-card small{
+    color:#ffffff!important;
+    text-shadow:none!important;
+}
+
+.auth-input{
+    background:#000000!important;
+    color:#ffffff!important;
+    border:1px solid #087FA0!important;
+    box-shadow:none!important;
+}
+
+.auth-input::placeholder{
+    color:#ffffff!important;
+    opacity:.55!important;
+}
+
+.auth-btn{
+    background:linear-gradient(90deg,#08BDEA,#159ED2)!important;
+    color:#000000!important;
+    border:0!important;
+    box-shadow:none!important;
+}
+
+.auth-links a,
+.auth-card a{
+    color:#08BDEA!important;
+}
+</style>
+
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+
+document.querySelectorAll(
+".hero-banner,.hero-image,.ai-hero,.top-banner,.banner-image,.register-hero,.auth-hero,.auth-card img"
+).forEach(function(el){
+    el.remove();
+});
+
+document.body.style.setProperty("background","#000000","important");
+document.body.style.setProperty("background-image","none","important");
+
+});
+</script>
