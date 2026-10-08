@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.vip-page{
+  min-height:calc(100vh - 120px);
+  padding:0 12px 90px;
+  background:#000;
+  color:#fff;
+}
+
+.vip-head{
+  height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  border-bottom:1px solid #222;
+  margin:0 -12px 24px;
+}
+
+.vip-back{
+  position:absolute;
+  left:18px;
+  color:#fff;
+  font-size:32px;
+  line-height:1;
+}
+
+.vip-title{
+  color:#fff;
+  font-size:27px;
+  font-weight:800;
+}
+
+.vip-card{
+  position:relative;
+  width:100%;
+  box-sizing:border-box;
+  min-height:145px;
+  margin:0 0 18px;
+  padding:22px 28px 20px;
+  border-radius:22px;
+  color:#111;
+  overflow:hidden;
+}
+
+.vip-card.v1{background:#f1f1f1;}
+.vip-card.v2{background:#dcdcdc;}
+.vip-card.v3{background:#555;}
+.vip-card.v4{background:#f2c21a;}
+.vip-card.v5{background:#51b957;}
+.vip-card.v6{background:#238be0;}
+
+.vip-card.v3,
+.vip-card.v4,
+.vip-card.v5,
+.vip-card.v6{
+  color:#fff;
+}
+
+.vip-level{
+  position:absolute;
+  top:23px;
+  right:28px;
+  font-size:16px;
+  font-weight:800;
+}
+
+.vip-text{
+  font-size:16px;
+  line-height:1.35;
+  padding-right:95px;
+  margin-bottom:12px;
+}
+
+.vip-text b{
+  font-weight:800;
+}
+
+.vip-progress,
+.vip-reward{
+  font-size:16px;
+  font-weight:700;
+  line-height:1.45;
+}
+
+.vip-close{
+  position:absolute;
+  right:22px;
+  bottom:20px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.20);
+  color:#111;
+  font-size:31px;
+  font-weight:300;
+}
+
+.v3 .vip-close,
+.v4 .vip-close,
+.v5 .vip-close,
+.v6 .vip-close{
+  color:#fff;
+  background:rgba(0,0,0,.20);
+}
+
+@media(max-width:420px){
+  .vip-card{
+    min-height:145px;
+    padding:27px 28px 23px;
+  }
+
+  .vip-text{
+    font-size:17px;
+  }
+
+  .vip-progress,
+  .vip-reward{
+    font-size:16px;
+  }
+
+  .vip-level{
+    font-size:21px;
+  }
+}
+</style>
+
+<div class="vip-page">
+
+  <div class="vip-head">
+    <a class="vip-back" href="/my">‹</a>
+    <div class="vip-title">VIP Task</div>
+  </div>
+
+  <div class="vip-card v1">
+    <div class="vip-level">VIP - 1</div>
+    <div class="vip-text">Invite <b>5 members</b> in Lv1 to purchase device</div>
+    <div class="vip-progress">Task progress: 0/5</div>
+    <div class="vip-reward">VIP Rewards: UGX15,000.00</div>
+    <div class="vip-close">×</div>
+  </div>
+
+  <div class="vip-card v2">
+    <div class="vip-level">VIP - 2</div>
+    <div class="vip-text">Invite <b>15 members</b> in Lv1 to purchase device</div>
+    <div class="vip-progress">Task progress: 0/15</div>
+    <div class="vip-reward">VIP Rewards: UGX30,000.00</div>
+    <div class="vip-close">×</div>
+  </div>
+
+  <div class="vip-card v3">
+    <div class="vip-level">VIP - 3</div>
+    <div class="vip-text">Invite <b>40 members</b> in Lv1 to purchase device</div>
+    <div class="vip-progress">Task progress: 0/40</div>
+    <div class="vip-reward">VIP Rewards: UGX100,000.00</div>
+    <div class="vip-close">×</div>
+  </div>
+
+  <div class="vip-card v4">
+    <div class="vip-level">VIP - 4</div>
+    <div class="vip-text">Invite <b>80 members</b> in Lv1 to purchase device</div>
+    <div class="vip-progress">Task progress: 0/80</div>
+    <div class="vip-reward">VIP Rewards: UGX200,000.00</div>
+    <div class="vip-close">×</div>
+  </div>
+
+  <div class="vip-card v5">
+    <div class="vip-level">VIP - 5</div>
+    <div class="vip-text">Invite <b>150 members</b> in Lv1 to purchase device</div>
+    <div class="vip-progress">Task progress: 0/150</div>
+    <div class="vip-reward">VIP Rewards: UGX500,000.00</div>
+    <div class="vip-close">×</div>
+  </div>
+
+  <div class="vip-card v6">
+    <div class="vip-level">VIP - 6</div>
+    <div class="vip-text">Invite <b>250 members</b> in Lv1 to purchase device</div>
+    <div class="vip-progress">Task progress: 0/250</div>
+    <div class="vip-reward">VIP Rewards: UGX800,000.00</div>
+    <div class="vip-close">×</div>
+  </div>
+
+</div>
+
+{% endblock %}

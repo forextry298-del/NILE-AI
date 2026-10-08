@@ -1137,7 +1137,7 @@ def card():
 def bills(): return render_template("simple.html",title="Bills",content="<h2>Bills</h2><p>Bill payment providers are not connected yet. No money is charged from this page.</p>",active="My")
 @app.route("/vip-tasks")
 @required
-def vip_tasks(): return render_template("simple.html",title="VIP Task",content="<h2>VIP Tasks</h2><p>No tasks are currently assigned.</p>",active="My")
+def vip_tasks(): return render_template("vip_tasks.html",active="My")
 MANAGERS = [
     {"id":"lucy","name":"Lucy","phone":"+256740062648","role":"NILE AI Manager","avatar":"👩🏻"},
     {"id":"elrie","name":"Elrie","phone":"+256789590432","role":"NILE AI Manager","avatar":"👩🏽"},
