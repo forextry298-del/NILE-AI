@@ -1,105 +1,97 @@
-/* ===== NILE AI — CODEX COLOR THEME ONLY ===== */
+/* NILE — CODEX COLOR SYSTEM */
 
 html,body{
   background:#000!important;
   color:#fff!important;
 }
 
-body{
-  background-color:#000!important;
-}
-
-/* Main NILE panels/cards — color only */
-.panel,
-.core,
-.wallet,
-.card,
-.machine-card,
-.auth-card,
+body,
 .nile-wrap,
-.nmh-panel,
-.nmh-stat,
-.nmh-news{
-  background:rgba(0,0,0,.55)!important;
-  border-color:#008dcc!important;
-  box-shadow:0 0 16px rgba(0,190,255,.08)!important;
+.my-page,
+.page,
+main,
+section,
+.panel{
+  color:#fff!important;
 }
 
-/* CODEX cyan text */
+.panel,
+.my-balance,
+.my-menu,
+.my-share,
+.my-salary,
+.my-invites,
+.my-rewards{
+  background:rgba(0,0,0,.45)!important;
+  border-color:#00aee8!important;
+}
+
 h1,h2,h3,h4,
-.section-title,
-.core-title,
-.nmh-section-title,
-.auth-logo span,
-.muted-accent{
-  color:#00baff!important;
+.nile-brand,
+.nile-sub,
+.my-label,
+.my-agent,
+.my-page span,
+.my-page strong,
+.my-page p{
+  color:#fff!important;
 }
 
-/* NILE links */
-a{
-  color:#fff;
+.nile-brand span,
+.my-share h2,
+.my-share strong,
+.my-salary strong,
+.my-invites strong{
+  color:#00c6ff!important;
 }
 
-a:hover{
-  color:#00baff!important;
+.my-menu .my-grid>a>i{
+  background:#10c5f5!important;
+  color:#fff!important;
+  border:0!important;
 }
 
-/* Buttons — preserve NILE dimensions */
+.my-menu .my-grid>a>i svg,
+.my-menu .my-grid>a>i svg *{
+  stroke:#fff!important;
+  fill:none!important;
+}
+
 button,
-.button,
-.action,
-.auth-btn,
-.machine-btn{
-  border-color:#00baff!important;
-  background:#001a24!important;
-  color:#00baff!important;
-}
-
-/* Primary buttons */
-button.primary,
-.button.primary,
-.action.primary,
-.auth-btn,
-.machine-btn{
-  background:#08bde8!important;
+.my-wide-btn,
+.my-signout{
+  background:#00bde8!important;
   color:#fff!important;
+  border-color:#00bde8!important;
 }
 
-/* Inputs — preserve NILE dimensions */
 input,
-textarea,
 select,
-.auth-input{
-  background:rgba(0,0,0,.35)!important;
+textarea{
+  background:#02070b!important;
   color:#fff!important;
-  border-color:#777!important;
+  border-color:#008dcc!important;
 }
 
-/* Bottom navigation — preserve NILE layout */
-.bottom-nav,
-.bottom,
-nav{
-  background:#000!important;
-  border-color:#123!important;
+a{
+  color:#00c6ff;
 }
 
-.bottom-nav a,
-.bottom a,
-nav a{
-  color:#aaa!important;
+.bottom-nav{
+  background:rgba(0,0,0,.94)!important;
+  border-color:#008dcc!important;
+}
+
+.bottom-nav a{
+  color:#fff!important;
 }
 
 .bottom-nav a.active,
-.bottom a.active,
-nav a.active{
-  color:#00baff!important;
+.bottom-nav .active{
+  color:#00c6ff!important;
 }
 
-/* Cyan highlights */
-.vip,
-.badge,
-.tag{
-  color:#00baff!important;
-  border-color:#00baff!important;
+.codex-lightning-bg,
+.codex-green-waves{
+  pointer-events:none!important;
 }
-
