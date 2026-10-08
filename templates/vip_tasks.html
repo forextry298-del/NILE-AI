@@ -37,9 +37,9 @@
   position:relative;
   width:100%;
   box-sizing:border-box;
-  min-height:145px;
-  margin:0 0 18px;
-  padding:22px 28px 20px;
+  min-height:112px;
+  margin:0 0 14px;
+  padding:16px 28px 15px;
   border-radius:22px;
   color:#111;
   overflow:hidden;
@@ -63,14 +63,14 @@
   position:absolute;
   top:23px;
   right:28px;
-  font-size:16px;
+  font-size:15px;
   font-weight:800;
 }
 
-.vip-text{
-  font-size:16px;
+.vip-text{white-space:nowrap;
+  font-size:15px;
   line-height:1.35;
-  padding-right:95px;
+  padding-right:0;
   margin-bottom:12px;
 }
 
@@ -78,9 +78,9 @@
   font-weight:800;
 }
 
-.vip-progress,
+.vip-progress,.vip-reward{white-space:nowrap;}.vip-progress,
 .vip-reward{
-  font-size:16px;
+  font-size:15px;
   font-weight:700;
   line-height:1.45;
 }
@@ -111,17 +111,17 @@
 
 @media(max-width:420px){
   .vip-card{
-    min-height:145px;
+    min-height:112px;
     padding:27px 28px 23px;
   }
 
-  .vip-text{
+  .vip-text{white-space:nowrap;
     font-size:17px;
   }
 
-  .vip-progress,
+  .vip-progress,.vip-reward{white-space:nowrap;}.vip-progress,
   .vip-reward{
-    font-size:16px;
+    font-size:15px;
   }
 
   .vip-level{
