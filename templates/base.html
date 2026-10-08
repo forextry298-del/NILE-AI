@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>NILE AI</title><link rel="stylesheet" href="{{ url_for("static",filename="css/nile.css") }}"><link rel="stylesheet" href="{{ url_for("static",filename="css/codex-match.css") }}"><link rel="stylesheet" href="{{ url_for("static",filename="css/codex-background.css") }}"></head><body>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>NILE AI</title><link rel="stylesheet" href="{{ url_for("static",filename="css/nile.css") }}"><link rel="stylesheet" href="{{ url_for("static",filename="css/codex-background.css") }}"><link rel="stylesheet" href="{{ url_for("static",filename="css/codex-colors.css") }}"></head><body>
 <div class="codex-lightning-bg" aria-hidden="true">
 <div class="flash"></div>
 <div class="bolt"></div><div class="bolt"></div><div class="bolt"></div><div class="bolt"></div>
@@ -19,4 +19,4 @@
 <div class="green-wave wave-11"></div>
 <div class="green-wave wave-12"></div>
 </div>
-<div class="page"><div class="box"><main>{% block content %}{% endblock %}</main></div></div>{% include "nav.html" %}<script src="{{ url_for("static",filename="js/nile.js") }}"></script></body></html>
+<header><b>NILE<span>AI</span></b><small>AI COMMAND CENTER</small></header><main>{% block content %}{% endblock %}</main><nav class="bottom"><a href="/home"><span class="nav-icon">⌂</span><small>Home</small></a><a href="/invest"><span class="nav-icon">◇</span><small>AI</small></a><a class="wallet-nav" href="/wallet"><span class="wallet-icon">◉</span><small>Wallet</small></a><a href="/income"><span class="nav-icon">◌</span><small>Activity</small></a><a href="/my"><span class="nav-icon">◉</span><small>My</small></a></nav><script src="{{ url_for("static",filename="js/nile.js") }}"></script></body></html>

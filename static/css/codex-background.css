@@ -150,3 +150,80 @@
     }
 }
 
+
+/* ===== EXACT CODEX DOT BACKGROUND ===== */
+html,body{
+  background-color:#000!important;
+}
+
+body{
+  background-image:radial-gradient(circle,rgba(0,190,255,.42) 1.2px,transparent 1.8px)!important;
+  background-size:18px 18px!important;
+  animation:codexDotFlow 12s linear infinite!important;
+}
+
+@keyframes codexDotFlow{
+  0%{background-position:0 0}
+  25%{background-position:18px -12px}
+  50%{background-position:36px 0}
+  75%{background-position:18px 12px}
+  100%{background-position:0 0}
+}
+
+
+/* ===== FORCE VISIBLE CODEX DOTS ===== */
+
+html{
+  background:#000!important;
+}
+
+body{
+  background-color:#000!important;
+  background-image:radial-gradient(circle,rgba(0,190,255,.75) 1.2px,transparent 1.8px)!important;
+  background-size:18px 18px!important;
+  background-position:0 0!important;
+  animation:codexDotFlow 12s linear infinite!important;
+}
+
+@keyframes codexDotFlow{
+  0%{background-position:0 0}
+  25%{background-position:18px -12px}
+  50%{background-position:36px 0}
+  75%{background-position:18px 12px}
+  100%{background-position:0 0}
+}
+
+/* Keep NILE content above the background */
+body > *{
+  position:relative;
+}
+
+.codex-lightning-bg,
+.codex-green-waves{
+  position:fixed!important;
+  pointer-events:none!important;
+}
+
+
+/* ===== CODEX DOTS ABOVE PAGE BACKGROUND ===== */
+
+body::before{
+  content:"";
+  position:fixed!important;
+  inset:0!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background-image:radial-gradient(circle,rgba(0,190,255,.75) 1.2px,transparent 1.8px)!important;
+  background-size:18px 18px!important;
+  animation:codexDotFlow 12s linear infinite!important;
+}
+
+body > *{
+  position:relative;
+}
+
+.codex-lightning-bg,
+.codex-green-waves{
+  z-index:1!important;
+}
+

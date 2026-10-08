@@ -1,0 +1,105 @@
+/* ===== NILE AI — CODEX COLOR THEME ONLY ===== */
+
+html,body{
+  background:#000!important;
+  color:#fff!important;
+}
+
+body{
+  background-color:#000!important;
+}
+
+/* Main NILE panels/cards — color only */
+.panel,
+.core,
+.wallet,
+.card,
+.machine-card,
+.auth-card,
+.nile-wrap,
+.nmh-panel,
+.nmh-stat,
+.nmh-news{
+  background:rgba(0,0,0,.55)!important;
+  border-color:#008dcc!important;
+  box-shadow:0 0 16px rgba(0,190,255,.08)!important;
+}
+
+/* CODEX cyan text */
+h1,h2,h3,h4,
+.section-title,
+.core-title,
+.nmh-section-title,
+.auth-logo span,
+.muted-accent{
+  color:#00baff!important;
+}
+
+/* NILE links */
+a{
+  color:#fff;
+}
+
+a:hover{
+  color:#00baff!important;
+}
+
+/* Buttons — preserve NILE dimensions */
+button,
+.button,
+.action,
+.auth-btn,
+.machine-btn{
+  border-color:#00baff!important;
+  background:#001a24!important;
+  color:#00baff!important;
+}
+
+/* Primary buttons */
+button.primary,
+.button.primary,
+.action.primary,
+.auth-btn,
+.machine-btn{
+  background:#08bde8!important;
+  color:#fff!important;
+}
+
+/* Inputs — preserve NILE dimensions */
+input,
+textarea,
+select,
+.auth-input{
+  background:rgba(0,0,0,.35)!important;
+  color:#fff!important;
+  border-color:#777!important;
+}
+
+/* Bottom navigation — preserve NILE layout */
+.bottom-nav,
+.bottom,
+nav{
+  background:#000!important;
+  border-color:#123!important;
+}
+
+.bottom-nav a,
+.bottom a,
+nav a{
+  color:#aaa!important;
+}
+
+.bottom-nav a.active,
+.bottom a.active,
+nav a.active{
+  color:#00baff!important;
+}
+
+/* Cyan highlights */
+.vip,
+.badge,
+.tag{
+  color:#00baff!important;
+  border-color:#00baff!important;
+}
+
