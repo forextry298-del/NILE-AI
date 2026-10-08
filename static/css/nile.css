@@ -32,27 +32,3 @@ nav.bottom .wallet-icon{position:relative!important;left:auto!important;right:au
 .auth-card .robot-zone:before,.auth-card .robot-zone:after{content:none!important}
 @media(max-width:430px){.auth-card .robot-zone{height:190px!important}}
 .auth-card .robot-zone{height:210px!important;margin:-16px -12px 15px!important;border-radius:15px!important;background-image:linear-gradient(to bottom,rgba(0,3,8,.05),rgba(0,3,8,.2)),url("/static/img/nile-robot-globe.png")!important;background-position:center top!important;background-size:cover!important;background-repeat:no-repeat!important;border-bottom:1px solid rgba(8,207,255,.65)!important;box-shadow:0 0 22px rgba(8,207,255,.18),inset 0 -25px 35px rgba(0,3,8,.35)!important}.auth-card .robot-zone:before,.auth-card .robot-zone:after{content:none!important}@media(max-width:430px){.auth-card .robot-zone{height:190px!important}}nav.bottom{left:6px!important;right:6px!important;width:auto!important;transform:none!important;overflow:visible!important}nav.bottom>a{left:auto!important;right:auto!important;transform:none!important;min-width:0!important}
-
-/* NILE AI MASTER COLOR SYSTEM */
-/* NILE AI MASTER COLOR SYSTEM */
-html,body{background:#000!important;color:#f4fbff!important}
-body{background-color:#000!important;background-image:radial-gradient(circle,rgba(0,205,255,.22) 1px,transparent 1.6px),linear-gradient(170deg,transparent 0 48%,rgba(0,255,180,.09) 49%,transparent 50%),linear-gradient(10deg,transparent 0 55%,rgba(0,190,255,.08) 56%,transparent 57%)!important;background-size:28px 28px,100% 210px,100% 230px!important;background-position:0 0,0 0,0 0!important;animation:nileDots 12s linear infinite!important}
-@keyframes nileDots{0%{background-position:0 0,0 0,0 0}50%{background-position:14px 20px,40px -12px,-35px 18px}100%{background-position:28px 40px,80px -24px,-70px 36px}}
-body:before{content:""!important;position:fixed!important;inset:0!important;pointer-events:none!important;z-index:-1!important;background:repeating-radial-gradient(ellipse at 50% 0,transparent 0 45px,rgba(0,255,180,.07) 46px 47px,transparent 48px 82px)!important;animation:nileWaves 14s linear infinite!important}
-@keyframes nileWaves{from{transform:translateY(0)}to{transform:translateY(70px)}}
-header{background:rgba(0,8,14,.92)!important;border-bottom:1px solid rgba(0,210,255,.55)!important}
-header b{color:#fff!important}header b span{color:#08cfff!important}header small{color:#d9f8ff!important}
-.auth-card{background:rgba(0,8,14,.88)!important;border:1px solid rgba(0,220,255,.65)!important;box-shadow:0 0 28px rgba(0,220,255,.16),inset 0 0 25px rgba(0,255,180,.05)!important;color:#fff!important}
-.auth-card h2,.auth-logo{color:#fff!important}.auth-card>small{color:#08cfff!important}.auth-input{background:rgba(0,5,10,.9)!important;border:1px solid rgba(0,220,255,.55)!important;color:#fff!important}.auth-btn{background:linear-gradient(90deg,#08cfff,#00a8d6)!important;color:#fff!important}
-.nmh-panel,.nmh-card,.nmh-stat,.nmh-tile,.stat-card,.stat-box,.home-card{background:#fff!important;color:#061018!important;border:1px solid rgba(0,210,255,.8)!important;box-shadow:0 0 14px rgba(0,200,255,.12)!important}
-.nmh-panel h1,.nmh-panel h2,.nmh-panel h3,.nmh-card h1,.nmh-card h2,.nmh-card h3,.nmh-stat h1,.nmh-stat h2,.nmh-stat h3,.stat-card h1,.stat-card h2,.stat-card h3{color:#071018!important}
-.nmh-panel p,.nmh-card p,.nmh-stat p,.stat-card p{color:#314b58!important}
-.nmh-grid .nmh-stat,.nmh-grid .stat-card{background:#fff!important}
-.nmh-slider{border-color:#08cfff!important;box-shadow:0 0 18px rgba(0,210,255,.2)!important}
-.my-page .panel{background:rgba(0,8,14,.9)!important;color:#fff!important;border:1px solid rgba(0,210,255,.7)!important;box-shadow:0 0 18px rgba(0,210,255,.12)!important}
-.my-page .my-grid a{background:#08b9df!important;color:#fff!important;border:1px solid #08cfff!important;box-shadow:0 0 12px rgba(0,210,255,.2)!important;border-radius:18px!important}
-.my-page .my-grid a i,.my-page .my-grid a span{color:#fff!important}
-.my-page strong,.my-page h2{color:#fff!important}
-.my-page .my-wide-btn{background:#08b9df!important;color:#fff!important;border-color:#08cfff!important}
-.bottom{background:linear-gradient(180deg,rgba(4,15,22,.98),rgba(0,4,8,.99))!important;border-color:rgba(0,210,255,.7)!important;box-shadow:0 0 18px rgba(0,210,255,.22)!important}
-.bottom .nav-icon{color:#d8f9ff!important}.bottom small{color:#b9d5df!important}.bottom .wallet-icon{background:radial-gradient(circle,#08cfff,#007fae 48%,#00131d 72%)!important;border-color:#08cfff!important}
