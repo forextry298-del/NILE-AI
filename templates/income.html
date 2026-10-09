@@ -1,1 +1,98 @@
-{% extends "base.html" %}{% block content %}<div class="nile-wrap"><header class="nile-header"><div><div class="nile-brand">NILE AI</div><div class="nile-sub">ACTIVITY CENTER</div></div><div class="nile-avatar">↗</div></header><section class="panel"><small>NILE AI ACTIVITY</small><h2>Activity Center</h2><p>Track your income, transactions and active AI engines.</p></section>{% if products %}<section class="panel"><h2>My Machines</h2>{% for p in products %}<p><strong>{{ p.name }}</strong> · {{ p.status }}{% if "Referral Reward" in p.name %} · Referral reward{% endif %}</p>{% endfor %}</section>{% endif %}{% if tx %}{% for t in tx[:12] %}<section class="panel"><h2>{{ t.kind }}</h2><p>UGX {{ "{:,.2f}".format(t.amount or 0) }} · {{ t.created_at }}</p></section>{% endfor %}{% else %}<section class="panel"><p>No activity recorded yet.</p></section>{% endif %}{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+<style>
+.activity-page {
+  min-height: auto;
+  padding: 8px 10px;
+  color: #f2f5fa;
+  font-family: Georgia, serif;
+  background-color: #020608;
+  background-image: radial-gradient(circle, rgba(0,207,255,.18) 1px, transparent 1.5px);
+  background-size: 28px 28px;
+}
+.activity-empty {
+  min-height: 155px;
+  border: 1px solid #00cfff;
+  border-radius: 15px;
+  box-shadow: 0 0 7px rgba(0,207,255,.35), inset 0 0 15px rgba(0,207,255,.035);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 14px 10px;
+  box-sizing: border-box;
+}
+.activity-empty h2 {
+  margin: 0 0 7px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #cbd0d9;
+}
+.activity-empty p {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #aeb5c1;
+}
+.activity-browse {
+  display: inline-block;
+  padding: 11px 18px;
+  border-radius: 12px;
+  background: #08b9ed;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  box-shadow: 0 0 12px rgba(0,207,255,.15);
+}
+.activity-panel {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #00cfff;
+  border-radius: 12px;
+  background: rgba(0,10,15,.9);
+  overflow-wrap: anywhere;
+}
+.activity-panel h3 { margin-top: 0; color: #00cfff; }
+.activity-panel p { margin: 6px 0; font-size: 11px; }
+@media (max-width: 380px) {
+  .activity-empty h2 { font-size: 15px; }
+  .activity-empty p { font-size: 11px; }
+  .activity-browse { padding: 9px 14px; font-size: 11px; }
+}
+</style>
+
+<div class="activity-page">
+  <section class="activity-empty">
+    {% if not products and not tx %}
+      <h2>No active investments yet.</h2>
+      <p>Buy a machine on the AI tab to start earning.</p>
+      <a class="activity-browse" href="{{ url_for('invest') }}">Browse AI machines</a>
+    {% else %}
+      <h2>Your activity</h2>
+      <p>Your machine and transaction records are shown below.</p>
+      <a class="activity-browse" href="{{ url_for('invest') }}">Browse AI machines</a>
+    {% endif %}
+  </section>
+
+  {% if products %}
+  <section class="activity-panel">
+    <h3>My Machines</h3>
+    {% for p in products %}
+      <p><strong>{{ p.name }}</strong> · {{ p.status }}{% if "Referral Reward" in p.name %} · Referral reward{% endif %}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if tx %}
+  <section class="activity-panel">
+    <h3>Recent Transactions</h3>
+    {% for t in tx[:12] %}
+      <p><strong>{{ t.kind }}</strong><br>
+      UGX {{ "{:,.2f}".format(t.amount or 0) }} · {{ t.created_at }}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+</div>
+{% endblock %}
