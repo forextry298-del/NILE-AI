@@ -709,7 +709,7 @@ def claim_salary():
     key = (uganda_now().replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
 
     if uganda_now().day != 1:
-        flash("Monthly salary will be paid on 1st of next month", "error")
+        flash("monthly salary will be payed to ur balance on 1st of next month", "error")
         return redirect(url_for("my"))
 
     con = db()
@@ -774,7 +774,7 @@ def claim_salary():
             (u["id"], "REFERRAL_SALARY", amount, "APPROVED", "SAL-"+key, now())
         )
         con.commit()
-        flash("Monthly salary claimed to your balance", "success")
+        flash("monthly salary claimed to ur balance", "success")
     except Exception:
         con.rollback()
         raise

@@ -19,4 +19,14 @@
 <div class="green-wave wave-11"></div>
 <div class="green-wave wave-12"></div>
 </div>
-<main>{% block content %}{% endblock %}</main><nav class="bottom"><a href="/home"><span class="nav-icon">⌂</span><small>Home</small></a><a href="/invest"><span class="nav-icon">◇</span><small>AI</small></a><a class="wallet-nav" href="/wallet"><span class="wallet-icon">◉</span><small>Wallet</small></a><a href="/income"><span class="nav-icon">◌</span><small>Activity</small></a><a href="/my"><span class="nav-icon">◉</span><small>My</small></a></nav><script src="{{ url_for("static",filename="js/nile.js") }}"></script></body></html>
+<main>
+{% with notices = get_flashed_messages(with_categories=true) %}
+  {% for category, message in notices %}
+    <div class="nile-flash {{ category }}" role="status"
+         style="margin:10px;padding:12px;border-radius:8px;background:#10252d;color:#fff;border:1px solid #00cfff;">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endwith %}
+{% block content %}{% endblock %}
+</main><nav class="bottom"><a href="/home"><span class="nav-icon">⌂</span><small>Home</small></a><a href="/invest"><span class="nav-icon">◇</span><small>AI</small></a><a class="wallet-nav" href="/wallet"><span class="wallet-icon">◉</span><small>Wallet</small></a><a href="/income"><span class="nav-icon">◌</span><small>Activity</small></a><a href="/my"><span class="nav-icon">◉</span><small>My</small></a></nav><script src="{{ url_for("static",filename="js/nile.js") }}"></script></body></html>
