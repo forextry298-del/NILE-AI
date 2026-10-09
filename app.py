@@ -31,6 +31,15 @@ PLANS = {
 }
 REWARDS=[(120,750000),(100,500000),(60,275000),(30,150000),(15,98000),(6,45000)]
 
+# Monthly referral rewards: invite threshold and machine code.
+MACHINE_REFERRAL_REWARDS = [
+    (6, "A1"),
+    (15, "A2"),
+    (30, "A3"),
+    (60, "B1"),
+]
+
+
 def db():
     con=sqlite3.connect(DB,timeout=30)
     con.row_factory=sqlite3.Row
@@ -39,11 +48,15 @@ def db():
 
 def now(): return datetime.now(timezone.utc).isoformat(timespec="seconds")
 def month_start():
-    n=datetime.now(timezone.utc)
-    return n.replace(day=1,hour=0,minute=0,second=0,microsecond=0)
+    n=datetime.now(ZoneInfo("Africa/Kampala"))
+    local=n.replace(day=1,hour=0,minute=0,second=0,microsecond=0)
+    return local.astimezone(timezone.utc)
+
 def previous_month_start():
-    n=month_start()
-    return n.replace(year=n.year-1,month=12) if n.month==1 else n.replace(month=n.month-1)
+    n=datetime.now(ZoneInfo("Africa/Kampala"))
+    first=n.replace(day=1,hour=0,minute=0,second=0,microsecond=0)
+    previous=(first-timedelta(days=1)).replace(day=1)
+    return previous.astimezone(timezone.utc)
 def pw_hash(p): return hashlib.sha256(p.encode()).hexdigest()
 def make_code(con):
     chars=string.ascii_uppercase+string.digits
@@ -669,26 +682,183 @@ def wallet():
 @app.route("/my")
 @required
 def my():
-    u=current_user(); last,this=invite_counts(u["id"]); ai_income,today=active_income(u["id"])
-    return render_template("my.html",user=u,invited_last_month=last,invited_this_month=this,last_salary=last*3000,ai_income=ai_income,today=today)
+    u = current_user()
+    last, this = invite_counts(u["id"])
+    ai_income, today = active_income(u["id"])
+    con = db()
+    claims = con.execute(
+        "SELECT salary_claimed_month,reward_claimed_month FROM users WHERE id=?",
+        (u["id"],)
+    ).fetchone()
+    con.close()
+    return render_template(
+        "my.html", user=u,
+        invited_last_month=last,
+        invited_this_month=this,
+        last_salary=last*3000,
+        ai_income=ai_income,
+        today=today,
+        salary_claimed_month=claims["salary_claimed_month"],
+        reward_claimed_month=claims["reward_claimed_month"]
+    )
 
 @app.route("/my/claim-salary",methods=["POST"])
 @required
 def claim_salary():
-    u=current_user(); last,_=invite_counts(u["id"]); key=previous_month_start().strftime("%Y-%m")
-    con=db(); cur=con.execute("SELECT salary_claimed_month FROM users WHERE id=?",(u["id"],)).fetchone()
-    if cur["salary_claimed_month"]==key: con.close(); flash("Last month's salary has already been claimed.","error"); return redirect(url_for("my"))
-    if last<=0: con.close(); flash("The number of invite last month was not enough","error"); return redirect(url_for("my"))
-    amount=last*3000; con.execute("UPDATE users SET balance=balance+?,salary_claimed_month=? WHERE id=?",(amount,key,u["id"])); con.execute("INSERT INTO transactions(uid,kind,amount,status,reference,created_at) VALUES(?,?,?,?,?,?)",(u["id"],"REFERRAL_SALARY",amount,"APPROVED","SAL-"+key,now())); con.commit(); con.close(); flash(f"UGX {amount:,.0f} last month's salary added to your balance.","success"); return redirect(url_for("my"))
+    u = current_user()
+    key = (uganda_now().replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
+
+    if uganda_now().day != 1:
+        flash("Monthly salary will be paid on 1st of next month", "error")
+        return redirect(url_for("my"))
+
+    con = db()
+    try:
+        claimed = con.execute(
+            "SELECT salary_claimed_month FROM users WHERE id=?",
+            (u["id"],)
+        ).fetchone()
+
+        if claimed["salary_claimed_month"] == key:
+            flash("UN repeatable", "error")
+            return redirect(url_for("my"))
+
+        own_codes = {
+            r["code"] for r in con.execute(
+                "SELECT DISTINCT code FROM products WHERE uid=? AND status='ACTIVE'",
+                (u["id"],)
+            ).fetchall()
+        }
+        if not own_codes:
+            flash("The number of invites last month was not enough", "error")
+            return redirect(url_for("my"))
+
+        referrals = con.execute("""
+            SELECT DISTINCT u.id
+            FROM users u
+            JOIN transactions t ON t.uid=u.id
+            WHERE u.invited_by=?
+              AND u.created_at>=?
+              AND u.created_at<?
+              AND t.kind='DEPOSIT'
+              AND t.status='APPROVED'
+        """, (
+            u["id"],
+            previous_month_start().isoformat(),
+            month_start().isoformat()
+        )).fetchall()
+
+        qualifying = 0
+        placeholders = ",".join("?" for _ in own_codes)
+        for referral in referrals:
+            match = con.execute(
+                "SELECT 1 FROM products WHERE uid=? "
+                "AND status='ACTIVE' AND code IN (" + placeholders + ") LIMIT 1",
+                (referral["id"], *sorted(own_codes))
+            ).fetchone()
+            if match:
+                qualifying += 1
+
+        amount = qualifying * 3000
+        if qualifying < 2 or amount <= 6000:
+            flash("The number of invites last month was not enough", "error")
+            return redirect(url_for("my"))
+
+        con.execute(
+            "UPDATE users SET balance=balance+?,salary_claimed_month=? WHERE id=?",
+            (amount, key, u["id"])
+        )
+        con.execute(
+            "INSERT INTO transactions(uid,kind,amount,status,reference,created_at) "
+            "VALUES(?,?,?,?,?,?)",
+            (u["id"], "REFERRAL_SALARY", amount, "APPROVED", "SAL-"+key, now())
+        )
+        con.commit()
+        flash("Monthly salary claimed to your balance", "success")
+    except Exception:
+        con.rollback()
+        raise
+    finally:
+        con.close()
+
+    return redirect(url_for("my"))
+
 
 @app.route("/my/claim-reward",methods=["POST"])
 @required
 def claim_reward():
-    u=current_user(); last,_=invite_counts(u["id"]); key=previous_month_start().strftime("%Y-%m"); reward=next((amt for req,amt in REWARDS if last>=req),0)
-    con=db(); cur=con.execute("SELECT reward_claimed_month FROM users WHERE id=?",(u["id"],)).fetchone()
-    if cur["reward_claimed_month"]==key: con.close(); flash("Last month's reward has already been claimed.","error"); return redirect(url_for("my"))
-    if reward<=0: con.close(); flash("The number of invite last month was not enough","error"); return redirect(url_for("my"))
-    con.execute("UPDATE users SET balance=balance+?,reward_claimed_month=? WHERE id=?",(reward,key,u["id"])); con.execute("INSERT INTO transactions(uid,kind,amount,status,reference,created_at) VALUES(?,?,?,?,?,?)",(u["id"],"REFERRAL_REWARD",reward,"APPROVED","REW-"+key,now())); con.commit(); con.close(); flash(f"UGX {reward:,.0f} reward added to your balance.","success"); return redirect(url_for("my"))
+    u = current_user()
+    key = (uganda_now().replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
+    con = db()
+    start = previous_month_start().isoformat()
+    end = month_start().isoformat()
+    last = con.execute("""
+        SELECT COUNT(DISTINCT u.id) AS n
+        FROM users u
+        JOIN transactions t ON t.uid=u.id
+        JOIN products p ON p.uid=u.id
+        WHERE u.invited_by=?
+          AND u.created_at>=? AND u.created_at<?
+          AND t.kind='DEPOSIT' AND t.status='APPROVED'
+          AND p.status='ACTIVE'
+    """, (u["id"], start, end)).fetchone()["n"]
+    con.close()
+
+    reward_code = next(
+        (code for required_count, code in reversed(MACHINE_REFERRAL_REWARDS)
+         if last >= required_count),
+        None
+    )
+
+    con = db()
+    try:
+        claimed = con.execute(
+            "SELECT reward_claimed_month FROM users WHERE id=?",
+            (u["id"],)
+        ).fetchone()
+
+        if claimed["reward_claimed_month"] == key:
+            flash("UN repeatable", "error")
+            return redirect(url_for("my"))
+
+        if not reward_code:
+            flash("Last month the number of invites was not enough", "error")
+            return redirect(url_for("my"))
+
+        plan = PLANS[reward_code]
+        stamp = now()
+        con.execute("""
+            INSERT INTO products
+              (uid,code,name,price,daily_income,lock_days,total_income,
+               purchased_at,last_income_at,earned_income,status)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?)
+        """, (
+            u["id"], reward_code,
+            reward_code+" AI Machine — Monthly Referral Reward",
+            0, plan["daily"], plan["days"], plan["total"],
+            stamp, stamp, 0, "ACTIVE"
+        ))
+
+        con.execute(
+            "UPDATE users SET reward_claimed_month=? WHERE id=?",
+            (key, u["id"])
+        )
+        con.execute(
+            "INSERT INTO transactions(uid,kind,amount,status,reference,created_at) "
+            "VALUES(?,?,?,?,?,?)",
+            (u["id"], "REFERRAL_MACHINE_REWARD", 0, "APPROVED",
+             "MACHINE-"+reward_code+"-"+key, stamp)
+        )
+        con.commit()
+        flash(reward_code+" machine added to your Activity Center", "success")
+    except Exception:
+        con.rollback()
+        raise
+    finally:
+        con.close()
+
+    return redirect(url_for("my"))
+
 
 @app.route("/invite")
 @required
