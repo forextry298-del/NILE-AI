@@ -18,16 +18,16 @@
 </div></section><section class="panel my-share"><h2>NILE SHARES</h2><div class="share-line"></div><strong>UGX {{ "{:,.2f}".format(ai_income or 0) }}</strong></section><section class="panel my-salary"><div><span>Last Month's Salary</span><strong>UGX 0.00</strong></div><div><span>This Month's Salary</span><strong>UGX {{ "{:,.2f}".format(today or 0) }}</strong></div><a href="/reward" class="my-wide-btn">Get Last Month's Salary</a></section><section class="panel my-invites"><div><span>Invited Last Month</span><strong>{{ invite_count or 0 }}</strong></div><div><span>Invited This Month</span><strong>{{ invite_count or 0 }}</strong></div><p>Only your direct invites (level 1) who made a deposit are counted.</p><a href="/reward" class="my-wide-btn">Get Last Month's Reward</a></section><section class="panel my-rewards"><div class="reward-head"><span>Invite</span><span>Reward</span></div><div class="reward-row"><span>6</span><span>Z-1</span></div><div class="reward-row"><span>15</span><span>Z-2</span></div><div class="reward-row"><span>30</span><span>Z-3</span></div><div class="reward-row"><span>60</span><span>Z-4</span></div></section><a class="my-signout" href="/logout">⇥ Sign Out</a><div class="my-referral">Your referral code: <b>{{ user.invite_code }}</b></div></div><style>
 /* COMPACT MOBILE MY PAGE */
 .my-page{
-  padding:12px 12px 82px!important;
+  padding:7px 8px 76px!important;
   min-height:calc(100vh - 60px)!important;
 }
 .profile{
-  min-height:135px!important;
+  min-height:100px!important;
   margin-bottom:8px!important;
 }
 .welcome{
-  font-size:21px!important;
-  margin:0 0 16px!important;
+  font-size:18px!important;
+  margin:0 0 9px!important;
   line-height:1.1!important;
 }
 .phone{
@@ -38,8 +38,8 @@
   top:8px!important;
 }
 .avatar{
-  width:55px!important;
-  height:55px!important;
+  width:44px!important;
+  height:44px!important;
   border-width:2px!important;
 }
 .avatar:after{
@@ -53,8 +53,8 @@
   font-size:12px!important;
 }
 .wallet-card{
-  height:175px!important;
-  min-height:175px!important;
+  height:130px!important;
+  min-height:130px!important;
   border-radius:17px!important;
   margin-bottom:14px!important;
 }
@@ -128,17 +128,17 @@
 <style id="NILE-CLEAN-MY-SERVICES">
 /* ONLY NILE MY SERVICES */
 .my-page section.my-menu{
-  padding:30px 16px 28px !important;
-  margin:30px 0 16px !important;
+  padding:16px 10px 14px !important;
+  margin:14px 0 12px !important;
   background:rgba(0,0,0,.45) !important;
   border:1px solid #00aee8 !important;
-  border-radius:22px !important;
+  border-radius:16px !important;
   box-shadow:none !important;
 }
 .my-page section.my-menu .my-grid{
   display:grid !important;
   grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:28px 10px !important;
+  gap:17px 6px !important;
   width:100% !important;
   padding:0 !important;
   margin:0 !important;
@@ -160,7 +160,7 @@
   color:#fff !important;
   text-decoration:none !important;
   text-align:center !important;
-  font-size:13px !important;
+  font-size:11px !important;
   line-height:1.2 !important;
 }
 .my-page section.my-menu .my-grid>a>i{
@@ -168,23 +168,23 @@
   align-items:center !important;
   justify-content:center !important;
   flex:none !important;
-  width:56px !important;
-  height:56px !important;
-  min-width:56px !important;
-  min-height:56px !important;
-  margin:0 0 8px 0 !important;
+  width:46px !important;
+  height:46px !important;
+  min-width:46px !important;
+  min-height:46px !important;
+  margin:0 0 5px 0 !important;
   padding:0 !important;
   background:#10c5f5 !important;
   border:0 !important;
-  border-radius:17px !important;
+  border-radius:13px !important;
   box-shadow:none !important;
   color:#fff !important;
   font-style:normal !important;
 }
 .my-page section.my-menu .my-grid>a>i svg{
   display:block !important;
-  width:32px !important;
-  height:32px !important;
+  width:27px !important;
+  height:27px !important;
   margin:0 !important;
   padding:0 !important;
   background:transparent !important;
@@ -203,7 +203,7 @@
   display:block !important;
   width:100% !important;
   color:#fff !important;
-  font-size:13px !important;
+  font-size:11px !important;
   line-height:1.2 !important;
   white-space:normal !important;
 }
@@ -321,6 +321,30 @@
 .my-welcome{font-size:19px}
   .my-phone{font-size:16px}
 }
+
+/* Compact My page to match Invite and My Team */
+.my-page .nile-header{margin-bottom:6px!important;padding:5px 0!important}
+.my-page .nile-brand{font-size:22px!important;line-height:1.05!important}
+.my-page .nile-sub{font-size:10px!important;margin-top:2px!important}
+.my-page .nile-avatar{width:36px!important;height:36px!important}
+.my-page .my-agent{margin:5px 0 8px!important;padding:7px 10px!important;font-size:12px!important}
+.my-page .my-balance{padding:9px 10px!important;margin:0 0 10px!important;gap:8px!important;border-radius:12px!important}
+.my-page .my-balance>div{padding:0!important;min-width:0!important}
+.my-page .my-label{font-size:11px!important;margin-bottom:4px!important}
+.my-page .my-balance strong{font-size:15px!important;line-height:1.15!important;overflow-wrap:anywhere!important}
+.my-page section.my-menu{padding:12px 8px 10px!important;margin:10px 0!important;border-radius:14px!important}
+.my-page section.my-menu .my-grid{gap:13px 4px!important}
+.my-page section.my-menu .my-grid>a>i{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;border-radius:12px!important;margin-bottom:4px!important}
+.my-page section.my-menu .my-grid>a>i svg{width:24px!important;height:24px!important}
+.my-page section.my-menu .my-grid>a>span{font-size:10px!important;line-height:1.1!important}
+.my-page .my-share,.my-page .my-salary,.my-page .my-invites,.my-page .my-rewards,.my-page .my-signout,.my-page .my-referral{padding:10px!important;margin:0 0 9px!important;border-radius:12px!important}
+.my-page .my-share h2{font-size:13px!important;margin:0 0 5px!important}
+.my-page .my-share strong,.my-page .my-salary strong,.my-page .my-invites strong{font-size:14px!important}
+.my-page .my-salary>div,.my-page .my-invites>div{margin-bottom:6px!important;gap:6px!important}
+.my-page .my-salary span,.my-page .my-invites span,.my-page .my-invites p{font-size:11px!important;line-height:1.25!important}
+.my-page .my-wide-btn,.my-page .button,.my-page .out{padding:7px 9px!important;font-size:11px!important}
+.my-page .reward-head,.my-page .reward-row{padding:5px 0!important;font-size:11px!important}
+
 </style>
 
 
