@@ -527,4 +527,137 @@ document.addEventListener("DOMContentLoaded",function(){
 
 
 
-\n\n\n
+\n\n\n<style id="my-horizontal-boxes-final">
+.my-page .my-salary,
+.my-page .my-invites,
+.my-page .my-rewards,
+.my-page .my-signout,
+.my-page .my-referral{
+  width:100%!important;
+  box-sizing:border-box!important;
+  margin:0 0 10px!important;
+  padding:12px!important;
+  border-radius:14px!important;
+}
+.my-page .my-salary,
+.my-page .my-invites,
+.my-page .my-rewards{
+  border:1px solid #00bdf4!important;
+  background:rgba(0,0,0,.45)!important;
+  box-shadow:0 0 7px rgba(0,190,244,.15)!important;
+}
+.my-page .my-salary,
+.my-page .my-invites{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px 8px!important;
+  text-align:center!important;
+}
+.my-page .my-salary>div,
+.my-page .my-invites>div{
+  display:block!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:3px 0!important;
+}
+.my-page .my-salary span,
+.my-page .my-invites span{
+  display:block!important;
+  font-size:12px!important;
+  line-height:1.25!important;
+  color:#bfc5cf!important;
+  margin-bottom:8px!important;
+}
+.my-page .my-salary strong,
+.my-page .my-invites strong{
+  display:block!important;
+  font-size:19px!important;
+  line-height:1.2!important;
+  overflow-wrap:anywhere!important;
+}
+.my-page .my-salary form,
+.my-page .my-invites form,
+.my-page .my-invites p{
+  grid-column:1/-1!important;
+  width:100%!important;
+  margin:0!important;
+}
+.my-page .my-invites p{
+  text-align:left!important;
+  font-size:11px!important;
+  line-height:1.35!important;
+  color:#aeb8c3!important;
+  padding:2px 0!important;
+}
+.my-page .my-wide-btn{
+  display:block!important;
+  width:100%!important;
+  min-height:42px!important;
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:12px!important;
+  padding:10px 8px!important;
+  background:#08bde9!important;
+  color:#fff!important;
+  font-size:14px!important;
+  line-height:1.2!important;
+  font-family:Georgia,serif!important;
+  font-weight:normal!important;
+}
+.my-page .my-rewards{
+  padding:10px 14px!important;
+}
+.my-page .my-rewards .reward-head,
+.my-page .my-rewards .reward-row{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  align-items:center!important;
+  gap:8px!important;
+  padding:10px 0!important;
+  margin:0!important;
+  border-bottom:1px solid rgba(0,189,244,.35)!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+}
+.my-page .my-rewards .reward-head{
+  font-weight:bold!important;
+  color:#f2f5fa!important;
+}
+.my-page .my-rewards .reward-head span:last-child,
+.my-page .my-rewards .reward-row span:last-child{
+  text-align:right!important;
+}
+.my-page .my-rewards .reward-row:last-child{
+  border-bottom:0!important;
+}
+.my-page .my-signout{
+  display:block!important;
+  text-align:center!important;
+  border:1px solid #e52c4b!important;
+  background:transparent!important;
+  color:#f04459!important;
+  font-size:15px!important;
+  padding:13px 10px!important;
+  text-decoration:none!important;
+}
+.my-page .my-referral{
+  text-align:center!important;
+  border:0!important;
+  background:transparent!important;
+  font-size:12px!important;
+  padding:4px 5px 12px!important;
+  color:#bfc5cf!important;
+}
+.my-page .my-referral b{color:#00cfff!important}
+@media(max-width:380px){
+  .my-page .my-salary,
+  .my-page .my-invites{padding:10px!important;gap:8px 5px!important}
+  .my-page .my-salary span,
+  .my-page .my-invites span{font-size:11px!important}
+  .my-page .my-salary strong,
+  .my-page .my-invites strong{font-size:16px!important}
+  .my-page .my-wide-btn{min-height:38px!important;font-size:12px!important}
+  .my-page .my-rewards .reward-head,
+  .my-page .my-rewards .reward-row{font-size:12px!important;padding:9px 0!important}
+}
+</style>
