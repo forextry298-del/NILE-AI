@@ -1,4 +1,19 @@
-{% extends "base.html" %}{% block content %}<div class="nile-wrap my-page"><div class="my-agent">0758878297 <span>★ VIP 0</span></div><section class="panel my-balance"><div><div class="my-label">Wallet</div><strong>UGX {{ "{:,.2f}".format(user.wallet or 0) }}</strong></div><div><div class="my-label">Balance</div><strong>UGX {{ "{:,.2f}".format(user.balance or 0) }}</strong></div></section><section class="panel my-menu"><div class="my-grid">
+{% extends "base.html" %}{% block content %}<div class="nile-wrap my-page"><div class="my-agent">0758878297 <span>★ VIP 0</span></div><section class="panel my-balance is-collapsed" id="myBalanceCard">
+<div class="my-balance-top">
+<div><div class="my-label">Wallet</div><strong>UGX {{ "{:,.2f}".format(user.wallet or 0) }}</strong></div>
+<div><div class="my-label">Balance</div><strong>UGX {{ "{:,.2f}".format(user.balance or 0) }}</strong></div>
+</div>
+<div class="my-balance-details" id="myBalanceDetails">
+<div><span>Deposit</span><strong>UGX {{ "{:,.2f}".format(deposit_total or 0) }}</strong></div>
+<div><span>Withdraw</span><strong>UGX {{ "{:,.2f}".format(withdraw_total or 0) }}</strong></div>
+<div><span>AI Income</span><strong>UGX {{ "{:,.2f}".format(ai_income or 0) }}</strong></div>
+<div><span>Today's earnings</span><strong>UGX {{ "{:,.2f}".format(today or 0) }}</strong></div>
+<div><span>Invite Count</span><strong>{{ invited_last_month or 0 }}</strong></div>
+<div><span>Team Count</span><strong>{{ team_count or 0 }}</strong></div>
+<div><span>Team income</span><strong>UGX {{ "{:,.2f}".format(team_income or 0) }}</strong></div>
+</div>
+<button type="button" id="myBalanceToggle" aria-expanded="true" aria-controls="myBalanceDetails">⌃⌃</button>
+</section><section class="panel my-menu"><div class="my-grid">
 <a href="/deposit"><i><svg viewBox="0 0 48 48"><rect x="8" y="11" width="29" height="25" rx="3"/><path d="M13 16h21M30 24h8v8h-8a4 4 0 0 0 0-8z"/></svg></i><span>Deposit</span></a>
 <a href="/withdraw"><i><svg viewBox="0 0 48 48"><circle cx="18" cy="15" r="5"/><path d="M8 34c1-7 5-11 10-11s9 4 10 11M29 24l5 5 8-10"/></svg></i><span>Withdraw</span></a>
 <a href="/card"><i><svg viewBox="0 0 48 48"><rect x="6" y="10" width="36" height="27" rx="4"/><path d="M7 18h34"/></svg></i><span>Card</span></a>
@@ -124,7 +139,66 @@
   .menu-icon{width:50px!important;height:50px!important;font-size:24px!important}
   .menu-name{font-size:11px!important}
 }
+
+.my-page
+.my-page .my-balance{
+  display:block!important;width:100%!important;box-sizing:border-box!important;
+  padding:18px 14px 12px!important;margin:0 0 10px!important;
+  border:2px solid #00bdf4!important;border-radius:22px!important;
+}
+.my-page .my-balance-top{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:8px!important;text-align:center!important;width:100%!important;
+}
+.my-page .my-balance-top>div{min-width:0!important;padding:0!important}
+.my-page .my-balance-top .my-label{
+  font-size:15px!important;margin:0 0 9px!important;color:#bfc5cf!important;
+}
+.my-page .my-balance-top strong{font-size:23px!important;line-height:1.15!important}
+.my-page .my-balance-details{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:17px 8px!important;padding:22px 0 8px!important;text-align:center!important;
+}
+.my-page .my-balance.is-collapsed .my-balance-details{display:none!important}
+.my-page .my-balance-details>div{min-width:0!important}
+.my-page .my-balance-details span{
+  display:block!important;font-size:13px!important;margin-bottom:7px!important;
+  line-height:1.2!important;color:#bfc5cf!important;
+}
+.my-page .my-balance-details strong{
+  display:block!important;font-size:16px!important;line-height:1.2!important;
+  overflow-wrap:anywhere!important;
+}
+.my-page #myBalanceToggle{
+  display:block!important;margin:18px auto 0!important;width:42px!important;
+  height:24px!important;padding:0!important;background:transparent!important;
+  color:#00cfff!important;border:0!important;font-size:24px!important;line-height:1!important;
+}
+.my-page .my-balance.is-collapsed #myBalanceToggle{margin-top:18px!important}
+@media(max-width:380px){
+.my-balance-top .my-label{font-size:12px!important}
+.my-balance-top strong{font-size:15px!important}
+.my-balance-details{gap:10px 5px;padding-top:10px}
+.my-balance-details span{font-size:11px}
+.my-balance-details strong{font-size:12px}
+}
+
+\n
+
 </style>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  const card=document.getElementById("myBalanceCard");
+  const toggle=document.getElementById("myBalanceToggle");
+  if(!card||!toggle)return;
+  toggle.addEventListener("click",function(){
+    const collapsed=card.classList.toggle("is-collapsed");
+    toggle.textContent=collapsed?"⌄⌄":"⌃⌃";
+    toggle.setAttribute("aria-expanded",String(!collapsed));
+  });
+});
+</script>
+
 <style id="NILE-CLEAN-MY-SERVICES">
 /* ONLY NILE MY SERVICES */
 .my-page section.my-menu{
@@ -207,7 +281,108 @@
   line-height:1.2 !important;
   white-space:normal !important;
 }
-</style>\n{% endblock %}<style>
+</style>\n
+<style id="nile-my-wallet-final">
+.my-page #myBalanceCard,
+.my-page section.panel#myBalanceCard {
+  display:block!important; width:100%!important; max-width:100%!important;
+  box-sizing:border-box!important; padding:16px 12px 10px!important;
+  margin:0 0 10px!important; border:1px solid #00bdf4!important;
+  border-radius:20px!important; background:rgba(0,0,0,.45)!important;
+  box-shadow:0 0 7px #00bdf433!important;
+}
+.my-page #myBalanceCard > .my-balance-top,
+.my-page #myBalanceCard > .my-balance-details {
+  position:static!important; float:none!important; transform:none!important;
+  width:100%!important; max-width:100%!important; box-sizing:border-box!important;
+  background:transparent!important; border:0!important; border-radius:0!important;
+  box-shadow:none!important; margin:0!important; min-height:0!important;
+}
+.my-page #myBalanceCard > .my-balance-top {
+  display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:8px!important; padding:0!important; text-align:center!important;
+}
+.my-page #myBalanceCard .my-balance-top > div {
+  display:block!important; width:auto!important; min-width:0!important;
+  padding:0!important; margin:0!important; background:transparent!important;
+  border:0!important; box-shadow:none!important;
+}
+.my-page #myBalanceCard .my-label {
+  font-size:14px!important; line-height:1.2!important;
+  margin:0 0 8px!important; color:#bdc5ce!important;
+}
+.my-page #myBalanceCard .my-balance-top strong {
+  display:block!important; font-size:22px!important;
+  line-height:1.2!important; overflow-wrap:anywhere!important;
+}
+.my-page #myBalanceCard > .my-balance-details {
+  display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px 8px!important; padding:18px 0 6px!important; text-align:center!important;
+}
+.my-page #myBalanceCard.is-collapsed > .my-balance-details {
+  display:none!important;
+}
+.my-page #myBalanceCard .my-balance-details > div {
+  display:block!important; min-width:0!important; padding:0!important;
+  margin:0!important; background:transparent!important; border:0!important;
+  border-radius:0!important; box-shadow:none!important;
+}
+.my-page #myBalanceCard .my-balance-details span {
+  display:block!important; font-size:12px!important; line-height:1.2!important;
+  margin:0 0 6px!important; color:#bdc5ce!important;
+}
+.my-page #myBalanceCard .my-balance-details strong {
+  display:block!important; font-size:15px!important; line-height:1.2!important;
+  overflow-wrap:anywhere!important;
+}
+.my-page #myBalanceCard #myBalanceToggle {
+  display:block!important; position:static!important; margin:12px auto 0!important;
+  width:42px!important; height:22px!important; padding:0!important;
+  background:transparent!important; border:0!important; box-shadow:none!important;
+  color:#00cfff!important; font-size:23px!important; line-height:1!important;
+}
+@media(max-width:380px) {
+  .my-page #myBalanceCard {padding:14px 9px 9px!important}
+  .my-page #myBalanceCard .my-balance-top strong {font-size:19px!important}
+  .my-page #myBalanceCard .my-balance-details {gap:13px 5px!important;padding-top:15px!important}
+  .my-page #myBalanceCard .my-balance-details span {font-size:11px!important}
+  .my-page #myBalanceCard .my-balance-details strong {font-size:14px!important}
+}
+
+/* Final reference sizing and centering */
+.my-page #myBalanceCard .my-balance-top .my-label{
+  font-family:Georgia,serif!important;
+  font-size:14px!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  margin-bottom:8px!important;
+}
+.my-page #myBalanceCard .my-balance-top strong{
+  font-family:Georgia,serif!important;
+  font-size:21px!important;
+  font-weight:700!important;
+  line-height:1.15!important;
+}
+.my-page #myBalanceCard #myBalanceToggle{
+  position:relative!important;
+  left:0!important;
+  right:0!important;
+  margin:12px auto 0!important;
+  text-align:center!important;
+  width:100%!important;
+  height:24px!important;
+  font-size:25px!important;
+  letter-spacing:-5px!important;
+  padding-right:5px!important;
+}
+@media(max-width:380px){
+  .my-page #myBalanceCard .my-balance-top .my-label{font-size:13px!important}
+  .my-page #myBalanceCard .my-balance-top strong{font-size:19px!important}
+}
+
+</style>
+
+{% endblock %}<style>
 .my-screen{
   min-height:100vh;
   background:#02070b;

@@ -683,14 +683,25 @@ def wallet():
 @required
 def my():
     u = current_user()
-    last, this = invite_counts(u["id"])
-    ai_income, today = active_income(u["id"])
+    uid = u["id"]
+    last, this = invite_counts(uid)
+    ai_income, today = active_income(uid)
+    team_count = deposited_team_count(uid)
+    team_income = team_income_for_user(uid)
+
     con = db()
     claims = con.execute(
         "SELECT salary_claimed_month,reward_claimed_month FROM users WHERE id=?",
-        (u["id"],)
+        (uid,)
     ).fetchone()
+    totals = con.execute("""
+        SELECT
+          COALESCE(SUM(CASE WHEN kind='DEPOSIT' AND status='APPROVED' THEN amount ELSE 0 END),0) AS deposits,
+          COALESCE(SUM(CASE WHEN kind='WITHDRAW' AND status IN ('APPROVED','COMPLETED') THEN amount ELSE 0 END),0) AS withdrawals
+        FROM transactions WHERE uid=?
+    """, (uid,)).fetchone()
     con.close()
+
     return render_template(
         "my.html", user=u,
         invited_last_month=last,
@@ -698,6 +709,10 @@ def my():
         last_salary=last*3000,
         ai_income=ai_income,
         today=today,
+        deposit_total=totals["deposits"],
+        withdraw_total=totals["withdrawals"],
+        team_count=team_count,
+        team_income=team_income,
         salary_claimed_month=claims["salary_claimed_month"],
         reward_claimed_month=claims["reward_claimed_month"]
     )
