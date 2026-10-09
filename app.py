@@ -9,50 +9,27 @@ DB=os.path.join(BASE,"nile_ai.db")
 app=Flask(__name__)
 app.secret_key=os.environ.get("SECRET_KEY","change-this-before-production")
 
-PLANS={
- "CX-1":{"series":"CX series","price":250000,"daily":20000,"days":30,"total":600000},
- "CXM-1":{"series":"CXM series","price":48000,"daily":9800,"days":20,"total":196000},
- "CXM-2":{"series":"CXM series","price":88000,"daily":20000,"days":25,"total":500000},
- "CX-2":{"series":"CX series","price":500000,"daily":40000,"days":30,"total":1200000},
- "BM-1":{"series":"BM series","price":1000000,"daily":85000,"days":30,"total":2550000},
- "BM-2":{"series":"BM series","price":2000000,"daily":180000,"days":30,"total":5400000},
+PLANS = {
+ "A1":{"series":"A series","price":50000,"daily":208700.66 / 19,"days":19,"total":208700.66},
+ "A2":{"series":"A series","price":100000,"daily":478000 / 19,"days":19,"total":478000},
+ "A3":{"series":"A series","price":1500000,"daily":900000,"days":5,"total":4500000},
+ "B1":{"series":"B series","price":48000,"daily":9800,"days":20,"total":196000},
+ "B2":{"series":"B series","price":90000,"daily":30000,"days":25,"total":750000},
+ "KW1":{"series":"KW series","price":100000,"daily":40000,"days":30,"total":1200000},
+ "KW2":{"series":"KW series","price":250000,"daily":40000,"days":40,"total":1600000},
+ "KW3":{"series":"KW series","price":500000,"daily":70000,"days":30,"total":2100000},
+ "KW4":{"series":"KW series","price":750000,"daily":100000,"days":30,"total":3000000},
+ "KW5":{"series":"KW series","price":1000000,"daily":500000,"days":5,"total":2500000},
+ "BM1":{"series":"BM series","price":1500000,"daily":930000,"days":30,"total":27900000},
+ "BM2":{"series":"BM series","price":2000000,"daily":180000,"days":30,"total":5400000},
+ "BM3":{"series":"BM series","price":2500000,"daily":1000000,"days":5,"total":5000000},
+ "BM-4":{"series":"BM series","price":25000000,"daily":2450000,"days":30,"total":73500000},
  "DS-3":{"series":"DS series","price":3500000,"daily":320000,"days":30,"total":9600000},
  "DS-4":{"series":"DS series","price":5000000,"daily":500000,"days":30,"total":15000000},
- "CX-3":{"series":"CX series","price":7500000,"daily":700000,"days":30,"total":21000000},
- "CX-4":{"series":"CX series","price":10000000,"daily":950000,"days":30,"total":28500000},
- "BM-3":{"series":"BM series","price":15000000,"daily":1450000,"days":30,"total":43500000},
- "BM-4":{"series":"BM series","price":25000000,"daily":2450000,"days":30,"total":73500000},
  "DS-5":{"series":"DS series","price":50000000,"daily":5000000,"days":30,"total":150000000},
  "DS-6":{"series":"DS series","price":100000000,"daily":10000000,"days":30,"total":300000000},
 }
 REWARDS=[(120,750000),(100,500000),(60,275000),(30,150000),(15,98000),(6,45000)]
-
-
-
-# NILE_AI_A1_A2_A6
-PLANS.update({
-    "A1": {
-        "series": "AI series",
-        "price": 50000,
-        "daily": 208700.66 / 19,
-        "days": 19,
-        "total": 208700.66
-    },
-    "A2": {
-        "series": "AI series",
-        "price": 100000,
-        "daily": 478000 / 19,
-        "days": 19,
-        "total": 478000
-    },
-    "A6": {
-        "series": "AI series",
-        "price": 1000000,
-        "daily": 2500000 / 3,
-        "days": 3,
-        "total": 2500000
-    },
-})
 
 def db():
     con=sqlite3.connect(DB,timeout=30)
