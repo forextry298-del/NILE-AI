@@ -30,7 +30,7 @@
 <a href="whatsapp://send?phone=255669953346" target="_blank" rel="noopener"><i><svg viewBox="0 0 48 48"><path d="M12 25a12 12 0 0 1 24 0v7M12 25v8H8v-6a4 4 0 0 1 4-4M36 25v8h4v-6a4 4 0 0 0-4-4M20 39h8"/></svg></i><span>Manager</span></a>
 
 <a href="/settings"><i><svg viewBox="0 0 48 48"><path d="M20 7h8l2 5 5 2 5-2 4 7-4 4v6l4 4-4 7-5-2-5 2-2 5h-8l-2-5-5-2-5 2-4-7 4-4v-6l-4-4 4-7 5 2 5-2z"/><circle cx="24" cy="24" r="6"/></svg></i><span>Settings</span></a>
-</div></section><section class="panel my-share"><h2>NILE SHARES</h2><div class="share-line"></div><strong>UGX {{ "{:,.2f}".format(ai_income or 0) }}</strong></section><section class="panel my-salary"><div><span>Last Month's Salary</span><strong>UGX {{ "{:,.2f}".format(last_salary or 0) }}</strong></div><div><span>This Month's Salary</span><strong>UGX {{ "{:,.2f}".format(today or 0) }}</strong></div><form method="post" action="/my/claim-salary"><button class="my-wide-btn" type="submit">Get Last Month's Salary</button></form></section><section class="panel my-invites"><div><span>Invited Last Month</span><strong>{{ invited_last_month or 0 }}</strong></div><div><span>Invited This Month</span><strong>{{ invited_this_month or 0 }}</strong></div><p>Only direct invites who made an approved deposit are counted.</p><form method="post" action="/my/claim-reward"><button class="my-wide-btn" type="submit">Get Last Month's Reward</button></form></section><section class="panel my-rewards"><div class="reward-head"><span>Invite</span><span>Reward</span></div><div class="reward-row"><span>6 invites</span><span>A1 Machine</span></div><div class="reward-row"><span>15 invites</span><span>A2 Machine</span></div><div class="reward-row"><span>30 invites</span><span>A3 Machine</span></div><div class="reward-row"><span>60 invites</span><span>KW3 Machine</span></div></section><a class="my-signout" href="/logout">⇥ Sign Out</a><div class="my-referral">Your referral code: <b>{{ user.invite_code }}</b></div></div><style>
+</div></section><section class="panel my-share"><h2>NILE SHARES</h2><div class="share-line"></div><strong>UGX {{ "{:,.2f}".format(ai_income or 0) }}</strong></section><section class="panel my-salary"><div><span>Last Month's Salary</span><strong>UGX {{ "{:,.2f}".format(last_salary or 0) }}</strong></div><div><span>This Month's Salary</span><strong>UGX {{ "{:,.2f}".format(today or 0) }}</strong></div><form method="post" action="/my/claim-salary"><button class="my-wide-btn" type="submit">Get Last Month's Salary</button></form></section><section class="panel my-invites"><div><span>Invited Last Month</span><strong>{{ invited_last_month or 0 }}</strong></div><div><span>Invited This Month</span><strong>{{ invited_this_month or 0 }}</strong></div><form method="post" action="/my/claim-reward"><button class="my-wide-btn" type="submit">Get Last Month's Reward</button></form></section><section class="panel my-rewards"><div class="reward-head"><span>Invite</span><span>Reward</span></div><div class="reward-row"><span>6 invites</span><span>A1 Machine</span></div><div class="reward-row"><span>15 invites</span><span>A2 Machine</span></div><div class="reward-row"><span>30 invites</span><span>A3 Machine</span></div><div class="reward-row"><span>60 invites</span><span>KW3 Machine</span></div></section><a class="my-signout" href="/logout">⇥ Sign Out</a><div class="my-referral">Your referral code: <b>{{ user.invite_code }}</b></div></div><style>
 /* COMPACT MOBILE MY PAGE */
 .my-page{
   padding:7px 8px 76px!important;
@@ -183,7 +183,7 @@
 .my-balance-details strong{font-size:12px}
 }
 
-\n
+
 
 </style>
 <script>
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded",function(){
   line-height:1.2 !important;
   white-space:normal !important;
 }
-</style>\n
+</style>
 <style id="nile-my-wallet-final">
 .my-page #myBalanceCard,
 .my-page section.panel#myBalanceCard {
@@ -527,7 +527,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
 
 
-\n\n\n<style id="my-horizontal-boxes-final">
+<style id="my-horizontal-boxes-final">
 .my-page .my-salary,
 .my-page .my-invites,
 .my-page .my-rewards,
