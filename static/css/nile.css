@@ -137,3 +137,178 @@ html, body {
   background-size: 137px 151px, 173px 181px, 191px 167px, 157px 199px !important;
   background-attachment: fixed !important;
 }
+
+
+/* NILE AI: replacement six-item bottom navigation */
+nav.bottom.nile-six-nav {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 96px !important;
+  min-height: 96px !important;
+  padding: 8px 3px max(8px, env(safe-area-inset-bottom)) !important;
+  margin: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  align-items: center !important;
+  justify-content: stretch !important;
+  gap: 0 !important;
+  box-sizing: border-box !important;
+  background: #000 !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(8,207,255,.42) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 -5px 18px rgba(0,0,0,.45) !important;
+  z-index: 99999 !important;
+  overflow: visible !important;
+}
+nav.bottom.nile-six-nav > a {
+  position: static !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  height: 76px !important;
+  padding: 5px 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  transform: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  font-size: 12px !important;
+}
+nav.bottom.nile-six-nav > a .nav-icon {
+  display: block !important;
+  width: auto !important;
+  height: 35px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: #fff !important;
+  font-family: Arial, sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 400 !important;
+  line-height: 35px !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+nav.bottom.nile-six-nav > a small {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: 12px !important;
+  line-height: 16px !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+}
+nav.bottom.nile-six-nav > a.active,
+nav.bottom.nile-six-nav > a.active .nav-icon,
+nav.bottom.nile-six-nav > a.active small {
+  color: #08cfff !important;
+  text-shadow: 0 0 8px rgba(8,207,255,.3) !important;
+}
+body { padding-bottom: 108px !important; }
+@media (max-width: 380px) {
+  nav.bottom.nile-six-nav > a .nav-icon {
+    font-size: 28px !important;
+  }
+  nav.bottom.nile-six-nav > a small {
+    font-size: 10px !important;
+  }
+}
+
+
+/* Clean SVG bottom navigation — final override */
+nav.bottom.nile-six-nav {
+  position: fixed !important;
+  inset: auto 0 0 0 !important;
+  width: 100% !important;
+  height: 94px !important;
+  padding: 7px 2px max(7px, env(safe-area-inset-bottom)) !important;
+  margin: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  align-items: center !important;
+  gap: 0 !important;
+  box-sizing: border-box !important;
+  background: #000 !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(8,207,255,.4) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 -5px 18px rgba(0,0,0,.45) !important;
+  z-index: 99999 !important;
+  overflow: hidden !important;
+}
+nav.bottom.nile-six-nav > a.nile-nav-item {
+  position: static !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 78px !important;
+  padding: 4px 0 !important;
+  margin: 0 !important;
+  color: #fff !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  text-decoration: none !important;
+  font-size: 12px !important;
+  box-sizing: border-box !important;
+}
+nav.bottom.nile-six-nav .nile-nav-icon {
+  display: block !important;
+  flex: 0 0 34px !important;
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 !important;
+  color: currentColor !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+nav.bottom.nile-six-nav .nile-nav-item span {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: 12px !important;
+  line-height: 16px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+}
+nav.bottom.nile-six-nav > a.nile-nav-item.active,
+nav.bottom.nile-six-nav > a.nile-nav-item.active .nile-nav-icon {
+  color: #08cfff !important;
+}
+body { padding-bottom: 108px !important; }
+@media(max-width:380px) {
+  nav.bottom.nile-six-nav .nile-nav-icon {
+    width: 30px !important;
+    height: 30px !important;
+    flex-basis: 30px !important;
+  }
+  nav.bottom.nile-six-nav .nile-nav-item span {
+    font-size: 10px !important;
+  }
+}
