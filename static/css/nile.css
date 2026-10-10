@@ -356,3 +356,7 @@ main .my-rewards {
   padding: 10px !important;
 }
 /* Navigation dimensions, icons and labels are intentionally untouched. */
+
+/* Flash message status colors */
+.nile-flash.error{color:#ff6b6b!important;background:#260b10!important;border:1px solid #ff354f!important}
+.nile-flash.success{color:#39e889!important;background:#082417!important;border:1px solid #20c96b!important}
