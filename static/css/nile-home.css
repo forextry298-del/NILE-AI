@@ -55,3 +55,450 @@ html, body {
   background-size: 137px 151px, 173px 181px, 191px 167px, 157px 199px !important;
   background-attachment: fixed !important;
 }
+
+/* NILE AI HOME — enhanced reference-inspired design */
+.nile-mobile-home {
+  max-width: 720px !important;
+  margin: 0 auto !important;
+  padding: 10px 12px 28px !important;
+  box-sizing: border-box !important;
+  color: #f5fbff !important;
+}
+
+.nmh-slider {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(8,207,255,.65) !important;
+  border-radius: 26px !important;
+  background: #02070b !important;
+  box-shadow: 0 0 20px rgba(8,207,255,.16) !important;
+  margin: 8px 0 24px !important;
+}
+
+.nmh-track {
+  display: flex !important;
+  transition: transform .45s ease !important;
+}
+
+.nmh-slide {
+  position: relative !important;
+  display: block !important;
+  flex: 0 0 100% !important;
+  min-width: 100% !important;
+  height: 260px !important;
+  overflow: hidden !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  background: #02080d !important;
+}
+
+.nmh-slide img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.nmh-caption {
+  position: absolute !important;
+  inset: auto 0 0 !important;
+  padding: 50px 16px 18px !important;
+  color: #fff !important;
+  background: linear-gradient(transparent,rgba(0,0,0,.94)) !important;
+  box-sizing: border-box !important;
+}
+
+.nmh-caption b {
+  display: block !important;
+  color: #08cfff !important;
+  font-size: 20px !important;
+  line-height: 1.3 !important;
+  margin-bottom: 7px !important;
+}
+
+.nmh-caption span {
+  display: block !important;
+  color: #f1f1f1 !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.nmh-arrow {
+  position: absolute !important;
+  z-index: 3 !important;
+  top: 43% !important;
+  width: 40px !important;
+  height: 40px !important;
+  border: 1px solid #08cfff !important;
+  border-radius: 50% !important;
+  background: rgba(0,0,0,.65) !important;
+  color: #fff !important;
+  font-size: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.nmh-prev { left: 10px !important; }
+.nmh-next { right: 10px !important; }
+
+.nmh-dots {
+  position: absolute !important;
+  z-index: 4 !important;
+  bottom: 7px !important;
+  left: 0 !important;
+  right: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 9px !important;
+}
+
+.nmh-dots button,
+.nmh-dots span {
+  width: 9px !important;
+  height: 9px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: #a9b4bb !important;
+}
+
+.nmh-grid {
+  display: grid !important;
+  gap: 16px !important;
+  margin: 18px 0 28px !important;
+}
+
+.nmh-grid-2 {
+  grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+}
+
+.nmh-grid-3 {
+  grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  gap: 12px !important;
+}
+
+.nmh-stat {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  min-width: 0 !important;
+  min-height: 150px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  border: 1px solid rgba(8,207,255,.85) !important;
+  border-radius: 24px !important;
+  background: #fff !important;
+  color: #071321 !important;
+  text-decoration: none !important;
+  text-align: center !important;
+  box-shadow: 0 0 18px rgba(8,207,255,.18) !important;
+}
+
+.nmh-stat strong {
+  display: flex !important;
+  flex: 1 !important;
+  min-height: 88px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px 4px !important;
+  color: #101827 !important;
+  background: #fff !important;
+  font-size: clamp(23px,6vw,34px) !important;
+  font-weight: 800 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.nmh-stat span {
+  display: flex !important;
+  min-height: 54px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 4px !important;
+  box-sizing: border-box !important;
+  color: #fff !important;
+  background: #08bfe8 !important;
+  font-size: clamp(12px,3.8vw,19px) !important;
+  line-height: 1.25 !important;
+}
+
+.nmh-stat.nmh-small {
+  min-height: 125px !important;
+  border-radius: 22px !important;
+}
+
+.nmh-stat.nmh-small strong {
+  min-height: 72px !important;
+  font-size: clamp(22px,5.5vw,31px) !important;
+}
+
+.nmh-stat.nmh-small span {
+  min-height: 54px !important;
+  font-size: clamp(11px,3.4vw,17px) !important;
+}
+
+.nmh-top {
+  margin-bottom: 14px !important;
+}
+
+.nmh-msg {
+  color: #08cfff !important;
+}
+
+@media(max-width:380px) {
+  .nile-mobile-home {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  .nmh-slide {
+    height: 225px !important;
+  }
+  .nmh-grid {
+    gap: 10px !important;
+  }
+  .nmh-grid-3 {
+    gap: 7px !important;
+  }
+  .nmh-stat,
+  .nmh-stat.nmh-small {
+    border-radius: 17px !important;
+  }
+  .nmh-sta
+
+cd ~/NILE_AI && cat >> static/css/nile-home.css <<'CSS'
+t strong {
+    font-size: 23px !important;
+  }
+}
+
+/* NILE AI home: restore compact reference proportions */
+.nile-mobile-home {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  padding-bottom: 88px !important;
+}
+
+.nmh-slider {
+  margin-bottom: 16px !important;
+}
+
+.nmh-slide {
+  height: 300px !important;
+  border-radius: 25px !important;
+  overflow: hidden !important;
+}
+
+.nmh-slide img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.nmh-grid {
+  gap: 12px !important;
+  margin-bottom: 16px !important;
+}
+
+.nmh-grid-2 .nmh-stat {
+  min-height: 0 !important;
+  height: 154px !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  overflow: hidden !important;
+  border: 1px solid #087b96 !important;
+  border-radius: 24px !important;
+  background: #000 !important;
+  box-shadow: 0 0 9px rgba(0,150,190,.15) !important;
+}
+
+.nmh-grid-2 .nmh-stat strong {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 0 !important;
+  padding: 8px 4px !important;
+  background: #fff !important;
+  color: #101827 !important;
+  font-size: 26px !important;
+}
+
+.nmh-grid-2 .nmh-stat span {
+  min-height: 54px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 4px !important;
+  background: #00bde8 !important;
+  color: #fff !important;
+  font-size: 15px !important;
+  text-align: center !important;
+}
+
+.nmh-grid-3 .nmh-stat,
+.nmh-grid-3 .nmh-stat.nmh-small {
+  min-height: 0 !important;
+  height: 112px !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  overflow: hidden !important;
+  border: 1px solid #087b96 !important;
+  border-radius: 20px !important;
+  background: #000 !important;
+}
+
+.nmh-grid-3 .nmh-stat strong {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #fff !important;
+  color: #101827 !important;
+  font-size: 22px !important;
+}
+
+.nmh-grid-3 .nmh-stat span {
+  min-height: 43px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px !important;
+  background: #00bde8 !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  text-align: center !important;
+}
+
+@media (max-width: 430px) {
+  .nmh-slide {
+    height: 260px !important;
+  }
+
+  .nmh-grid-2 .nmh-stat {
+    height: 145px !important;
+  }
+
+  .nmh-grid-2 .nmh-stat strong {
+    font-size: 24px !important;
+  }
+
+  .nmh-grid-2 .nmh-stat span {
+    min-height: 51px !important;
+    font-size: 13px !important;
+  }
+
+  .nmh-grid-3 .nmh-stat,
+  .nmh-grid-3 .nmh-stat.nmh-small {
+    height: 102px !important;
+  }
+}
+
+/* Compact rectangular dashboard — override earlier oversized cards */
+.nile-mobile-home {
+  padding: 5px 8px 82px !important;
+}
+
+.nmh-slider {
+  margin: 4px 0 12px !important;
+  border-radius: 20px !important;
+}
+
+.nmh-slide {
+  height: 175px !important;
+  min-height: 0 !important;
+}
+
+.nmh-grid {
+  gap: 10px !important;
+  margin: 10px 0 14px !important;
+}
+
+.nmh-grid-2 .nmh-stat {
+  height: 78px !important;
+  min-height: 78px !important;
+  border-radius: 15px !important;
+  box-shadow: 0 0 8px rgba(0,150,190,.10) !important;
+}
+
+.nmh-grid-2 .nmh-stat strong {
+  min-height: 0 !important;
+  padding: 5px 3px !important;
+  font-size: 20px !important;
+}
+
+.nmh-grid-2 .nmh-stat span {
+  min-height: 28px !important;
+  padding: 4px 3px !important;
+  font-size: 12px !important;
+  line-height: 1.15 !important;
+}
+
+.nmh-grid-3 {
+  gap: 7px !important;
+  margin-top: 10px !important;
+}
+
+.nmh-grid-3 .nmh-stat,
+.nmh-grid-3 .nmh-stat.nmh-small {
+  height: 68px !important;
+  min-height: 68px !important;
+  border-radius: 13px !important;
+}
+
+.nmh-grid-3 .nmh-stat strong {
+  min-height: 0 !important;
+  padding: 4px 2px !important;
+  font-size: 18px !important;
+}
+
+.nmh-grid-3 .nmh-stat span {
+  min-height: 25px !important;
+  padding: 3px 2px !important;
+  font-size: 10px !important;
+  line-height: 1.1 !important;
+  overflow-wrap: anywhere !important;
+}
+
+@media (max-width: 430px) {
+  .nmh-slide {
+    height: 165px !important;
+  }
+
+  .nmh-grid-2 .nmh-stat {
+    height: 78px !important;
+    min-height: 78px !important;
+  }
+
+  .nmh-grid-2 .nmh-stat strong {
+    font-size: 19px !important;
+  }
+
+  .nmh-grid-2 .nmh-stat span {
+    font-size: 11px !important;
+  }
+
+  .nmh-grid-3 .nmh-stat,
+  .nmh-grid-3 .nmh-stat.nmh-small {
+    height: 68px !important;
+    min-height: 68px !important;
+  }
+
+  .nmh-grid-3 .nmh-stat span {
+    font-size: 9px !important;
+  }
+}
+
+/* Final slider height adjustment for mobile auto-scroll */
+.nmh-slide {
+  height: 200px !important;
+}
+@media (max-width: 430px) {
+  .nmh-slide {
+    height: 190px !important;
+  }
+}
