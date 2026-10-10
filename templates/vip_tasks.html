@@ -155,7 +155,7 @@
 {% for task in vip_tasks %}
 <div class="vip-card v{{ task.level }}">
 <div class="vip-top"><div class="vip-level">VIP LEVEL {{ task.level }}</div><div class="vip-status">{% if task.paid %}REWARD PAID{% elif task.completed %}COMPLETED{% else %}IN PROGRESS{% endif %}</div></div>
-<div class="vip-text">Invite <b>{{ task.required }} LV2 members</b> to purchase a machine</div>
+<div class="vip-text">Invite <b>{{ task.required }} LV1 members</b> to purchase a machine</div>
 <div class="vip-progress">Task progress: {{ task.progress }}/{{ task.required }}</div>
 <div class="vip-bar"><span style="width:{{ (task.progress * 100 / task.required)|int }}%"></span></div>
 <div class="vip-reward">VIP Reward: UGX {{ "{:,.2f}".format(task.reward) }}{% if task.paid %} · Credited to balance{% endif %}</div>

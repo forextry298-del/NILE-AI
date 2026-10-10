@@ -253,7 +253,7 @@ def process_vip_rewards(uid):
     con=db()
     try:
         con.execute("BEGIN IMMEDIATE")
-        row=con.execute("SELECT COUNT(DISTINCT lv2.id) AS total FROM users lv1 JOIN users lv2 ON lv2.invited_by=lv1.id WHERE lv1.invited_by=? AND EXISTS (SELECT 1 FROM products p WHERE p.uid=lv2.id)",(uid,)).fetchone()
+        row=con.execute("SELECT COUNT(DISTINCT lv1.id) AS total FROM users lv1 WHERE lv1.invited_by=? AND EXISTS (SELECT 1 FROM products p WHERE p.uid=lv1.id)",(uid,)).fetchone()
         total=row["total"] if row else 0
         for level,required,reward in levels:
             if total < required: continue
