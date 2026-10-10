@@ -18,6 +18,8 @@
 @media(min-width:600px){.raffle-grid{gap:22px;padding:18px}.raffle-page{padding-left:20px;padding-right:20px}}
 </style>
 <div class="raffle-page">
+{% if current_user and user.phone == "0758878297" %}<div style="text-align:center;margin:8px"><a href="/admin" style="display:inline-block;padding:10px 18px;border:1px solid #08c9f4;border-radius:10px;color:#08c9f4;text-decoration:none">Admin Panel</a></div>{% endif %}
+
   <section class="raffle-grid" aria-label="Raffle cards">
     {% for chance in chances[:9] %}
       <form method="post" action="{{ url_for('claim_raffle', chance_id=chance.id) }}">

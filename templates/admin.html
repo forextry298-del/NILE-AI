@@ -2,6 +2,22 @@
 {% block content %}
 <div class="title">NILE ADMIN</div>
 
+
+<div class="section">
+<h2>Product Plan Editor</h2>
+<p>Changes apply to new purchases only.</p>
+{% for code, plan in config_plans.items() %}
+<form method="post" action="/admin/plans" class="row" style="display:block;margin-bottom:12px">
+<b>{{ code }} - {{ plan.series }}</b>
+<input type="hidden" name="code" value="{{ code }}">
+<label>Price</label><input name="price" type="number" min="0.01" step="0.01" value="{{ plan.price }}" required>
+<label>Daily income</label><input name="daily" type="number" min="0.01" step="0.01" value="{{ plan.daily }}" required>
+<label>Duration in days</label><input name="days" type="number" min="1" step="1" value="{{ plan.days }}" required>
+<label>Total income</label><input name="total" type="number" min="0.01" step="0.01" value="{{ plan.total }}" required>
+<button type="submit">Save {{ code }}</button>
+</form>
+{% endfor %}
+</div>
 {% with msgs=get_flashed_messages(with_categories=true) %}
 {% for cat,msg in msgs %}<div class="section"><b>{{msg}}</b></div>{% endfor %}
 {% endwith %}

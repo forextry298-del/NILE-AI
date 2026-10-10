@@ -1,4 +1,5 @@
 import os, sqlite3, secrets, string, hashlib, hmac
+import json
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 from functools import wraps
@@ -42,6 +43,18 @@ PLANS = {
  "DS-5":{"series":"DS series","price":50000000,"daily":5000000,"days":30,"total":150000000},
  "DS-6":{"series":"DS series","price":100000000,"daily":10000000,"days":30,"total":300000000},
 }
+
+try:
+    with open("product_plans.json") as _pf:
+        _saved_plans = json.load(_pf)
+    for _code, _plan in _saved_plans.items():
+        if _code in PLANS:
+            for _key in ("price", "daily", "days", "total"):
+                if _key in _plan:
+                    PLANS[_code][_key] = int(_plan[_key]) if _key == "days" else float(_plan[_key])
+except (OSError, ValueError, TypeError):
+    pass
+
 REWARDS=[(120,750000),(100,500000),(60,275000),(30,150000),(15,98000),(6,45000)]
 
 # Monthly referral rewards: invite threshold and machine code.
@@ -1763,7 +1776,7 @@ def raffle():
     promo_revealed_id=session.pop("revealed_chance_id",None)
     promo_revealed=con.execute("SELECT * FROM promo_chances WHERE id=? AND uid=? AND claimed=1",(promo_revealed_id,u["id"])).fetchone() if promo_revealed_id else None
     con.close()
-    return render_template("raffle.html",chances=chances,history=history,revealed=revealed,promo_chances=promo_chances,promo_history=promo_history,promo_revealed=promo_revealed,active="Raffle")
+    return render_template("raffle.html",chances=chances,history=history,revealed=revealed,promo_chances=promo_chances,promo_history=promo_history,promo_revealed=promo_revealed,active="Raffle",user=u)
 
 @app.route("/raffle/reveal/<int:chance_id>",methods=["POST"])
 @required
@@ -1812,6 +1825,30 @@ def claim_raffle(chance_id):
     finally:
         con.close()
     return redirect(url_for("raffle"))
+
+
+@app.route("/admin/plans", methods=["POST"])
+@admin_required
+def admin_plans_save():
+    code = request.form.get("code", "").strip()
+    if code not in PLANS:
+        flash("Invalid product plan.", "error")
+        return redirect(url_for("admin"))
+    try:
+        price = float(request.form["price"])
+        daily = float(request.form["daily"])
+        days = int(request.form["days"])
+        total = float(request.form["total"])
+        if min(price, daily, days, total) <= 0:
+            raise ValueError()
+    except (ValueError, KeyError):
+        flash("Enter valid positive values.", "error")
+        return redirect(url_for("admin"))
+    PLANS[code].update(price=price, daily=daily, days=days, total=total)
+    with open("product_plans.json", "w") as pf:
+        json.dump(PLANS, pf, indent=2)
+    flash("Plan saved for new purchases. Existing machines were not changed.", "success")
+    return redirect(url_for("admin"))
 
 @app.route("/admin")
 @app.route("/admin/")
@@ -1870,7 +1907,7 @@ def admin():
     activity=con.execute("SELECT a.*,u.phone FROM admin_activity a LEFT JOIN users u ON u.id=a.admin_uid ORDER BY a.id DESC LIMIT 100").fetchall()
     announcements=con.execute("SELECT * FROM announcements ORDER BY id DESC LIMIT 20").fetchall()
     con.close()
-    return render_template("admin.html",users=users,tx=tx,withdrawals=withdrawals,deposits=deposits,requests=requests,messages=messages,gifts=gifts,managers=managers,activity=activity,announcements=announcements)
+    return render_template("admin.html",users=users,tx=tx,withdrawals=withdrawals,deposits=deposits,requests=requests,messages=messages,gifts=gifts,managers=managers,activity=activity,announcements=announcements,config_plans=PLANS)
 
 @app.route("/admin/transaction/<int:tid>/<action>",methods=["POST"])
 @admin_required
