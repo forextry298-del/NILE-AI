@@ -1264,6 +1264,10 @@ def download():
 def service_worker():
     return send_from_directory(BASE, "service-worker.js", mimetype="application/javascript")
 
+@app.route("/settings")
+def settings_redirect():
+    return redirect(url_for("account"))
+
 @app.route("/account",methods=["GET","POST"])
 @required
 def account():
