@@ -1245,7 +1245,7 @@ def deposit():
 def withdraw():
     u=current_user()
     con_check=db()
-    pending=None
+    pending=con_check.execute("SELECT amount,status,reference,created_at FROM transactions WHERE uid=? AND kind=? AND status=? ORDER BY id DESC LIMIT 1",(u["id"],"WITHDRAW","PENDING")).fetchone()
     con_check.close()
 
     if request.method=="POST":
@@ -1253,7 +1253,7 @@ def withdraw():
         destination=request.form.get("destination","").strip()
         try: amount=float(request.form.get("amount") or 0)
         except (TypeError,ValueError): amount=0
-        allowed={"MTN UG":"mtn_number","Airtel UG":"airtel_number","USDT TRC20":"usdt_wallet"}
+        allowed={"MTN UG":"mtn_number","Airtel UG":"airtel_number"}
         if method not in allowed:
             flash("Select a valid payout method.","error")
         elif amount < 5000:
@@ -1275,7 +1275,7 @@ def withdraw():
                 else:
                     con.execute("INSERT INTO transactions(uid,kind,amount,status,reference,created_at) VALUES(?,?,?,?,?,?)",(u["id"],"WITHDRAW",amount,"PENDING",ref,now()))
                     con.commit(); con.close(); flash(f"Withdrawal request submitted. Fee: UGX {fee:,.2f}. You receive: UGX {receive:,.2f}.","success"); return redirect(url_for("withdraw"))
-    return render_template("withdraw.html",title="Withdraw",user=current_user(),active="My")
+    return render_template("withdraw.html",title="Withdraw",user=current_user(),active="My",pending_withdrawal=pending)
 
 @app.route("/download")
 @required
