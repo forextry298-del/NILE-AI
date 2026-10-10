@@ -76,15 +76,35 @@
     {% endif %}
   </section>
 
-  {% if products %}
-  <section class="activity-panel">
-    <h3>My Machines</h3>
-    {% for p in products %}
-      <p><strong>{{ p.name }}</strong> · {{ p.status }}{% if "Referral Reward" in p.name %} · Referral reward{% endif %}</p>
+
+  {% if cards %}
+  <section class="machine-list">
+    {% for p in cards %}
+    <article class="machine-card">
+      <div class="machine-heading">
+        <div class="machine-picture">⚙</div>
+        <div class="machine-info">
+          <h2>{{ p.name }}</h2>
+          <p>{{ p.code }}</p>
+          <p>EARNED <strong>UGX {{ "{:,.2f}".format(p.earned_income or 0) }}</strong></p>
+          <span class="machine-status">{{ "Running" if p.status == "ACTIVE" else p.status }}</span>
+          <div class="machine-stats">
+            <div><span>DAILY</span><b>UGX {{ "{:,.2f}".format(p.daily_income or 0) }}</b></div>
+            <div><span>DAYS</span><b>{{ p.display_days }}/{{ p.lock_days }}</b></div>
+            <div><span>TOTAL</span><b>UGX {{ "{:,.2f}".format(p.total_income or 0) }}</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="machine-progress"><span style="width:{{ p.progress }}%"></span></div>
+      <p class="machine-lock">{% if p.status == "ACTIVE" %}Locked: pays out in {{ p.remaining_days }} days{% else %}Machine completed{% endif %}</p>
+      <div class="machine-timers">
+        <div>◷ Next income in <strong class="countdown" data-seconds="{{ p.next_income_seconds }}">--:--:--</strong></div>
+        <div>Ends <strong class="end-days">{{ p.remaining_days }}d</strong><br><strong class="countdown" data-seconds="{{ p.end_seconds }}">--:--:--</strong></div>
+      </div>
+    </article>
     {% endfor %}
   </section>
   {% endif %}
-
   {% if tx %}
   <section class="activity-panel">
     <h3>Recent Transactions</h3>
@@ -95,4 +115,46 @@
   </section>
   {% endif %}
 </div>
+
+<style>
+.machine-list{display:grid;gap:16px;padding:8px 0;color:#f4f7fc;font-family:Georgia,serif}
+.machine-card{position:relative;padding:14px;border:2px solid #00bff2;border-radius:22px;background:rgba(0,5,10,.9);box-shadow:0 0 10px #00bff222}
+.machine-heading{display:grid;grid-template-columns:minmax(95px,38%) minmax(0,1fr);gap:12px}
+.machine-picture{min-height:125px;display:flex;align-items:center;justify-content:center;border-radius:18px;background:radial-gradient(circle,#16485b,#071017 70%);color:#08c9f5;font-size:54px}
+.machine-info{min-width:0;padding-right:2px}
+.machine-info h2{margin:0 0 5px;color:#08c9f5;font-size:19px;line-height:1.2;overflow-wrap:anywhere}
+.machine-info p{margin:5px 0;font-size:12px}
+.machine-info p strong,.machine-stats b{color:#08c9f5}
+.machine-status{display:inline-block;border:1px solid #00cfff;border-radius:20px;padding:4px 10px;color:#08c9f5;font-size:11px}
+.machine-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:14px}
+.machine-stats div{min-width:0;padding:8px 3px;text-align:center;background:#03090f;border-radius:10px}
+.machine-stats span{display:block;font-size:10px;margin-bottom:6px}
+.machine-stats b{display:block;font-size:11px;overflow-wrap:anywhere}
+.machine-progress{height:9px;background:#101b28;border-radius:10px;overflow:hidden;margin-top:15px}
+.machine-progress span{display:block;height:100%;background:#08c9f5;border-radius:10px}
+.machine-lock{font-size:12px;color:#c6cbd3;margin:9px 0 13px}
+.machine-timers{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:1px solid #123c4b;border-radius:16px;padding:12px;font-size:12px;color:#cbd2dc}
+.machine-timers>div{min-width:0;overflow-wrap:anywhere}
+.machine-timers strong{color:#08c9f5;font-size:13px}
+@media(max-width:380px){.machine-card{padding:10px}.machine-heading{grid-template-columns:100px minmax(0,1fr);gap:9px}.machine-picture{min-height:115px}.machine-info h2{font-size:16px}.machine-stats{gap:3px}.machine-stats span{font-size:9px}.machine-stats b{font-size:10px}.machine-timers{font-size:11px;padding:9px}}
+</style>
+<script>
+(function(){
+  function tick(){
+    document.querySelectorAll('.countdown').forEach(function(el){
+      var sec=Math.max(0,parseInt(el.dataset.seconds||'0',10));
+      var days=Math.floor(sec/86400);sec%=86400;
+      var hours=Math.floor(sec/3600);sec%=3600;
+      var mins=Math.floor(sec/60);var seconds=sec%60;
+      el.textContent=(days?days+'d ':'')+
+        String(hours).padStart(2,'0')+':'+
+        String(mins).padStart(2,'0')+':'+
+        String(seconds).padStart(2,'0');
+      if(parseInt(el.dataset.seconds||'0',10)>0)el.dataset.seconds=String(parseInt(el.dataset.seconds,10)-1);
+    });
+  }
+  tick();setInterval(tick,1000);
+})();
+</script>
+
 {% endblock %}

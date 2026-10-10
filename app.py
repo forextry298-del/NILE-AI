@@ -1552,8 +1552,73 @@ def product():
 @app.route("/income")
 @required
 def income():
-    settle_promo_machine_income(session["uid"]); settle_mining_credits(session["uid"])
-    con=db(); tx=con.execute("SELECT * FROM transactions WHERE uid=? ORDER BY id DESC",(session["uid"],)).fetchall(); products=con.execute("SELECT * FROM products WHERE uid=? ORDER BY id DESC",(session["uid"],)).fetchall(); tools=con.execute("SELECT * FROM mining_tools WHERE uid=? ORDER BY id DESC",(session["uid"],)).fetchall(); con.close(); return render_template("income.html",tx=tx,products=products,tools=tools,active="Income")
+    uid = session["uid"]
+    settle_machine_income(uid)
+    settle_promo_machine_income(uid)
+    settle_mining_credits(uid)
+
+    con = db()
+    tx = con.execute(
+        "SELECT * FROM transactions WHERE uid=? ORDER BY id DESC",
+        (uid,)
+    ).fetchall()
+    products = con.execute(
+        "SELECT * FROM products WHERE uid=? ORDER BY id DESC",
+        (uid,)
+    ).fetchall()
+    tools = con.execute(
+        "SELECT * FROM mining_tools WHERE uid=? ORDER BY id DESC",
+        (uid,)
+    ).fetchall()
+    con.close()
+
+    local_now = uganda_now()
+    today = local_now.date()
+    next_midnight = (local_now + timedelta(days=1)).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+    cards = []
+
+    for product in products:
+        item = dict(product)
+        try:
+            start_day = uganda_date(item["purchased_at"])
+            days = max(0, min(
+                int(item["lock_days"]),
+                (today - start_day).days
+            ))
+            lock_days = int(item["lock_days"])
+            end_time = datetime.combine(
+                start_day + timedelta(days=lock_days),
+                datetime.min.time(),
+                tzinfo=ZoneInfo("Africa/Kampala")
+            )
+            item["display_days"] = days
+            item["remaining_days"] = max(0, lock_days - days)
+            item["progress"] = min(
+                100, int(days * 100 / lock_days)
+            ) if lock_days else 100
+            item["next_income_seconds"] = max(
+                0, int((next_midnight - local_now).total_seconds())
+            )
+            item["end_seconds"] = max(
+                0, int((end_time - local_now).total_seconds())
+            )
+        except Exception:
+            item["display_days"] = int(item.get("earned_days") or 0)
+            item["remaining_days"] = max(
+                0, int(item.get("lock_days") or 0) -
+                item["display_days"]
+            )
+            item["progress"] = 0
+            item["next_income_seconds"] = 0
+            item["end_seconds"] = 0
+        cards.append(item)
+
+    return render_template(
+        "income.html", tx=tx, products=products, cards=cards,
+        tools=tools, active="Income"
+    )
 
 @app.route("/support",methods=["GET","POST"])
 @required
