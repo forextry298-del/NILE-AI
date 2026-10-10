@@ -1850,6 +1850,28 @@ def admin_plans_save():
     flash("Plan saved for new purchases. Existing machines were not changed.", "success")
     return redirect(url_for("admin"))
 
+
+@app.context_processor
+def nile_admin_totals():
+    if request.endpoint != "admin":
+        return {}
+    con = db()
+    row = con.execute("""
+        SELECT
+          COALESCE(SUM(CASE
+            WHEN UPPER(kind)='DEPOSIT' AND UPPER(status)='APPROVED'
+            THEN amount ELSE 0 END), 0) AS deposits,
+          COALESCE(SUM(CASE
+            WHEN UPPER(kind)='WITHDRAW' AND UPPER(status)='APPROVED'
+            THEN amount ELSE 0 END), 0) AS withdrawals
+        FROM transactions
+    """).fetchone()
+    con.close()
+    return {
+        "approved_deposit_total": row["deposits"],
+        "approved_withdrawal_total": row["withdrawals"]
+    }
+
 @app.route("/admin")
 @app.route("/admin/")
 @admin_required
@@ -1988,6 +2010,57 @@ def admin_support_send():
         con.commit()
         flash("Message sent to user.","success")
     con.close()
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/support/broadcast", methods=["POST"])
+@admin_required
+def admin_support_broadcast():
+    msg = (request.form.get("message") or "").strip()
+    upload = request.files.get("media")
+    media = None
+
+    if upload and upload.filename:
+        from werkzeug.utils import secure_filename
+        name = secure_filename(upload.filename)
+        ext = name.rsplit(".", 1)[-1].lower() if "." in name else ""
+        types = {
+            "jpg": "image/jpeg",
+            "jpeg": "image/jpeg",
+            "png": "image/png",
+            "gif": "image/gif",
+            "webp": "image/webp",
+        }
+
+        if ext not in types or upload.mimetype != types[ext]:
+            flash("Choose a JPG, PNG, GIF, or WEBP image.", "error")
+            return redirect(url_for("admin"))
+
+        folder = os.path.join(BASE, "static", "uploads", "support")
+        os.makedirs(folder, exist_ok=True)
+        filename = secrets.token_hex(16) + "." + ext
+        upload.save(os.path.join(folder, filename))
+        media = "uploads/support/" + filename
+
+    if not msg and not media:
+        flash("Write a message or attach an image.", "error")
+        return redirect(url_for("admin"))
+
+    con = db()
+    cols = {r[1] for r in con.execute("PRAGMA table_info(support_messages)")}
+    if "media" not in cols:
+        con.execute("ALTER TABLE support_messages ADD COLUMN media TEXT")
+
+    users = con.execute("SELECT id FROM users").fetchall()
+    for user in users:
+        con.execute(
+            "INSERT INTO support_messages(uid,sender,message,created_at,media) VALUES(?,?,?,?,?)",
+            (user["id"], "MANAGER", msg, now(), media)
+        )
+
+    con.commit()
+    con.close()
+    flash(f"Broadcast sent to {len(users)} registered users.", "success")
     return redirect(url_for("admin"))
 
 @app.route("/admin/gift",methods=["POST"])

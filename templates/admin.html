@@ -1,29 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="title">NILE ADMIN</div>
-
-
-<div class="section">
-<h2>Product Plan Editor</h2>
-<p>Changes apply to new purchases only.</p>
-{% for code, plan in config_plans.items() %}
-<form method="post" action="/admin/plans" class="row" style="display:block;margin-bottom:12px">
-<b>{{ code }} - {{ plan.series }}</b>
-<input type="hidden" name="code" value="{{ code }}">
-<label>Price</label><input name="price" type="number" min="0.01" step="0.01" value="{{ plan.price }}" required>
-<label>Daily income</label><input name="daily" type="number" min="0.01" step="0.01" value="{{ plan.daily }}" required>
-<label>Duration in days</label><input name="days" type="number" min="1" step="1" value="{{ plan.days }}" required>
-<label>Total income</label><input name="total" type="number" min="0.01" step="0.01" value="{{ plan.total }}" required>
-<button type="submit">Save {{ code }}</button>
-</form>
-{% endfor %}
+<style id="nile-compact-admin">
+.admin-shell,.admin-top,.section{box-sizing:border-box;min-width:0}
+.admin-shell{width:100%;max-width:1100px;margin:0 auto;padding:10px}
+.admin-top,.section{padding:12px!important;margin:10px 0!important;border-radius:12px}
+.admin-shell h1,.admin-shell h2,.admin-top h2,.section h2{
+  font-size:clamp(15px,4vw,19px)!important;line-height:1.3;margin:0 0 10px
+}
+.admin-shell p,.admin-top p,.section p{font-size:12px;line-height:1.45}
+.admin-shell button,.admin-top button,.section button{
+  max-width:100%;font-size:12px!important;padding:9px 12px!important;
+  border-radius:9px;white-space:normal
+}
+.admin-shell input,.admin-shell select,.admin-shell textarea,
+.admin-top input,.admin-top select,.admin-top textarea,
+.section input,.section select,.section textarea{
+  box-sizing:border-box;max-width:100%;min-width:0;font-size:13px!important
+}
+.admin-top form,.section form{max-width:100%}
+.admin-top table,.section table{width:100%;font-size:12px}
+.admin-top{overflow-wrap:anywhere}
+.nile-total-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.nile-total-card{min-width:0;padding:13px;border:1px solid #087f9b;border-radius:12px;background:#020b11}
+.nile-total-card small{display:block;font-size:11px;color:#9db6c3;margin-bottom:7px}
+.nile-total-card strong{display:block;font-size:clamp(16px,4.5vw,23px);color:#08cfff;overflow-wrap:anywhere}
+@media(max-width:520px){
+  .admin-shell{padding:7px}
+  .admin-top,.section{padding:10px!important;margin:8px 0!important}
+  .nile-total-grid{gap:7px}
+  .nile-total-card{padding:10px}
+  .admin-top table,.section table{display:block;overflow-x:auto;white-space:nowrap}
+}
+</style>
+<div class="nile-total-grid">
+  <div class="nile-total-card">
+    <small>Approved Deposits</small>
+    <strong>UGX {{ "{:,.2f}".format(approved_deposit_total|default(0)|float) }}</strong>
+  </div>
+  <div class="nile-total-card">
+    <small>Approved Withdrawals</small>
+    <strong>UGX {{ "{:,.2f}".format(approved_withdrawal_total|default(0)|float) }}</strong>
+  </div>
 </div>
+
+<div class="admin-shell">
+<div class="title">NILE ADMIN</div>
+<div class="admin-subtitle">Platform management</div>
+
+<div class="admin-shortcuts">
+<a href="#users">Search &amp; Users</a>
+<a href="#deposits">Deposits</a>
+<a href="#withdrawals">Withdrawals</a>
+<a href="#messages">User Messages</a>
+<a href="#broadcast">Message All</a>
+<a href="#transactions">Transactions</a>
+<a href="#gift-codes">Gift Codes</a>
+
+</div>
+
+
+
 {% with msgs=get_flashed_messages(with_categories=true) %}
 {% for cat,msg in msgs %}<div class="section"><b>{{msg}}</b></div>{% endfor %}
 {% endwith %}
 
-<div class="section">
-<h2>Send Announcement</h2>
+<div class="section admin-top" id="announcements"><h2>Send Announcement</h2>
 <form method="post" action="/admin/announcement">
 <input name="title" placeholder="Announcement title" required>
 <textarea name="message" rows="4" placeholder="Write announcement..." required></textarea>
@@ -39,8 +80,21 @@
 {% endfor %}
 </div>
 
-<div class="section">
-<h2>Send Message To Registered User</h2>
+
+<div class="section admin-top" id="broadcast-all-users">
+  <h2>Message All Users</h2>
+  <p>Send a message or image directly into every registered user's existing Chats conversation.</p>
+  <form method="post" action="/admin/support/broadcast" enctype="multipart/form-data">
+    <textarea name="message" rows="4" placeholder="Write your message..."></textarea>
+    <label style="display:block;margin:12px 0;color:inherit">
+      Attach image (JPG, PNG, GIF, WEBP)
+      <input type="file" name="media" accept="image/jpeg,image/png,image/gif,image/webp">
+    </label>
+    <button type="submit">Send to All Users</button>
+  </form>
+</div>
+
+<div class="section admin-top" id="broadcast"><h2>Send Message To Registered User</h2>
 <form method="post" action="/admin/support/send">
 <select name="uid" required>
 <option value="">Select registered user</option>
@@ -53,8 +107,7 @@
 </form>
 </div>
 
-<div class="section">
-<h2>Users</h2>
+<div class="section admin-top" id="users"><h2>Users</h2>
 {% for u in users %}
 <div class="row" style="display:block;margin-bottom:12px">
 <b>{{u.display_name or u.phone}}</b><br>
@@ -85,8 +138,7 @@
 {% else %}<p>No users.</p>{% endfor %}
 </div>
 
-<div class="section">
-<h2>Deposits</h2>
+<div class="section admin-top" id="deposits"><h2>Deposits</h2>
 {% for t in deposits %}
 <div class="row">
 <div>
@@ -126,8 +178,7 @@
 {% endfor %}
 </div>
 
-<div class="section">
-<h2>Withdraw Requests</h2>
+<div class="section admin-top" id="withdrawals"><h2>Withdraw Requests</h2>
 {% for w in withdrawals %}
 <div class="row" style="display:block;margin-bottom:10px">
 <strong>{{w.phone}}</strong>
@@ -166,15 +217,13 @@
 {% endfor %}
 </div>
 
-<div class="section">
-<h2>All Transactions</h2>
+<div class="section admin-top" id="transactions"><h2>All Transactions</h2>
 {% for t in tx %}
 <div class="row"><span>{{t.phone}} — {{t.kind}} — UGX {{'%.0f'|format(t.amount)}}</span><span>{{t.status}}</span></div>
 {% else %}<p>No transactions.</p>{% endfor %}
 </div>
 
-<div class="section">
-<h2>Gift Codes</h2>
+<div class="section admin-top" id="gift-codes"><h2>Gift Codes</h2>
 <form method="post" action="/admin/gift/create">
 <input name="code" placeholder="Code (optional)">
 <input name="amount" type="number" step="0.01" placeholder="Reward UGX" required>
@@ -198,41 +247,17 @@
 {% else %}<p>No gift codes.</p>{% endfor %}
 </div>
 
-<div class="section">
-<h2>Managers</h2>
-{% for m in managers %}
-<div class="row" style="display:block;margin-bottom:10px">
-<b>{{m.name}}</b> — {{m.role}} — {{m.phone}}
-{% if m.enabled %} ACTIVE{% else %} DISABLED{% endif %}
-<form method="post" action="/admin/manager/edit">
-<input type="hidden" name="id" value="{{m.id}}">
-<input name="name" value="{{m.name}}" required>
-<input name="phone" value="{{m.phone}}" required>
-<input name="role" value="{{m.role}}">
-<input name="avatar" value="{{m.avatar}}">
-<button>Save Manager</button>
-</form>
-<form method="post" action="/admin/manager/{{m.id}}/toggle">
-<button>{{"Disable" if m.enabled else "Enable"}}</button>
-</form>
-</div>
-{% endfor %}
-</div>
-
-<div class="section">
-<h2>Admin Access</h2>
+<div class="section admin-top" id="admin-access"><h2>Admin Access</h2>
 <p>Admin permissions can be changed from the Users section above.</p>
 </div>
 
-<div class="section">
-<h2>Password Requests</h2>
+<div class="section admin-top" id="password-requests"><h2>Password Requests</h2>
 {% for r in requests %}
 <div class="row"><span>User {{r.uid}} — {{r.status}}</span></div>
 {% else %}<p>No password requests.</p>{% endfor %}
 </div>
 
-<div class="section">
-<h2>Support Messages</h2>
+<div class="section admin-top" id="messages"><h2>Support Messages</h2>
 {% for m in messages %}
 <div class="row" style="display:block;margin-bottom:8px">
 <b>User {{m.uid}}</b>: {{m.message}}
@@ -244,12 +269,44 @@
 {% else %}<p>No messages.</p>{% endfor %}
 </div>
 
-<div class="section">
-<h2>Admin Activity</h2>
+<div class="section admin-top" id="activity"><h2>Admin Activity</h2>
 <a href="/admin/activity"><button>View Full Activity Log</button></a>
 {% for a in activity %}
 <div class="row"><span>{{a.action}} — {{a.details}}</span><small>{{a.created_at}}</small></div>
 {% endfor %}
 </div>
 
+
+<style id="nile-mobile-admin-layout">
+.admin-shell{width:100%;max-width:1000px;margin:0 auto;padding:12px 0 36px;box-sizing:border-box}
+.admin-shell *{box-sizing:border-box;overflow-wrap:anywhere}
+.admin-shell .title{font-size:clamp(23px,5vw,32px);font-weight:800;letter-spacing:.3px;margin:8px 0 5px}
+.admin-subtitle{font-size:13px;opacity:.72;margin-bottom:16px}
+.admin-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0 22px}
+.admin-shortcuts a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:11px 9px;border:1px solid var(--border-color,rgba(128,128,128,.28));border-radius:12px;text-decoration:none;color:inherit;font-size:13px;font-weight:700;text-align:center}
+.admin-shell .section{min-width:0;padding:15px;margin:0 0 15px;border:1px solid var(--border-color,rgba(128,128,128,.22));border-radius:15px;overflow:hidden}
+.admin-shell .section h2{font-size:17px;line-height:1.35;margin:0 0 13px}
+.admin-shell .row{min-width:0;padding:12px;margin:10px 0;border-radius:11px;display:block;overflow-wrap:anywhere}
+.admin-shell form{min-width:0;max-width:100%;margin-top:8px}
+.admin-shell input:not([type=checkbox]):not([type=radio]),.admin-shell select,.admin-shell textarea{display:block;width:100%;max-width:100%;min-width:0;margin:7px 0;padding:12px;border-radius:10px;font:inherit}
+.admin-shell button{max-width:100%;min-height:42px;padding:10px 14px;border-radius:10px;font:inherit;font-weight:700;white-space:normal;overflow-wrap:anywhere}
+.admin-shell form[style*="inline"]{display:inline-block;vertical-align:middle;margin:5px 5px 0 0}
+.admin-shell small{overflow-wrap:anywhere}
+.admin-shell a{overflow-wrap:anywhere}
+.admin-shell .admin-top{scroll-margin-top:12px}
+@media(min-width:650px){
+ .admin-shell{padding:20px}
+ .admin-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .admin-shell .section{padding:20px}
+ .admin-shell .row{padding:15px}
+}
+@media(max-width:380px){
+ .admin-shell{padding:6px 0 25px}
+ .admin-shell .section{padding:11px}
+ .admin-shortcuts{gap:6px}
+ .admin-shortcuts a{font-size:12px;padding:9px 5px}
+}
+</style>
+
+</div>
 {% endblock %}
