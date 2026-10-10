@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.team-wrap{max-width:1000px;margin:auto;padding:16px}
+.team-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.team-card{padding:14px;border:1px solid #ddd;border-radius:12px;overflow-wrap:anywhere}
+.team-table-wrap{overflow-x:auto}
+.team-table{width:100%;border-collapse:collapse;min-width:560px}
+.team-table th,.team-table td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
+.team-form{display:flex;gap:6px;flex-wrap:wrap;margin:5px 0}
+.team-form input,.team-form button{padding:8px}
+@media(max-width:560px){.team-stats{grid-template-columns:1fr}.team-wrap{padding:10px}}
+</style>
+
+<div class="team-wrap">
+<h2>Team Admin Dashboard</h2>
+<p>Manage members in your referral team only.</p>
+
+<div class="team-stats">
+<div class="team-card">Team Members<h3>{{ team_count }}</h3></div>
+<div class="team-card">Approved Deposits<h3>{{ "{:,.2f}".format(deposit_total|float) }}</h3></div>
+<div class="team-card">Approved Withdrawals<h3>{{ "{:,.2f}".format(withdrawal_total|float) }}</h3></div>
+</div>
+
+<h3>Pending Team Deposits</h3>
+<div class="team-table-wrap">
+<table class="team-table">
+<thead><tr><th>Phone</th><th>Amount</th><th>Reference</th><th>Action</th></tr></thead>
+<tbody>
+{% for deposit in pending_deposits %}
+<tr>
+<td>{{ deposit["phone"] }}</td>
+<td>{{ "{:,.2f}".format(deposit["amount"]|float) }}</td>
+<td>{{ deposit["reference"] or "-" }}</td>
+<td>
+<form method="post" action="{{ url_for('team_approve_deposit', tid=deposit['id']) }}">
+<button type="submit">Approve Deposit</button>
+</form>
+</td>
+</tr>
+{% else %}
+<tr><td colspan="4">No pending team deposits.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+<h3>My Team</h3>
+<div class="team-table-wrap">
+<table class="team-table">
+<thead>
+<tr><th>Phone</th><th>Invite Code</th><th>Status</th><th>Actions</th></tr>
+</thead>
+<tbody>
+{% for member in members %}
+<tr>
+<td>{{ member["phone"] }}</td>
+<td>{{ member["invite_code"] or "-" }}</td>
+<td>{{ "Blocked" if member["is_blocked"] else "Active" }}</td>
+<td>
+<form class="team-form" method="post" action="{{ url_for('team_admin_reply', uid=member['id']) }}">
+<input type="text" name="message" maxlength="2000" placeholder="Private reply" required>
+<button type="submit">Send Reply</button>
+</form>
+<form class="team-form" method="post" action="{{ url_for('team_member_action', uid=member['id'], action='block' if not member['is_blocked'] else 'unblock') }}">, uid=member['id'], action='block' if not member['is_blocked'] else 'unblock') }}">
+<button type="submit">{{ "Unblock" if member["is_blocked"] else "Block" }}</button>
+</form>
+<form class="team-form" method="post" action="{{ url_for('team_member_action', uid=member['id'], action='reset-password') }}">
+<input type="password" name="new_password" minlength="8" placeholder="New password" required autocomplete="new-password">
+<button type="submit">Reset Password</button>
+</form>
+</td>
+</tr>
+{% else %}
+<tr><td colspan="4">No team members found yet.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+<p><a href="{{ url_for('raffle') }}">Back to Raffle</a></p>
+</div>
+{% endblock %}

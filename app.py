@@ -112,7 +112,7 @@ def init_db():
     """)
     # Safe migrations for any copy that already has an older fresh DB.
     cols={r[1] for r in con.execute("PRAGMA table_info(users)").fetchall()}
-    for col,typ in [("points","INTEGER NOT NULL DEFAULT 0"),("display_name","TEXT NOT NULL DEFAULT ''"),("mtn_number","TEXT NOT NULL DEFAULT ''"),("airtel_number","TEXT NOT NULL DEFAULT ''"),("usdt_wallet","TEXT NOT NULL DEFAULT ''"),("notifications_enabled","INTEGER NOT NULL DEFAULT 1"),("salary_claimed_month","TEXT"),("reward_claimed_month","TEXT"),("manager_phone","TEXT"),("mtn_name","TEXT NOT NULL DEFAULT ''"),("airtel_name","TEXT NOT NULL DEFAULT ''"),("is_blocked","INTEGER NOT NULL DEFAULT 0"),("last_seen","TEXT"),("announcement_seen_id","INTEGER NOT NULL DEFAULT 0")]:
+    for col,typ in [("points","INTEGER NOT NULL DEFAULT 0"),("display_name","TEXT NOT NULL DEFAULT ''"),("mtn_number","TEXT NOT NULL DEFAULT ''"),("airtel_number","TEXT NOT NULL DEFAULT ''"),("usdt_wallet","TEXT NOT NULL DEFAULT ''"),("notifications_enabled","INTEGER NOT NULL DEFAULT 1"),("salary_claimed_month","TEXT"),("reward_claimed_month","TEXT"),("manager_phone","TEXT"),("mtn_name","TEXT NOT NULL DEFAULT ''"),("airtel_name","TEXT NOT NULL DEFAULT ''"),("is_blocked","INTEGER NOT NULL DEFAULT 0"),("team_admin","INTEGER NOT NULL DEFAULT 0"),("last_seen","TEXT"),("announcement_seen_id","INTEGER NOT NULL DEFAULT 0")]:
         if col not in cols: con.execute(f"ALTER TABLE users ADD COLUMN {col} {typ}")
 
     gcols={r[1] for r in con.execute("PRAGMA table_info(gift_codes)").fetchall()}
@@ -198,6 +198,39 @@ def admin_required(fn):
             return ("Forbidden", 403)
         return fn(*a, **k)
     return w
+
+def team_admin_required(fn):
+    @wraps(fn)
+    def w(*a, **k):
+        u = current_user()
+        if not u:
+            return redirect(url_for("login"))
+        if str(u["phone"]).strip() == "0758878297":
+            return fn(*a, **k)
+        con = db()
+        row = con.execute(
+            "SELECT team_admin FROM users WHERE id=?", (u["id"],)
+        ).fetchone()
+        con.close()
+        if not row or not row["team_admin"]:
+            return ("Forbidden", 403)
+        return fn(*a, **k)
+    return w
+
+def team_member_ids(con, admin_uid):
+    rows = con.execute("""
+        WITH RECURSIVE team(id, depth, path) AS (
+            SELECT id, 1, printf(',%d,', id)
+            FROM users WHERE invited_by=?
+            UNION ALL
+            SELECT u.id, team.depth+1, team.path || printf('%d,', u.id)
+            FROM users u JOIN team ON u.invited_by=team.id
+            WHERE team.depth < 10000
+              AND instr(team.path, printf(',%d,', u.id)) = 0
+        )
+        SELECT DISTINCT id FROM team
+    """, (admin_uid,)).fetchall()
+    return [r["id"] for r in rows]
 
 def invite_counts(uid):
     cur=month_start()
@@ -1877,7 +1910,7 @@ def nile_admin_totals():
 @admin_required
 def admin():
     con=db()
-    users=con.execute("SELECT id,phone,balance,created_at,is_admin,is_blocked,last_seen,display_name,manager_phone FROM users ORDER BY id DESC").fetchall()
+    users=con.execute("SELECT id,phone,balance,created_at,is_admin,team_admin,is_blocked,last_seen,display_name,manager_phone FROM users ORDER BY id DESC").fetchall()
     tx=con.execute("SELECT t.*,u.phone,u.display_name FROM transactions t LEFT JOIN users u ON u.id=t.uid ORDER BY t.id DESC LIMIT 200").fetchall()
     withdrawals=con.execute("""
         SELECT t.*,u.phone,u.display_name,
@@ -2215,15 +2248,24 @@ def admin_manager_toggle(mid):
 @app.route("/admin/user/<int:uid>/admin",methods=["POST"])
 @admin_required
 def admin_user_admin(uid):
-    value=1 if request.form.get("value")=="1" else 0
-    if uid==current_user()["id"] and value==0:
-        flash("You cannot remove your own admin access.","error")
+    value = 1 if request.form.get("value") == "1" else 0
+    con = db()
+    target = con.execute("SELECT id,phone FROM users WHERE id=?", (uid,)).fetchone()
+    if not target:
+        con.close()
+        abort(404)
+    if str(target["phone"]).strip() == "0758878297":
+        con.close()
+        flash("The Official Admin role cannot be changed here.", "error")
         return redirect(url_for("admin"))
-    con=db()
-    con.execute("UPDATE users SET is_admin=? WHERE id=?",(value,uid))
-    con.execute("INSERT INTO admin_activity(admin_uid,action,details,created_at) VALUES(?,?,?,?)",(current_user()["id"],"ADMIN_ACCESS",f"User {uid} admin={value}",now()))
-    con.commit(); con.close()
-    flash("Admin access updated.","success")
+    con.execute("UPDATE users SET team_admin=? WHERE id=?", (value, uid))
+    con.execute(
+        "INSERT INTO admin_activity(admin_uid,action,details,created_at) VALUES(?,?,?,?)",
+        (current_user()["id"], "TEAM_ADMIN_ACCESS", f"User {uid} team_admin={value}", now())
+    )
+    con.commit()
+    con.close()
+    flash("Team Admin access updated.", "success")
     return redirect(url_for("admin"))
 
 @app.route("/admin/gift/<code>/claims")
@@ -2250,6 +2292,183 @@ def admin_create():
     if not exists: con.execute("INSERT INTO users(phone,password,invite_code,created_at,is_admin) VALUES(?,?,?,?,1)",(phone,pw_hash(password),make_code(con),now()))
     else: con.execute("UPDATE users SET is_admin=1,password=? WHERE phone=?",(pw_hash(password),phone))
     con.commit(); con.close(); return "Admin account ready."
+
+
+@app.route("/team-admin")
+@team_admin_required
+def team_dashboard():
+    u = current_user()
+    con = db()
+    try:
+        ids = team_member_ids(con, u["id"])
+        members = []
+        pending_deposits = []
+        deposit_total = 0
+        withdrawal_total = 0
+
+        if ids:
+            marks = ",".join("?" for _ in ids)
+            members = con.execute(
+                f"""SELECT id, phone, invite_code, is_blocked
+                    FROM users WHERE id IN ({marks})
+                    ORDER BY id DESC""", ids
+            ).fetchall()
+
+            pending_deposits = con.execute(
+                f"""SELECT t.id, t.uid, t.amount, t.reference, t.created_at, u.phone
+                    FROM transactions t JOIN users u ON u.id=t.uid
+                    WHERE t.uid IN ({marks}) AND t.kind='DEPOSIT'
+                    AND UPPER(t.status)='PENDING'
+                    ORDER BY t.id DESC""", ids
+            ).fetchall()
+
+            deposit_total = con.execute(
+                f"""SELECT COALESCE(SUM(amount),0) FROM transactions
+                    WHERE uid IN ({marks}) AND kind='DEPOSIT'
+                    AND UPPER(status)='APPROVED'""", ids
+            ).fetchone()[0] or 0
+
+            withdrawal_total = con.execute(
+                f"""SELECT COALESCE(SUM(amount),0) FROM transactions
+                    WHERE uid IN ({marks}) AND kind='WITHDRAW'
+                    AND UPPER(status)='APPROVED'""", ids
+            ).fetchone()[0] or 0
+
+        return render_template(
+            "team_admin.html",
+            members=members,
+            pending_deposits=pending_deposits,
+            team_count=len(ids),
+            deposit_total=deposit_total,
+            withdrawal_total=withdrawal_total
+        )
+    finally:
+        con.close()
+
+
+
+@app.route("/team-admin/deposit/<int:tid>/approve", methods=["POST"])
+@team_admin_required
+def team_approve_deposit(tid):
+    admin = current_user()
+    con = db()
+    award = False
+    try:
+        t = con.execute(
+            "SELECT * FROM transactions WHERE id=?", (tid,)
+        ).fetchone()
+
+        if not t or t["kind"] != "DEPOSIT" or str(t["status"]).upper() != "PENDING":
+            abort(404)
+
+        if t["uid"] not in team_member_ids(con, admin["id"]):
+            abort(403)
+
+        cur = con.execute(
+            "UPDATE transactions SET status='APPROVED' WHERE id=? AND status='PENDING'",
+            (tid,)
+        )
+        if cur.rowcount != 1:
+            abort(409)
+
+        con.execute(
+            "UPDATE users SET wallet=wallet+? WHERE id=?",
+            (t["amount"], t["uid"])
+        )
+        con.execute("""
+            UPDATE deposit_sessions SET status='APPROVED'
+            WHERE id=CAST(substr(?,instr(?,'-S')+2) AS INTEGER)
+        """, (t["reference"], t["reference"]))
+        con.execute(
+            "INSERT OR IGNORE INTO raffle_chances(uid,source_transaction_id,reward_amount,created_at) VALUES(?,?,0,?)",
+            (t["uid"], tid, now())
+        )
+        con.commit()
+        award = True
+    finally:
+        con.close()
+
+    if award:
+        referral_deposit_commission(t["uid"], t["amount"], tid)
+        award_referral_points(t["uid"])
+
+    flash("Team deposit approved.", "success")
+    return redirect(url_for("team_dashboard"))
+
+
+@app.route("/team-admin/support/<int:uid>", methods=["POST"])
+@team_admin_required
+def team_admin_reply(uid):
+    admin = current_user()
+    message = (request.form.get("message") or "").strip()
+    con = db()
+    try:
+        if uid not in team_member_ids(con, admin["id"]):
+            abort(403)
+        if not con.execute("SELECT id FROM users WHERE id=?", (uid,)).fetchone():
+            abort(404)
+        if message:
+            con.execute(
+                "INSERT INTO support_messages(uid,sender,message,created_at) VALUES(?,?,?,?)",
+                (uid, "MANAGER", message, now())
+            )
+            con.commit()
+    finally:
+        con.close()
+
+    flash("Private reply sent.", "success")
+    return redirect(url_for("team_dashboard"))
+
+@app.route("/team-admin/member/<int:uid>/<action>", methods=["POST"])
+@team_admin_required
+def team_member_action(uid, action):
+    if action not in ("block", "unblock", "reset-password"):
+        abort(404)
+
+    admin = current_user()
+    con = db()
+    try:
+        allowed_ids = team_member_ids(con, admin["id"])
+        if uid not in allowed_ids:
+            abort(403)
+
+        target = con.execute(
+            "SELECT id, phone FROM users WHERE id=?", (uid,)
+        ).fetchone()
+        if not target:
+            abort(404)
+
+        # Never let a Team Admin alter the Official Admin account.
+        if str(target["phone"]).strip() == "0758878297":
+            abort(403)
+
+        if action == "block":
+            con.execute("UPDATE users SET is_blocked=1 WHERE id=?", (uid,))
+            con.commit()
+            flash("Team member blocked.", "success")
+
+        elif action == "unblock":
+            con.execute("UPDATE users SET is_blocked=0 WHERE id=?", (uid,))
+            con.commit()
+            flash("Team member unblocked.", "success")
+
+        else:
+            new_password = request.form.get("new_password", "").strip()
+            if len(new_password) < 8:
+                flash("New password must contain at least 8 characters.", "error")
+            else:
+                from werkzeug.security import generate_password_hash
+                con.execute(
+                    "UPDATE users SET password=? WHERE id=?",
+                    (generate_password_hash(new_password), uid)
+                )
+                con.commit()
+                flash("Team member password reset successfully.", "success")
+
+    finally:
+        con.close()
+
+    return redirect(url_for("team_dashboard"))
 
 init_db()
 if __name__=="__main__": app.run(host="0.0.0.0",port=int(os.environ.get("PORT",5000)),debug=False)

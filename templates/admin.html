@@ -114,7 +114,7 @@
 <small>{{u.phone}} | ID {{u.id}} | Last seen: {{u.last_seen or "Never"}}</small><br>
 <b>UGX {{'%.0f'|format(u.balance or 0)}}</b>
 {% if u.is_blocked %}<span style="color:red"> BLOCKED</span>{% endif %}
-{% if u.is_admin %}<span> ADMIN</span>{% endif %}
+{% if u.team_admin %}<span style="color:#08a"> TEAM ADMIN</span>{% endif %}
 
 <form method="post" action="/admin/user/{{u.id}}/balance" style="margin-top:6px">
 <input name="amount" type="number" step="0.01" value="{{u.balance or 0}}" placeholder="Balance">
@@ -131,8 +131,8 @@
 </form>
 
 <form method="post" action="/admin/user/{{u.id}}/admin" style="display:inline">
-<input type="hidden" name="value" value="{{0 if u.is_admin else 1}}">
-<button>{{"Remove Admin" if u.is_admin else "Make Admin"}}</button>
+<input type="hidden" name="value" value="{{0 if u.team_admin else 1}}">
+<button>{{"Remove Team Admin" if u.team_admin else "Make Team Admin"}}</button>
 </form>
 </div>
 {% else %}<p>No users.</p>{% endfor %}
