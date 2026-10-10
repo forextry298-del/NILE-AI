@@ -99,7 +99,7 @@ def init_db():
     """)
     # Safe migrations for any copy that already has an older fresh DB.
     cols={r[1] for r in con.execute("PRAGMA table_info(users)").fetchall()}
-    for col,typ in [("points","INTEGER NOT NULL DEFAULT 0"),("display_name","TEXT NOT NULL DEFAULT ''"),("mtn_number","TEXT NOT NULL DEFAULT ''"),("airtel_number","TEXT NOT NULL DEFAULT ''"),("usdt_wallet","TEXT NOT NULL DEFAULT ''"),("notifications_enabled","INTEGER NOT NULL DEFAULT 1"),("salary_claimed_month","TEXT"),("reward_claimed_month","TEXT"),("manager_phone","TEXT"),("is_blocked","INTEGER NOT NULL DEFAULT 0"),("last_seen","TEXT"),("announcement_seen_id","INTEGER NOT NULL DEFAULT 0")]:
+    for col,typ in [("points","INTEGER NOT NULL DEFAULT 0"),("display_name","TEXT NOT NULL DEFAULT ''"),("mtn_number","TEXT NOT NULL DEFAULT ''"),("airtel_number","TEXT NOT NULL DEFAULT ''"),("usdt_wallet","TEXT NOT NULL DEFAULT ''"),("notifications_enabled","INTEGER NOT NULL DEFAULT 1"),("salary_claimed_month","TEXT"),("reward_claimed_month","TEXT"),("manager_phone","TEXT"),("mtn_name","TEXT NOT NULL DEFAULT ''"),("airtel_name","TEXT NOT NULL DEFAULT ''"),("is_blocked","INTEGER NOT NULL DEFAULT 0"),("last_seen","TEXT"),("announcement_seen_id","INTEGER NOT NULL DEFAULT 0")]:
         if col not in cols: con.execute(f"ALTER TABLE users ADD COLUMN {col} {typ}")
 
     gcols={r[1] for r in con.execute("PRAGMA table_info(gift_codes)").fetchall()}

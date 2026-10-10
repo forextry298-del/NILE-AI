@@ -312,3 +312,47 @@ body { padding-bottom: 108px !important; }
     font-size: 10px !important;
   }
 }
+
+/* COMPACT PLATFORM CONTENT — KEEP NAVIGATION UNCHANGED */
+main {
+  padding: 9px !important;
+}
+main .panel,
+main .core,
+main .wallet,
+main .machine-card,
+main .auth-card {
+  padding: 10px !important;
+  border-radius: 12px !important;
+}
+main h1 { font-size: 20px !important; }
+main h2 { font-size: 16px !important; }
+main h3 { font-size: 13px !important; }
+main p, main label, main small {
+  line-height: 1.3;
+}
+main .actions { gap: 7px !important; margin: 8px 0 !important; }
+main .actions a,
+main .machine-btn,
+main .my-wide-btn {
+  padding: 8px !important;
+  border-radius: 8px !important;
+}
+main input:not([type="checkbox"]):not([type="radio"]),
+main select,
+main textarea,
+main .auth-input {
+  min-height: 36px !important;
+  padding: 8px 10px !important;
+  border-radius: 9px !important;
+}
+main .machine-grid { gap: 7px !important; }
+main .machine-row { padding: 4px 0 !important; }
+main .my-menu,
+main .my-share,
+main .my-salary,
+main .my-invites,
+main .my-rewards {
+  padding: 10px !important;
+}
+/* Navigation dimensions, icons and labels are intentionally untouched. */
