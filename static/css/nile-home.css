@@ -18,9 +18,9 @@
 .nmh-grid{display:grid;gap:10px;margin-bottom:10px}
 .nmh-grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .nmh-grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.nmh-stat{display:flex;flex-direction:column;justify-content:space-between;min-width:0;min-height:78px;text-align:center;text-decoration:none;overflow:hidden;border:1px solid rgba(8,207,255,.7);border-radius:17px;background:rgba(0,7,12,.92);box-shadow:0 0 12px rgba(8,207,255,.12)}
-.nmh-stat strong{display:block;padding:13px 5px 9px;font-size:18px;line-height:1.1;color:#f6fbff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nmh-stat span{display:block;padding:9px 4px;background:linear-gradient(135deg,#08cfff,#087fb4);color:#fff;font-size:12px;font-weight:700;line-height:1.15;min-height:30px;box-sizing:border-box}
+.nmh-stat{background:#fff!important;color:#101827!important;display:flex;flex-direction:column;justify-content:space-between;min-width:0;min-height:78px;text-align:center;text-decoration:none;overflow:hidden;border:1px solid rgba(8,207,255,.7);border-radius:17px;box-shadow:0 0 12px rgba(8,207,255,.12)}
+.nmh-stat strong{background:#fff!important;color:#101827!important;display:block;padding:13px 5px 9px;font-size:18px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nmh-stat span{background:linear-gradient(135deg,#08cfff,#087fb4)!important;color:#fff!important;display:block;padding:9px 4px;background:linear-gradient(135deg,#08cfff,#087fb4);color:#fff;font-size:12px;font-weight:700;line-height:1.15;min-height:30px;box-sizing:border-box}
 .nmh-small{min-height:74px}.nmh-small strong{font-size:16px}
 .nmh-panel{margin-top:12px;padding:12px;border:1px solid rgba(8,207,255,.65);border-radius:18px;background:rgba(0,5,9,.84);box-shadow:0 0 15px rgba(8,207,255,.1)}
 .nmh-section-title{font-size:18px;font-weight:900;margin-bottom:9px;color:#f4fbff}
@@ -41,3 +41,17 @@
 /* Keep the existing global navigation fixed and above page content */
 .bottom-nav{position:fixed!important;left:50%!important;bottom:0!important;transform:translateX(-50%)!important;width:min(100%,760px)!important;z-index:9999!important}
 .nile-mobile-home{max-width:720px;margin:auto;padding:0 8px 78px;box-sizing:border-box}.nmh-panel{padding:10px;margin-top:9px}.nmh-grid{gap:7px;margin-bottom:7px}
+
+
+
+/* Subtle scattered dots over pure black */
+html, body {
+  background-color: #000 !important;
+  background-image:
+    radial-gradient(circle at 8% 12%, rgba(8,207,255,.20) 1px, transparent 1.6px),
+    radial-gradient(circle at 72% 28%, rgba(8,207,255,.15) 1px, transparent 1.7px),
+    radial-gradient(circle at 34% 66%, rgba(8,207,255,.17) 1px, transparent 1.6px),
+    radial-gradient(circle at 91% 84%, rgba(8,207,255,.16) 1px, transparent 1.7px) !important;
+  background-size: 137px 151px, 173px 181px, 191px 167px, 157px 199px !important;
+  background-attachment: fixed !important;
+}
