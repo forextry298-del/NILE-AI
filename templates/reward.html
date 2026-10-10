@@ -1,1 +1,24 @@
-{% extends 'base.html' %}{% block content %}<div class="nile-wrap"><header class="nile-header"><div><div class="nile-brand">NILE AI</div><div class="nile-sub">REWARD CENTER</div></div><div class="nile-avatar">★</div></header><div class="section-title">Rewards</div><div class="section"><table class="table"><tr><th>Invite</th><th>Reward</th></tr>{% for req,amt in rewards|sort(attribute=0) %}<tr><td>{{req}}</td><td>UGX {{'{:,.0f}'.format(amt)}}</td></tr>{% endfor %}</table><form method="post" action="/my/claim-reward"><button class="button">Get last month's reward</button></form></div>{% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.promo{padding:8px;max-width:520px;margin:auto;color:#f4fbff}
+.promo h2{font-size:19px;margin:5px 0}
+.promo p{font-size:11px;color:#91a9b6;line-height:1.5}
+.offer{margin:9px 0;padding:13px;border:1px solid #087b9c;border-radius:12px;background:#06101a}
+.day{font-size:10px;color:#16d9ff;font-weight:bold;letter-spacing:1px}
+.amount{font-size:19px;font-weight:bold;margin:8px 0}
+.bonus{border-top:1px solid #163343;padding-top:9px;color:#65e6a5;font-size:14px;font-weight:bold}
+.rules{padding:12px;border:1px solid #163343;border-radius:10px;font-size:11px;line-height:1.8}
+.monthly{margin-top:14px}
+.monthly button{width:100%;padding:9px;border:0;border-radius:8px;background:#16d9ff;color:#001018;font-weight:bold}
+</style>
+<div class="promo">
+<h2>Deposit Promotions</h2>
+<p>Qualify with an approved deposit on the promotion day and receive the bonus directly in your wallet.</p>
+<div class="offer"><div class="day">TUESDAY OFFER</div><div class="amount">Deposit UGX 1,000,000</div><div class="bonus">Wallet reward: UGX 100,000</div></div>
+<div class="offer"><div class="day">FRIDAY OFFER</div><div class="amount">Deposit UGX 2,500,000</div><div class="bonus">Wallet reward: UGX 1,000,000</div></div>
+<div class="offer"><div class="day">SUNDAY OFFER</div><div class="amount">Deposit UGX 5,000,000</div><div class="bonus">Wallet reward: UGX 2,000,000</div></div>
+<div class="rules"><b>Promotion rules</b><br>• Minimum deposit amount must be met.<br>• Admin approval is required.<br>• Promotion day uses Uganda time.<br>• Each eligible deposit can earn one bonus.<br>• Rejected deposits do not qualify.</div>
+<div class="monthly"><p>Your existing monthly reward claim is still available.</p><form method="post" action="/my/claim-reward"><button type="submit">Claim last month's reward</button></form></div>
+</div>
+{% endblock %}
