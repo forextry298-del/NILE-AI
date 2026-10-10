@@ -1061,7 +1061,7 @@ def deposit():
             """,(
                 u["id"],
                 amount,
-                "0758878297 (Shakila Nantongo)",
+                "0700244204 (Emanuel Onen)",
                 expires,
                 now()
             ))

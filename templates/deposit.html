@@ -9,6 +9,10 @@
 .deposit-input{width:100%;box-sizing:border-box;padding:14px;border-radius:12px;border:1px solid #19465b;background:#050b11;color:#e9f7ff;font-size:17px;margin-bottom:14px}
 .deposit-btn{width:100%;border:0;border-radius:12px;padding:14px;background:linear-gradient(90deg,#16d9ff,#ffd34d);color:#071019;font-weight:800;font-size:16px;margin-top:8px}
 .method-btn{margin-bottom:10px}
+.quick-amounts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 14px}
+.quick-amounts button{border:1px solid #24506a;border-radius:10px;padding:12px 5px;background:#0b151f;color:#16d9ff;font-weight:800;font-size:14px}
+.quick-amounts button:last-child{grid-column:1/-1}
+.quick-amounts button:active{background:#16d9ff;color:#071019}
 .error{color:#ff7b7b;margin-bottom:12px;font-weight:700}
 .success{color:#16d98a;font-weight:800}
 .agent{padding:16px;border-radius:14px;background:#0b151f;border:1px solid #19465b;margin:14px 0}
@@ -22,14 +26,16 @@
 
 {% if stage=="amount" %}
 
-<div class="deposit-title">NILE PAYMENT AGENT 626</div>
+
 <div class="deposit-sub">Enter the amount you want to deposit. Minimum required deposit: <b>UGX 20,000</b>.</div>
 
 {% if error %}<div class="error">{{error}}</div>{% endif %}
 
 <form method="post">
 <input type="hidden" name="action" value="start">
-<input class="deposit-input" name="amount" type="number" min="20000" step="1" placeholder="Amount (UGX)" required>
+<input id="depositAmount" class="deposit-input" name="amount" type="number" min="20000" step="1" placeholder="Amount (UGX)" required>
+<div class="quick-amounts"><button type="button" onclick="pickAmount(20000)">20,000</button><button type="button" onclick="pickAmount(50000)">50,000</button><button type="button" onclick="pickAmount(90000)">90,000</button><button type="button" onclick="pickAmount(100000)">100,000</button><button type="button" onclick="pickAmount(500000)">500,000</button></div>
+<script>function pickAmount(n){document.getElementById('depositAmount').value=n;}</script>
 <button class="deposit-btn" type="submit">Continue</button>
 </form>
 
@@ -53,8 +59,8 @@
 
 <div class="agent">
 <div>Send money to</div>
-<div class="agent-number">0758878297</div>
-<div style="margin-top:5px;font-weight:800">Shakila Nantongo</div>
+<div class="agent-number">0700244204</div>
+<div style="margin-top:5px;font-weight:800">Emanuel Onen</div>
 </div>
 
 <div class="agent">
@@ -129,8 +135,8 @@ Enter the details of the payment you made.
 
 <div class="agent">
 <div>Payment agent</div>
-<div class="agent-number">0758878297</div>
-<div style="margin-top:5px">Shakila Nantongo</div>
+<div class="agent-number">0700244204</div>
+<div style="margin-top:5px">Emanuel Onen</div>
 </div>
 
 <div id="countdown" class="countdown">30:00</div>
