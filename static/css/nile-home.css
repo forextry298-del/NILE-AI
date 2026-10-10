@@ -276,7 +276,7 @@ t strong {
 .nile-mobile-home {
   padding-left: 8px !important;
   padding-right: 8px !important;
-  padding-bottom: 88px !important;
+  padding-bottom: 8px !important;
 }
 
 .nmh-slider {
@@ -501,4 +501,23 @@ t strong {
   .nmh-slide {
     height: 190px !important;
   }
+}
+
+
+/* Fix stray bottom text and excessive space above fixed navigation */
+.nmh-quick,
+.nmh-quick-access,
+.nmh-quick-access:last-child {
+  margin-bottom: 4px !important;
+  padding-bottom: 10px !important;
+}
+.nmh-wrap,
+.nmh-page,
+.nmh-content {
+  padding-bottom: 6px !important;
+  margin-bottom: 0 !important;
+}
+main {
+  padding-bottom: 6px !important;
+  margin-bottom: 0 !important;
 }
