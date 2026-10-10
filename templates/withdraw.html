@@ -1,27 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<style>
-.withdraw-page{color:#f3f8fc;padding:0 12px 85px;max-width:620px;margin:auto}
-.wd-head{height:55px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid #173b4c;margin-bottom:18px}
-.wd-title{font-size:23px;font-weight:900;color:#fff}
-.wd-balance{padding:17px;border-radius:15px;border:1px solid #17617a;background:linear-gradient(120deg,#071922,#0c2936);margin-bottom:20px}
-.wd-caption{font-size:12px;color:#a9c6d3}
-.wd-amount{font-size:27px;font-weight:900;color:#16d9ff;margin-top:5px}
-.wd-methods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}
-.wd-method{padding:15px;border-radius:12px;border:1px solid #264956;background:#101b23;color:#eaf6fb;font-weight:800}
-.wd-method.active{border:2px solid #16d9ff;color:#16d9ff;background:#092d39}
-.wd-card{padding:16px;border:1px solid #16495b;border-radius:15px;background:#081720;margin-bottom:15px}
-.wd-label{display:block;font-size:12px;font-weight:800;color:#16d9ff;margin:12px 0 7px}
-.wd-input{box-sizing:border-box;width:100%;padding:14px;border:1px solid #315363;border-radius:10px;background:#f7fbff;color:#111;font-size:16px}
-.wd-summary{margin-top:16px;padding:12px;background:#0c1b24;border-radius:10px}
-.wd-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;font-size:12px;color:#b5c8d1}
-.wd-row b{color:#fff}
-.wd-row.receive{border-top:1px solid #244451;padding-top:12px;color:#16d9ff}
-.wd-submit{width:100%;margin-top:17px;padding:15px;border:0;border-radius:11px;background:linear-gradient(100deg,#08bfe9,#16d9ff,#e7bd4a);color:#06151c;font-weight:900}
- .withdraw-page .panel{background:#081720;border:1px solid #16495b;border-radius:15px;padding:16px;margin-bottom:15px;color:#f3f8fc}.withdraw-page .wallet{background:linear-gradient(120deg,#071922,#0c2936);border:1px solid #17617a;border-radius:15px;padding:18px;margin-bottom:18px}.withdraw-page .balance-number{font-size:28px;font-weight:900;color:#16d9ff}.withdraw-page .balance-label,.withdraw-page .helper{color:#a9c6d3}.withdraw-page .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.withdraw-page .method-btn{padding:15px;border-radius:12px;border:1px solid #264956;background:#101b23;color:#eaf6fb;font-weight:800}.withdraw-page .method-btn.active{border:2px solid #16d9ff;color:#16d9ff;background:#092d39}.withdraw-page .amount-input input{box-sizing:border-box;width:100%;padding:14px;border:1px solid #315363;border-radius:10px;background:#f7fbff;color:#111;font-size:16px}.withdraw-page .form-label{color:#16d9ff;font-weight:800;margin:14px 0 8px}.withdraw-page .withdraw-summary{background:#0c1b24;border-radius:10px;padding:12px}.withdraw-page .withdraw-summary span{color:#b5c8d1}.withdraw-page .withdraw-summary b{color:#fff}.withdraw-page .withdraw-submit{width:100%;padding:15px;border:0;border-radius:11px;background:linear-gradient(100deg,#08bfe9,#16d9ff,#e7bd4a);color:#06151c;font-weight:900}</style>
+<style>.withdraw-page{max-width:620px;margin:auto;padding:0 10px 85px;color:#d4d4df;font:14px Georgia,serif}.withdraw-page>.panel:first-child{display:none}.withdraw-page .wallet,.withdraw-page .panel{background:#000;border:1px solid #087b9c;border-radius:18px;padding:14px;margin:14px 0}.withdraw-page .wallet{text-align:center}.withdraw-page .balance-label{font-size:13px;color:#bbb}.withdraw-page .balance-number{font-size:27px;color:#08c8f2;font-weight:bold}.withdraw-page .form-label{font:16px Georgia,serif;color:#ddd;margin:14px 0 8px}.withdraw-page .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.withdraw-page .method-btn{padding:12px 4px;border:1px solid #075b78;border-radius:15px;background:#000;color:#eee;font:14px Georgia,serif}.withdraw-page .method-btn.active{background:#08bfe8;color:#fff}.withdraw-page .amount-input input{box-sizing:border-box;width:100%;padding:14px;border:1px solid #087b9c;border-radius:14px;background:#050a10;color:#fff;font-size:14px}.withdraw-page .details-warning{background:#180306;border:1px solid #8d1730;border-radius:15px;padding:14px;margin:14px 0;line-height:1.5}.withdraw-page .details-warning a{color:#08c8f2}.withdraw-page .helper{font-size:11px;line-height:1.5;color:#a9b5c4}.withdraw-page .withdraw-summary{background:#000;border:1px solid #075b78;border-radius:14px;padding:12px;margin-top:16px}.withdraw-page .withdraw-summary>div{display:flex;justify-content:space-between;gap:8px;padding:7px 0;font-size:11px}.withdraw-page .withdraw-summary b{color:#eee}.withdraw-page .withdraw-summary .receive b{color:#08c8f2}.withdraw-page .withdraw-submit{width:100%;padding:14px;border:0;border-radius:15px;background:#08bde7;color:#fff;font:16px Georgia,serif}.withdraw-page .panel p{font-size:11px;line-height:1.5}</style>
 
 <div class="withdraw-page">
-  <section class="panel"><small>NILE AI WITHDRAWAL</small><h2>Withdraw Funds</h2><p>Move your available income to your saved payout destination.</p></section>
+  <section class="panel"><small>←</small><h2>Withdraw</h2></section>
 
   {% if pending_withdrawal %}
   <section class="panel" style="margin-bottom:16px">
@@ -45,8 +27,8 @@
     <section class="panel">
       <div class="form-label">Payout method</div>
       <div class="method-grid">
-        <button type="button" class="method-btn active" data-method="MTN UG">MTN</button>
-        <button type="button" class="method-btn" data-method="Airtel UG">Airtel</button>
+        <button type="button" class="method-btn active" data-method="MTN UG">MTN UG</button>
+        <button type="button" class="method-btn" data-method="Airtel UG">Airtel UG</button>
       </div>
       <input type="hidden" name="method" id="method" value="MTN UG">
 
@@ -60,7 +42,7 @@
         <a href="/card">Save my card details</a>
       </div>
 
-      <div class="form-label destination-label">Destination</div>
+      <div class="form-label destination-label">Destination phone number</div>
       <div class="amount-input"><input id="destination" name="destination" type="text" value="{{ user.mtn_number }}" placeholder="Saved payout destination" readonly></div>
       <div class="helper" id="destinationHelp">Taken from your saved MTN details. Change it on the Card page.</div>
 
@@ -70,7 +52,7 @@
         <div class="receive"><span>You receive</span><b id="summaryReceive">0.00</b></div>
       </div>
 
-      <button class="machine-btn withdraw-submit" type="submit">WITHDRAW</button>
+      <button class="machine-btn withdraw-submit" type="submit">Request withdrawal</button>
     </section>
   </form>
 
