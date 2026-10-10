@@ -97,4 +97,35 @@
   restart();
 })();
 </script>
-{% endblock %}
+
+<style id="nile-image1-color-match">
+/* Match Image 1 colors without changing the page structure */
+body {
+  background-color: #020608 !important;
+}
+.panel, .stat-card, .dashboard-card, .summary-card,
+.balance-card, .info-card, .quick-access,
+section.panel {
+  background: rgba(0, 7, 12, 0.88) !important;
+  color: #f4f7fc !important;
+  border: 1px solid #00bff2 !important;
+  box-shadow: 0 0 8px rgba(0, 191, 242, 0.22) !important;
+}
+.stat-card, .dashboard-card, .summary-card,
+.balance-card, .info-card {
+  overflow: hidden !important;
+}
+.stat-card .value, .stat-card strong,
+.dashboard-card .value, .dashboard-card strong {
+  color: #f4f7fc !important;
+}
+.stat-card .label, .dashboard-card .label {
+  color: #d3dce5 !important;
+}
+.stat-card .label, .dashboard-card .label,
+.stat-card .card-label, .dashboard-card .card-label {
+  background: #08b9ed !important;
+  color: #ffffff !important;
+}
+</style>
+\n{% endblock %}
