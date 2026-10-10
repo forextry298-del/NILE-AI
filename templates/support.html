@@ -1,1 +1,60 @@
-{% extends 'base.html' %}{% block content %}<div class="nile-wrap"><header class="nile-header"><div><div class="nile-brand">NILE AI</div><div class="nile-sub">SUPPORT CHAT</div></div><div class="nile-avatar">✉</div></header><div class="section-title">Chats</div><div class="section">{% for m in messages %}<p><b>{{m.sender}}</b>: {{m.message}}</p><small class="muted">{{m.created_at}}</small><hr>{% else %}<p class="muted">No messages yet.</p>{% endfor %}</div><form method="post"><div class="field"><input name="message" placeholder="Write a message..." required></div><button class="button">Send</button></form>{% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.chat{max-width:760px;margin:-10px auto;padding:0 12px 12px;color:#eefaff;font-family:Arial,sans-serif}
+.head{display:flex;align-items:center;justify-content:space-between;padding:14px 4px;border-bottom:1px solid #087f9b;background:#020609}
+.head button,.tool,.send{width:44px;height:44px;border:1px solid #08bce8;border-radius:50%;background:#020a10;color:#08cfff;font-size:23px}
+.head h2{color:#08cfff;font-size:21px}
+.agent{display:flex;align-items:center;gap:12px;margin:16px 0;padding:14px;border:1px solid #087f9b;border-radius:16px;background:#02090e}
+.avatar{width:48px;height:48px;display:grid;place-items:center;border:2px solid #08bce8;border-radius:50%;color:#08cfff;font-weight:bold}
+.agent strong{color:#08cfff}.agent small{display:block;color:#20d89a;margin-top:6px}
+.date{text-align:center;color:#9daab7;font-size:12px;margin:18px 0}
+.history{display:flex;flex-direction:column;gap:13px;padding-bottom:16px}
+.bubble{width:fit-content;max-width:88%;padding:13px 15px;border:1px solid #123e4d;border-radius:19px;background:#020609;overflow-wrap:anywhere}
+.mine{align-self:flex-end;border-color:#087f9b;background:#03131a}
+.sender{font-size:13px;font-weight:bold;color:#08cfff;margin-bottom:8px}
+.message{font-size:16px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.message a{color:#08cfff;text-decoration:underline}
+.time{text-align:right;color:#8b98a6;font-size:11px;margin-top:8px}
+.empty{text-align:center;color:#91a1af;padding:30px 12px;border:1px solid #123e4d;border-radius:16px}
+.compose{position:sticky;bottom:76px;display:flex;align-items:center;gap:8px;padding:10px 0;background:#000;border-top:1px solid #087f9b}
+.compose input{min-width:0;flex:1;height:46px;border:1px solid #087f9b;border-radius:25px;background:#030a10;color:white;padding:0 13px}
+.send{background:#08bce8;color:#001018;border:0}
+</style>
+<div class="chat">
+<header class="head"><button type="button" onclick="history.back()">‹</button><h2>Support Center</h2><button type="button">♙</button></header>
+<div class="agent"><div class="avatar">AI</div><div><strong>NILE AI SUPPORT</strong><small>● Support conversation</small></div></div>
+<div class="date">NILE AI · Support conversation</div>
+<div class="history" id="history">
+{% for m in messages %}
+<article class="bubble {% if m['sender']=='USER' %}mine{% endif %}">
+<div class="sender">{% if m['sender']=='USER' %}You{% else %}NILE AI SUPPORT{% endif %}</div>
+<div class="message">{{ m['message'] }}</div>
+{% if m['media'] %}
+<a href="{{ url_for('static',filename=m['media']) }}" target="_blank" rel="noopener">
+<img src="{{ url_for('static',filename=m['media']) }}" alt="Attached image" style="display:block;max-width:100%;max-height:280px;object-fit:contain;border-radius:12px;margin-top:10px">
+</a>
+{% endif %}
+<div class="time">{{ m['created_at']|localtime }}</div>
+</article>
+{% else %}
+<div class="empty">Welcome to NILE AI support. Send a message if you need assistance.</div>
+{% endfor %}
+</div>
+<form class="compose" method="post" enctype="multipart/form-data" action="{{ url_for('support') }}">
+<label class="tool" for="media" style="display:grid;place-items:center;cursor:pointer">＋</label><input id="media" type="file" name="media" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none">
+<input id="msg" name="message" placeholder="Type a message or attach an image..." autocomplete="off">
+<button class="send" type="submit">➤</button>
+</form>
+</div>
+<script>
+const h=document.getElementById('history');if(h)h.scrollTop=h.scrollHeight;
+document.querySelectorAll('.message').forEach(el=>{
+const text=el.textContent,re=/(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
+const out=document.createDocumentFragment();let last=0,m;
+while((m=re.exec(text))){out.append(document.createTextNode(text.slice(last,m.index)));
+const a=document.createElement('a');a.textContent=m[0];a.href=m[0].startsWith('www.')?'https://'+m[0]:m[0];a.target='_blank';a.rel='noopener noreferrer';out.append(a);last=re.lastIndex}
+out.append(document.createTextNode(text.slice(last)));el.replaceChildren(out);
+});
+</script>
+{% endblock %}

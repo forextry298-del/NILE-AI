@@ -7,6 +7,19 @@ from flask import Flask, request, redirect, session, render_template, flash, url
 BASE=os.path.dirname(os.path.abspath(__file__))
 DB=os.path.join(BASE,"nile_ai.db")
 app=Flask(__name__)
+
+@app.template_filter("localtime")
+def localtime_filter(value):
+    from datetime import datetime, timezone
+    from zoneinfo import ZoneInfo
+    try:
+        dt = datetime.fromisoformat(str(value))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(ZoneInfo("Africa/Kampala")).strftime("%I:%M %p").lstrip("0")
+    except (ValueError, TypeError):
+        return str(value)
+
 app.secret_key=os.environ.get("SECRET_KEY","change-this-before-production")
 
 PLANS = {
@@ -46,7 +59,7 @@ def db():
     con.execute("PRAGMA busy_timeout=30000")
     return con
 
-def now(): return datetime.now(timezone.utc).isoformat(timespec="seconds")
+def now(): return datetime.now(ZoneInfo("Africa/Kampala")).strftime("%Y-%m-%d %I:%M %p")
 def month_start():
     n=datetime.now(ZoneInfo("Africa/Kampala"))
     local=n.replace(day=1,hour=0,minute=0,second=0,microsecond=0)
@@ -1623,12 +1636,41 @@ def income():
 @app.route("/support",methods=["GET","POST"])
 @required
 def support():
+    con=db()
+    cols={r[1] for r in con.execute("PRAGMA table_info(support_messages)")}
+    if "media" not in cols:
+        con.execute("ALTER TABLE support_messages ADD COLUMN media TEXT")
+        con.commit()
     if request.method=="POST":
-        msg=request.form.get("message","").strip()
-        if msg:
-            con=db(); con.execute("INSERT INTO support_messages(uid,sender,message,created_at) VALUES(?,?,?,?)",(session["uid"],"USER",msg,now())); con.commit(); con.close(); flash("Message sent.","success")
+        msg=(request.form.get("message") or "").strip()
+        upload=request.files.get("media")
+        media=None
+        if upload and upload.filename:
+            from werkzeug.utils import secure_filename
+            name=secure_filename(upload.filename)
+            ext=name.rsplit(".",1)[-1].lower() if "." in name else ""
+            types={"jpg":"image/jpeg","jpeg":"image/jpeg","png":"image/png","gif":"image/gif","webp":"image/webp"}
+            if ext not in types or upload.mimetype!=types[ext]:
+                con.close()
+                flash("Choose a JPG, PNG, GIF, or WEBP image.","error")
+                return redirect(url_for("support"))
+            folder=os.path.join(BASE,"static","uploads","support")
+            os.makedirs(folder,exist_ok=True)
+            filename=secrets.token_hex(16)+"."+ext
+            upload.save(os.path.join(folder,filename))
+            media="uploads/support/"+filename
+        if not msg and not media:
+            con.close()
+            flash("Write a message or select an image.","error")
+            return redirect(url_for("support"))
+        con.execute("INSERT INTO support_messages(uid,sender,message,created_at,media) VALUES(?,?,?,?,?)",(session["uid"],"USER",msg,now(),media))
+        con.commit()
+        con.close()
+        flash("Message sent.","success")
         return redirect(url_for("support"))
-    con=db(); messages=con.execute("SELECT * FROM support_messages WHERE uid=? ORDER BY id",(session["uid"],)).fetchall(); con.close(); return render_template("support.html",messages=messages,active="chats")
+    messages=con.execute("SELECT * FROM support_messages WHERE uid=? ORDER BY id",(session["uid"],)).fetchall()
+    con.close()
+    return render_template("support.html",messages=messages,active="chats")
 
 @app.route("/raffle")
 @required
