@@ -1,48 +1,89 @@
 {% extends 'base.html' %}
 {% block content %}
 <style>
-.promo-head{text-align:center;margin:8px 0 20px}.promo-head h1{font-size:32px;margin:0;color:#08cfff}.promo-head p{color:#aaa;margin:9px 0 0;line-height:1.45}.chance-bar{border:1px solid #08cfff;border-radius:18px;background:rgba(0,0,0,.58);padding:16px;text-align:center;margin-bottom:18px}.chance-number{font-size:30px;color:#08cfff;font-weight:bold}.chance-note{color:#aaa;font-size:13px;margin-top:4px}.reveal-panel{border:1px solid #08cfff;border-radius:22px;background:rgba(0,0,0,.55);padding:16px;box-shadow:0 0 18px rgba(0,190,255,.08)}.reveal-title{text-align:center;color:#fff;font-size:18px;font-weight:bold;margin-bottom:14px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.promo-card{position:relative;min-height:135px;border:1px solid #00aee8;border-radius:18px;background:linear-gradient(145deg,#071b25,#000);box-shadow:0 0 13px rgba(0,190,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}.promo-card::before{content:"";position:absolute;inset:-60%;background:linear-gradient(115deg,transparent 44%,rgba(0,205,255,.18) 50%,transparent 56%);animation:cardSweep 1.1s linear infinite}.card-symbol{position:relative;font-size:38px;color:#00c8ff}.card-name{position:relative;color:#fff;font-weight:bold;font-size:13px;margin-top:8px}.card-hint{position:relative;color:#8c9aa0;font-size:10px;margin-top:5px}.card-reward{position:relative;color:#08cfff;font-size:13px;font-weight:bold;margin-top:7px}.selected-card{border-color:#70ffad;box-shadow:0 0 20px rgba(80,255,160,.3)}.selected-card .card-reward{color:#70ffad}.selected-result{margin-top:16px;border:1px solid #70ffad;border-radius:15px;padding:15px;text-align:center;color:#ddd}.selected-result b{display:block;color:#70ffad;font-size:20px;margin-top:6px}.reveal-form{text-align:center;margin-top:16px}.reveal-btn{width:100%;min-height:56px;border:1px solid #00c8ff;border-radius:15px;background:#002333;color:#08cfff;font-weight:bold;font-size:17px}.history{margin-top:20px;border:1px solid #123c50;border-radius:20px;padding:16px;background:rgba(0,0,0,.45)}.history h2{color:#08cfff;font-size:20px;margin:0 0 10px}.history-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #123;padding:10px 0;color:#ccc}.history-row:last-child{border-bottom:0}.history-row b{color:#70ffad}.info{margin-top:16px;color:#aaa;font-size:12px;line-height:1.5;text-align:center}@keyframes cardSweep{0%{transform:translateX(-20%) rotate(10deg)}100%{transform:translateX(20%) rotate(10deg)}}@media(max-width:380px){.cards{gap:7px}.promo-card{min-height:120px}.card-symbol{font-size:31px}}
+.raffle-page{max-width:760px;margin:-8px auto 0;padding:8px 12px 4px;color:#f4f5ff;font-family:Georgia,'Times New Roman',serif;background-color:#020306;background-image:radial-gradient(#10202e 1px,transparent 1px);background-size:14px 14px}
+.raffle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:10px;border:2px solid #102c3a;border-radius:24px;background:#02040a;box-shadow:0 0 18px #071b2b}
+.raffle-card{position:relative;aspect-ratio:.61;border:3px ridge #6b438f;border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#18264e,#080f2a 48%,#030713 78%);box-shadow:inset 0 0 14px #a34cff66,0 0 12px #6035a533;width:100%;color:#f4f5ff;cursor:pointer}
+.raffle-card:before{content:"";position:absolute;inset:7px;border:1px solid #67418d;border-radius:12px;background:repeating-linear-gradient(0deg,transparent 0 8px,#482b6b22 9px,#18284a33 10px),repeating-linear-gradient(90deg,transparent 0 10px,#432b6722 11px,#18284a33 12px)}
+.raffle-card:after{content:"✦";position:absolute;top:4px;color:#a98aff;font-size:13px}
+.card-art{position:relative;z-index:1;width:76%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:1px solid #53689d;border-radius:50%;color:#d6d9ff;font-size:clamp(20px,5vw,34px);text-shadow:0 0 12px #a9baff;box-shadow:0 0 20px #7d5bff44;text-align:center}
+.card-art:before{content:"";position:absolute;inset:10%;border:1px solid #697fb9;transform:rotate(45deg);border-radius:8px}
+.ready-box,.records-box{margin-top:12px;padding:12px;text-align:center;border:2px solid #08b9ee;border-radius:22px;background:#010305;box-shadow:0 0 17px #00bdf222}
+.ready-box{font-size:clamp(20px,5vw,30px);font-weight:bold;color:#08c9f4}
+.records-box h2,.transactions h3{color:#08c9f4;font-size:17px;margin:6px 0 10px}
+.raffle-result{margin-top:12px;padding:12px;border:2px solid #a98aff;border-radius:18px;text-align:center;background:#080f2a;font-size:20px}
+.raffle-note,.no-records{color:#b8b8c5;font-size:12px;line-height:1.5;text-align:center}
+.transactions{margin:12px 4px}
+.record-row{padding:8px;border-bottom:1px solid #26344d;font-size:13px}
+@media(min-width:600px){.raffle-grid{gap:22px;padding:18px}.raffle-page{padding-left:20px;padding-right:20px}}
 </style>
-<div class="promo-head"><h1>Reward Cards</h1><p>Your machine purchase unlocks promotional reveals. Rewards are assigned in advance; the cards are a visual reveal.</p></div>
-<div class="chance-bar"><div class="chance-number">{{ chances|length }}</div><div class="chance-note">PROMOTIONAL REVEAL CHANCE{{ '' if chances|length == 1 else 'S' }} AVAILABLE</div></div>
-{% if revealed %}
-<div class="reveal-panel">
-  <div class="reveal-title">All cards revealed</div>
-  <div class="cards revealed-cards">
-    {% set shown_rewards=[('CASH',1000),('CASH',3000),('CASH',5000),('CASH',10000),('CASH',40000),('CASH',50000),('CASH',100000),('CASH',3000),('DS4',0)] %}
-    {% for r in shown_rewards %}
-    <div class="promo-card {% if r[0]==revealed.reward_type and ((r[0]=='DS4') or (r[1]==revealed.reward_amount)) %}selected-card{% endif %}">
-      <div class="card-symbol">◆</div><div class="card-name">CARD {{loop.index}}</div>
-      <div class="card-reward">{% if r[0]=='DS4' %}DS4 MACHINE{% else %}UGX {{'{:,.0f}'.format(r[1])}}{% endif %}</div>
-    </div>
+<div class="raffle-page">
+  <section class="raffle-grid" aria-label="Raffle cards">
+    {% for chance in chances[:9] %}
+      <form method="post" action="{{ url_for('claim_raffle', chance_id=chance.id) }}">
+        <button class="raffle-card" type="submit" aria-label="Reveal raffle card">
+          <span class="card-art">✦</span>
+        </button>
+      </form>
     {% endfor %}
-  </div>
-  <div class="selected-result">YOUR ASSIGNED PROMOTION: <b>{% if revealed.reward_type=='DS4' %}DS4 AI MACHINE{% else %}UGX {{'{:,.0f}'.format(revealed.reward_amount)}}{% endif %}</b></div>
-</div>
-{% elif chances %}
-<div class="reveal-panel">
-  <div class="reveal-title">Cards are changing every second</div>
-  <div class="cards" id="cards">
-    {% for n in range(1,10) %}
-    <div class="promo-card"><div class="card-symbol">◆</div><div class="card-name">CARD {{n}}</div><div class="card-hint">READY</div></div>
+    {% for i in range(9 - (chances|length if chances|length < 9 else 9)) %}
+      <div class="raffle-card" aria-disabled="true"><span class="card-art">AI</span></div>
     {% endfor %}
-  </div>
-  <form class="reveal-form" method="post" action="{{ url_for('reveal_promo', chance_id=chances[0].id) }}">
-    <button class="reveal-btn" type="submit">REVEAL ALL CARDS</button>
-  </form>
-  <div class="info">The promotional reward is predetermined before the reveal. Reveal displays the complete card set and your assigned result.</div>
+  </section>
+
+  <section class="ready-box">Ready: {{ chances|length }}</section>
+
+  {% if revealed %}
+    <section class="raffle-result">
+      <strong>Prize revealed: UGX {{ "{:,.0f}".format(revealed.reward_amount) }}</strong>
+      <p class="raffle-note">This exact amount has been credited to your balance.</p>
+    </section>
+  {% endif %}
+
+  <section class="records-box">
+    <h2>My records</h2>
+    {% if history %}
+      {% for item in history %}
+        <div class="record-row">UGX {{ "{:,.0f}".format(item.reward_amount) }} — {{ item.claimed_at }}</div>
+      {% else %}
+        <p class="no-records">No raffle records yet.</p>
+      {% endfor %}
+    {% else %}
+      <p class="no-records">No raffle records yet.</p>
+    {% endif %}
+  </section>
+
+  {% if promo_chances or promo_revealed %}
+  <section class="records-box">
+    <h2>AI Promotional Rewards</h2>
+    {% if promo_revealed %}
+      <p class="raffle-note">Your promotional reward has been revealed.</p>
+      {% if promo_revealed.reward_type == 'DS4' %}
+        <p>DS4 AI Machine awarded.</p>
+      {% else %}
+        <p>UGX {{ "{:,.0f}".format(promo_revealed.reward_amount) }} promotional reward.</p>
+      {% endif %}
+    {% endif %}
+    {% for pc in promo_chances %}
+      <form method="post" action="{{ url_for('reveal_promo', chance_id=pc.id) }}" style="margin:8px">
+        <button type="submit" class="raffle-card" style="aspect-ratio:auto;min-height:70px">
+          <span class="card-art">AI</span>
+        </button>
+      </form>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <section class="transactions">
+    <h3>Raffle transactions</h3>
+    <p class="raffle-note">One chance is earned for each approved deposit. Each chance can be used once. Rewards above UGX 10,000 pay UGX 3,000 instead; the amount displayed is the amount credited.</p>
+    {% if history %}
+      {% for item in history %}
+        <div class="record-row">Reward: UGX {{ "{:,.0f}".format(item.reward_amount) }} · {{ item.claimed_at }}</div>
+      {% endfor %}
+    {% else %}
+      <p class="no-records">No raffle transactions yet.</p>
+    {% endif %}
+  </section>
 </div>
-{% else %}
-<div class="chance-bar"><div style="color:#70ffad;font-weight:bold">✓ No promotional reveals waiting</div><div class="chance-note">Purchase an AI machine to unlock your next promotional reveal.</div></div>
-{% endif %}
-{% if history %}<div class="history"><h2>Recent Promotional Rewards</h2>{% for h in history %}<div class="history-row"><span>{{h.reward_type == 'DS4' and 'DS4 AI Machine' or 'Cash reward'}}</span><b>{% if h.reward_type == 'DS4' %}AWARDED{% else %}UGX {{'{:,.0f}'.format(h.reward_amount)}}{% endif %}</b></div>{% endfor %}</div>{% endif %}
-<script>
-(function(){
- const cards=[...document.querySelectorAll('#cards .promo-card')];
- if(!cards.length)return;
- const symbols=['◆','◇','⬢','✦','▣','⬡','✧','◈','♢'];
- let offset=0;
- setInterval(()=>{offset=(offset+1)%symbols.length;cards.forEach((c,i)=>{const s=c.querySelector('.card-symbol');s.textContent=symbols[(i+offset)%symbols.length]});},1000);
-})();
-</script>
 {% endblock %}

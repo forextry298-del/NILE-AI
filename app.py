@@ -88,6 +88,7 @@ def init_db():
     CREATE TABLE IF NOT EXISTS products(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,code TEXT NOT NULL,name TEXT NOT NULL,price REAL NOT NULL,daily_income REAL NOT NULL DEFAULT 0,lock_days INTEGER NOT NULL DEFAULT 30,total_income REAL NOT NULL DEFAULT 0,purchased_at TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'ACTIVE');
     CREATE TABLE IF NOT EXISTS support_messages(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,sender TEXT NOT NULL,message TEXT NOT NULL,created_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS raffle_tickets(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,quantity INTEGER NOT NULL,created_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS raffle_chances(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,source_transaction_id INTEGER NOT NULL UNIQUE,reward_amount REAL NOT NULL DEFAULT 0,claimed INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,claimed_at TEXT);
     CREATE TABLE IF NOT EXISTS reward_box_claims(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,box_id INTEGER NOT NULL,amount REAL NOT NULL,created_at TEXT NOT NULL,UNIQUE(uid,box_id));
     CREATE TABLE IF NOT EXISTS promo_chances(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,product_id INTEGER NOT NULL,reward_type TEXT NOT NULL,reward_amount REAL NOT NULL DEFAULT 0,reward_code TEXT,claimed INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,claimed_at TEXT);
     CREATE TABLE IF NOT EXISTS password_requests(id INTEGER PRIMARY KEY AUTOINCREMENT,phone TEXT NOT NULL,name TEXT,message TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'PENDING',created_at TEXT NOT NULL);
@@ -1676,12 +1677,16 @@ def support():
 @required
 def raffle():
     u=current_user(); con=db()
-    chances=con.execute("SELECT * FROM promo_chances WHERE uid=? AND claimed=0 ORDER BY id",(u["id"],)).fetchall()
-    history=con.execute("SELECT * FROM promo_chances WHERE uid=? AND claimed=1 ORDER BY id DESC LIMIT 20",(u["id"],)).fetchall()
-    revealed_id=session.pop("revealed_chance_id",None)
-    revealed=con.execute("SELECT * FROM promo_chances WHERE id=? AND uid=? AND claimed=1",(revealed_id,u["id"])).fetchone() if revealed_id else None
+    chances=con.execute("SELECT * FROM raffle_chances WHERE uid=? AND claimed=0 ORDER BY id",(u["id"],)).fetchall()
+    history=con.execute("SELECT * FROM raffle_chances WHERE uid=? AND claimed=1 ORDER BY id DESC LIMIT 20",(u["id"],)).fetchall()
+    revealed_id=session.pop("revealed_raffle_id",None)
+    revealed=con.execute("SELECT * FROM raffle_chances WHERE id=? AND uid=? AND claimed=1",(revealed_id,u["id"])).fetchone() if revealed_id else None
+    promo_chances=con.execute("SELECT * FROM promo_chances WHERE uid=? AND claimed=0 ORDER BY id",(u["id"],)).fetchall()
+    promo_history=con.execute("SELECT * FROM promo_chances WHERE uid=? AND claimed=1 ORDER BY id DESC LIMIT 20",(u["id"],)).fetchall()
+    promo_revealed_id=session.pop("revealed_chance_id",None)
+    promo_revealed=con.execute("SELECT * FROM promo_chances WHERE id=? AND uid=? AND claimed=1",(promo_revealed_id,u["id"])).fetchone() if promo_revealed_id else None
     con.close()
-    return render_template("raffle.html",chances=chances,history=history,revealed=revealed,active="Raffle")
+    return render_template("raffle.html",chances=chances,history=history,revealed=revealed,promo_chances=promo_chances,promo_history=promo_history,promo_revealed=promo_revealed,active="Raffle")
 
 @app.route("/raffle/reveal/<int:chance_id>",methods=["POST"])
 @required
@@ -1702,6 +1707,34 @@ def reveal_promo(chance_id):
         message=f"UGX {amount:,.0f} promotional reward added to your balance."
     con.execute("UPDATE promo_chances SET claimed=1,claimed_at=? WHERE id=?",(now(),chance_id))
     con.commit(); con.close(); session["revealed_chance_id"]=chance_id; flash(message,"success"); return redirect(url_for("raffle"))
+
+@app.route("/raffle/claim/<int:chance_id>", methods=["POST"])
+@required
+def claim_raffle(chance_id):
+    u=current_user(); con=db()
+    try:
+        con.execute("BEGIN IMMEDIATE")
+        c=con.execute("SELECT * FROM raffle_chances WHERE id=? AND uid=? AND claimed=0",(chance_id,u["id"])).fetchone()
+        if not c:
+            con.rollback(); flash("That raffle chance is no longer available.","error")
+            return redirect(url_for("raffle"))
+        rewards=[3000,1000,6000,10000,50000,100000,2000000,1000000,500000]
+        import secrets
+        selected=secrets.choice(rewards)
+        amount=3000 if selected>10000 else selected
+        changed=con.execute("UPDATE raffle_chances SET claimed=1,reward_amount=?,claimed_at=? WHERE id=? AND uid=? AND claimed=0",(amount,now(),chance_id,u["id"]))
+        if changed.rowcount!=1:
+            con.rollback(); flash("That raffle chance has already been used.","error")
+            return redirect(url_for("raffle"))
+        con.execute("UPDATE users SET balance=balance+? WHERE id=?",(amount,u["id"]))
+        con.execute("INSERT INTO transactions(uid,kind,amount,status,reference,created_at) VALUES(?,?,?,?,?,?)",(u["id"],"RAFFLE_REWARD",amount,"APPROVED",f"RAFFLE-{chance_id}",now()))
+        con.commit(); session["revealed_raffle_id"]=chance_id
+        flash(f"Raffle reward: UGX {amount:,.0f} credited to your balance.","success")
+    except Exception:
+        con.rollback(); raise
+    finally:
+        con.close()
+    return redirect(url_for("raffle"))
 
 @app.route("/admin")
 @app.route("/admin/")
@@ -1776,6 +1809,7 @@ def admin_transaction(tid,action):
                 SET status='APPROVED'
                 WHERE id=CAST(substr(?,instr(?,'-S')+2) AS INTEGER)
             """,(t["reference"],t["reference"]))
+            con.execute("INSERT OR IGNORE INTO raffle_chances(uid,source_transaction_id,reward_amount,created_at) VALUES(?,?,0,?)",(t["uid"],tid,now()))
             award=True
         con.execute("UPDATE transactions SET status='APPROVED' WHERE id=?",(tid,))
     elif action=="reject":
