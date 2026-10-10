@@ -521,3 +521,8 @@ main {
   padding-bottom: 6px !important;
   margin-bottom: 0 !important;
 }
+
+/* Hide text overlays on the auto-moving home carousel */
+.nmh-slider .nmh-caption {
+  display: none !important;
+}
