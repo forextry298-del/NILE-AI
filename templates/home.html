@@ -129,3 +129,67 @@ section.panel {
 }
 </style>
 \n{% endblock %}
+
+<style>
+/* NILE CARD COLOUR REFERENCE OVERRIDE */
+
+/* Reference colour match: white top, cyan-blue bottom */
+.nmh-stat {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  border: 1px solid #08bce9 !important;
+  border-radius: 25px !important;
+  background: #08bce9 !important;
+  box-shadow: 0 4px 14px rgba(0,190,240,.22) !important;
+  text-decoration: none !important;
+}
+.nmh-stat > strong {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 82px !important;
+  padding: 12px 5px !important;
+  margin: 0 !important;
+  background: #ffffff !important;
+  color: #101a31 !important;
+  font-size: 27px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+.nmh-stat > span {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 52px !important;
+  padding: 10px 4px !important;
+  margin: 0 !important;
+  background: #08bce9 !important;
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  text-align: center !important;
+}
+.nmh-stat.nmh-small > strong {
+  min-height: 68px !important;
+  font-size: 24px !important;
+}
+.nmh-stat.nmh-small > span {
+  min-height: 48px !important;
+  font-size: 14px !important;
+}
+@media (max-width: 380px) {
+  .nmh-stat { border-radius: 20px !important; }
+  .nmh-stat > strong { min-height: 70px !important; font-size: 23px !important; }
+  .nmh-stat > span { min-height: 46px !important; font-size: 13px !important; }
+  .nmh-stat.nmh-small > strong { min-height: 60px !important; font-size: 21px !important; }
+  .nmh-stat.nmh-small > span { min-height: 44px !important; font-size: 12px !important; }
+}
+
+</style>
