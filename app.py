@@ -1269,8 +1269,34 @@ def service_worker():
 def account():
     u=current_user()
     if request.method=="POST":
-        con=db(); con.execute("UPDATE users SET display_name=?,mtn_number=?,airtel_number=?,usdt_wallet=?,notifications_enabled=? WHERE id=?",(request.form.get("display_name","").strip(),request.form.get("mtn_number","").strip(),request.form.get("airtel_number","").strip(),request.form.get("usdt_wallet","").strip(),1 if request.form.get("notifications") else 0,u["id"])); con.commit(); con.close(); flash("Settings saved.","success"); return redirect(url_for("account"))
-    return render_template("settings.html",user=u,active="My")
+        if request.form.get("action") == "change_password":
+            current_password=request.form.get("current_password","")
+            new_password=request.form.get("new_password","")
+            confirm_password=request.form.get("confirm_password","")
+            if len(new_password)<8:
+                flash("New password must be at least 8 characters.","error")
+            elif new_password!=confirm_password:
+                flash("New password and confirmation do not match.","error")
+            else:
+                con=db()
+                stored=con.execute("SELECT password FROM users WHERE id=?",(u["id"],)).fetchone()
+                if not stored or not hmac.compare_digest(stored["password"],pw_hash(current_password)):
+                    con.close()
+                    flash("Current password is incorrect.","error")
+                else:
+                    con.execute("UPDATE users SET password=? WHERE id=?",(pw_hash(new_password),u["id"]))
+                    con.commit()
+                    con.close()
+                    flash("Password changed successfully. Use your new password next time you log in.","success")
+                    return redirect(url_for("account"))
+        else:
+            con=db()
+            con.execute("UPDATE users SET display_name=?,mtn_number=?,airtel_number=?,usdt_wallet=?,notifications_enabled=? WHERE id=?",(request.form.get("display_name","").strip(),request.form.get("mtn_number","").strip(),request.form.get("airtel_number","").strip(),request.form.get("usdt_wallet","").strip(),1 if request.form.get("notifications") else 0,u["id"]))
+            con.commit()
+            con.close()
+            flash("Settings saved.","success")
+            return redirect(url_for("account"))
+    return render_template("settings.html",user=current_user(),active="My")
 
 @app.route("/card",methods=["GET","POST"])
 @required
