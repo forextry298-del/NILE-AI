@@ -1362,7 +1362,21 @@ def card():
     )
 @app.route("/bills")
 @required
-def bills(): return render_template("simple.html",title="Bills",content="<h2>Bills</h2><p>Bill payment providers are not connected yet. No money is charged from this page.</p>",active="My")
+def bills():
+    uid = session["uid"]
+    con = db()
+    try:
+        records = con.execute(
+            "SELECT kind,amount,status,reference,created_at "
+            "FROM transactions WHERE uid=? ORDER BY id DESC LIMIT 100",
+            (uid,)
+        ).fetchall()
+        items = [dict(r) for r in records]
+    finally:
+        con.close()
+    return render_template("bills.html", bills=items, active="My")
+
+
 @app.route("/vip-tasks")
 @required
 def vip_tasks():

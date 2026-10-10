@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.bill-page{min-height:calc(100vh - 120px);padding:0 12px 85px;color:#fff}
+.bill-head{height:58px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid #24333d;margin:0 -12px 22px}
+.bill-back{position:absolute;left:17px;color:#fff;text-decoration:none;font-size:30px}
+.bill-title{font-size:24px;font-weight:800;color:#fff}
+.bill-list{display:flex;flex-direction:column;gap:10px}
+.bill-item{padding:14px;border:1px solid #16495b;border-radius:13px;background:rgba(9,25,35,.94);box-shadow:0 4px 15px #0003}
+.bill-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.bill-kind{font-size:14px;font-weight:800;color:#16d9ff;overflow-wrap:anywhere}
+.bill-amount{font-size:16px;font-weight:900;color:#fff;white-space:nowrap}
+.bill-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;font-size:11px;color:#a8bdc8}
+.bill-status{display:inline-block;padding:4px 8px;border-radius:20px;background:#173a35;color:#76efb1;font-size:10px;font-weight:800}
+.bill-status.pending{background:#463719;color:#ffda80}
+.bill-status.rejected,.bill-status.failed,.bill-status.cancelled{background:#49232a;color:#ff9ba6}
+.bill-ref{margin-top:8px;font-size:11px;color:#7895a3;overflow-wrap:anywhere}
+.bill-empty{margin-top:55px;padding:24px 10px;text-align:center;border:1px dashed #3b5966;border-radius:13px;background:#0b1820;color:#b4c5ce;font-size:15px}
+</style>
+<div class="bill-page">
+ <div class="bill-head"><a class="bill-back" href="/my">‹</a><div class="bill-title">Bill</div></div>
+ {% if bills %}
+ <div class="bill-list">
+ {% for item in bills %}
+ <div class="bill-item">
+  <div class="bill-top">
+   <div class="bill-kind">{{ item.kind|replace('_',' ')|title }}</div>
+   <div class="bill-amount">UGX {{ "{:,.2f}".format(item.amount or 0) }}</div>
+  </div>
+  <div class="bill-meta">
+   <span>{{ item.created_at or 'Date unavailable' }}</span>
+   <span class="bill-status {% if (item.status or '')|lower in ['pending','rejected','failed','cancelled'] %}{{ (item.status or '')|lower }}{% endif %}">{{ item.status or 'Recorded' }}</span>
+  </div>
+  {% if item.reference %}<div class="bill-ref">Reference: {{ item.reference }}</div>{% endif %}
+ </div>
+ {% endfor %}
+ </div>
+ {% else %}
+ <div class="bill-empty">No transactions found</div>
+ {% endif %}
+</div>
+{% endblock %}
