@@ -190,13 +190,13 @@ def required(fn):
 
 def admin_required(fn):
     @wraps(fn)
-    def w(*a,**k):
-        u=current_user()
+    def w(*a, **k):
+        u = current_user()
         if not u:
             return redirect(url_for("login"))
-        if u["phone"] == "0758878297":
-            return fn(*a,**k)
-        return fn(*a,**k) if u["is_admin"] else ("Forbidden",403)
+        if str(u["phone"]).strip() != "0758878297":
+            return ("Forbidden", 403)
+        return fn(*a, **k)
     return w
 
 def invite_counts(uid):
