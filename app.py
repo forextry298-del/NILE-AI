@@ -95,6 +95,7 @@ def init_db():
     CREATE TABLE IF NOT EXISTS gift_codes(code TEXT PRIMARY KEY,amount REAL NOT NULL,used_by INTEGER,used_at TEXT);
     CREATE TABLE IF NOT EXISTS mining_tools(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,tool_name TEXT NOT NULL,points_cost INTEGER NOT NULL,rate REAL NOT NULL,capacity REAL NOT NULL DEFAULT 0,purchased_at TEXT NOT NULL,last_credit_at TEXT NOT NULL,earned REAL NOT NULL DEFAULT 0,status TEXT NOT NULL DEFAULT 'ACTIVE');
     CREATE TABLE IF NOT EXISTS referral_point_awards(id INTEGER PRIMARY KEY AUTOINCREMENT,referrer_uid INTEGER NOT NULL,referred_uid INTEGER UNIQUE NOT NULL,points INTEGER NOT NULL DEFAULT 10,created_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS vip_reward_claims(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,vip_level INTEGER NOT NULL,reward_amount REAL NOT NULL,qualifying_members INTEGER NOT NULL,created_at TEXT NOT NULL,UNIQUE(uid,vip_level));
     """)
     # Safe migrations for any copy that already has an older fresh DB.
     cols={r[1] for r in con.execute("PRAGMA table_info(users)").fetchall()}
@@ -246,6 +247,27 @@ def has_approved_deposit(con,uid):
         LIMIT 1
     """,(uid,)).fetchone() is not None
 
+
+def process_vip_rewards(uid):
+    levels=[(1,5,15000),(2,15,30000),(3,40,100000),(4,80,200000),(5,150,500000),(6,250,800000)]
+    con=db()
+    try:
+        con.execute("BEGIN IMMEDIATE")
+        row=con.execute("SELECT COUNT(DISTINCT lv2.id) AS total FROM users lv1 JOIN users lv2 ON lv2.invited_by=lv1.id WHERE lv1.invited_by=? AND EXISTS (SELECT 1 FROM products p WHERE p.uid=lv2.id)",(uid,)).fetchone()
+        total=row["total"] if row else 0
+        for level,required,reward in levels:
+            if total < required: continue
+            cur=con.execute("INSERT OR IGNORE INTO vip_reward_claims(uid,vip_level,reward_amount,qualifying_members,created_at) VALUES(?,?,?,?,CURRENT_TIMESTAMP)",(uid,level,reward,total))
+            if cur.rowcount == 1:
+                con.execute("UPDATE users SET balance=COALESCE(balance,0)+? WHERE id=?",(reward,uid))
+                con.execute("INSERT INTO transactions(uid,kind,amount,status,reference,created_at) VALUES(?,?,?,?,?,CURRENT_TIMESTAMP)",(uid,"VIP_REWARD",reward,"APPROVED","VIP-"+str(level)))
+        con.commit()
+        return total
+    except Exception:
+        con.rollback()
+        raise
+    finally:
+        con.close()
 
 def award_machine_team_income(purchaser_uid,machine_code,purchase_amount,purchase_tx_id):
     """
@@ -1343,7 +1365,18 @@ def card():
 def bills(): return render_template("simple.html",title="Bills",content="<h2>Bills</h2><p>Bill payment providers are not connected yet. No money is charged from this page.</p>",active="My")
 @app.route("/vip-tasks")
 @required
-def vip_tasks(): return render_template("vip_tasks.html",active="My")
+def vip_tasks():
+    uid = session["uid"]
+    total = process_vip_rewards(uid)
+    levels = [(1, 5, 15000), (2, 15, 30000), (3, 40, 100000), (4, 80, 200000), (5, 150, 500000), (6, 250, 800000)]
+    con = db()
+    try:
+        claims = {r["vip_level"]: r["reward_amount"] for r in con.execute("SELECT vip_level,reward_amount FROM vip_reward_claims WHERE uid=?", (uid,)).fetchall()}
+    finally:
+        con.close()
+    tasks = [{"level": level, "required": required, "reward": reward, "progress": min(total, required), "completed": total >= required, "paid": level in claims} for level, required, reward in levels]
+    return render_template("vip_tasks.html", active="My", vip_tasks=tasks, vip_total=total)
+
 MANAGERS = [
     {"id":"lucy","name":"Lucy","phone":"+256740062648","role":"NILE AI Manager","avatar":"👩🏻"},
     {"id":"elrie","name":"Elrie","phone":"+256789590432","role":"NILE AI Manager","avatar":"👩🏽"},
