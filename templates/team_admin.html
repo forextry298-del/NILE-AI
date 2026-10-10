@@ -1,82 +1,148 @@
 {% extends "base.html" %}
 {% block content %}
 <style>
-.team-wrap{max-width:1000px;margin:auto;padding:16px}
-.team-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
-.team-card{padding:14px;border:1px solid #ddd;border-radius:12px;overflow-wrap:anywhere}
-.team-table-wrap{overflow-x:auto}
-.team-table{width:100%;border-collapse:collapse;min-width:560px}
-.team-table th,.team-table td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
-.team-form{display:flex;gap:6px;flex-wrap:wrap;margin:5px 0}
-.team-form input,.team-form button{padding:8px}
-@media(max-width:560px){.team-stats{grid-template-columns:1fr}.team-wrap{padding:10px}}
+.td{max-width:1050px;margin:auto;padding:12px;color:#eff8ff}
+.td *{box-sizing:border-box}
+.td-hero{padding:22px 18px;border:1px solid #17618a;border-radius:20px;background:linear-gradient(135deg,#071426,#0b3450);position:relative}
+.td-kicker{font-size:10px;letter-spacing:3px;color:#42dcff;font-weight:900}
+.td-hero h2{margin:12px 0 5px;color:white;font-size:25px}
+.td-hero p{margin:0;color:#a9c7dd;font-size:12px}
+.td-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 24px}
+.td-stat,.td-card{padding:14px;border:1px solid #194565;border-radius:16px;background:linear-gradient(145deg,#0d2943,#071426);min-width:0}
+.td-icon{font-size:22px;color:#42dcff}
+.td-label{margin-top:9px;font-size:10px;color:#9cbdd4;font-weight:800}
+.td-value{margin-top:6px;font-size:22px;font-weight:900;color:white;overflow-wrap:anywhere}
+.td-section{margin-top:24px}
+.td-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.td-heading h3{margin:0;color:white;font-size:17px}
+.td-pill{padding:5px 8px;border:1px solid #17618a;border-radius:20px;color:#42dcff;font-size:10px}
+.td-search,.td input{width:100%;padding:12px;border:1px solid #254a65;border-radius:10px;background:#061322;color:white;font-size:13px}
+.td-search{margin-bottom:12px}
+.td-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.td-person{font-size:14px;font-weight:800;color:white;overflow-wrap:anywhere}
+.td-sub{font-size:11px;color:#8eafc7;margin:5px 0 12px;overflow-wrap:anywhere}
+.td-status{display:inline-block;padding:5px 8px;border-radius:20px;background:#123c30;color:#73efb3;font-size:10px}
+.td-status.off{background:#48212b;color:#ffadba}
+.td-amount{font-size:24px;font-weight:900;color:#62e6ff;margin:9px 0}
+.td-form{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.td-btn{width:100%;padding:11px;border:1px solid #287da0;border-radius:10px;background:#103a54;color:#bcefff;font-weight:800;font-size:12px}
+.td-btn.primary{border:0;background:linear-gradient(100deg,#087ba5,#0aa9bd);color:white}
+.td-btn.danger{border-color:#78404a;background:#351c27;color:#ffb3bd}
+.td summary{cursor:pointer;color:#42dcff;font-size:12px;padding:8px 0}
+.td-empty{padding:20px;text-align:center;border:1px dashed #254861;border-radius:13px;color:#94b3ca;font-size:13px}
+.td-footer{text-align:center;margin:24px 0}
+.td-footer a{color:#42dcff;text-decoration:none}
+@media(max-width:430px){.td{padding:9px}.td-grid{grid-template-columns:1fr}.td-hero h2{font-size:22px}}
+@media(min-width:700px){.td-stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 
-<div class="team-wrap">
-<h2>Team Admin Dashboard</h2>
-<p>Manage members in your referral team only.</p>
+<div class="td">
+  <header class="td-hero">
+    <div class="td-kicker">NILE AI / TEAM MANAGEMENT</div>
+    <h2>Team Dashboard</h2>
+    <p>Monitor your network and manage your team.</p>
+  </header>
 
-<div class="team-stats">
-<div class="team-card">Team Members<h3>{{ team_count }}</h3></div>
-<div class="team-card">Approved Deposits<h3>{{ "{:,.2f}".format(deposit_total|float) }}</h3></div>
-<div class="team-card">Approved Withdrawals<h3>{{ "{:,.2f}".format(withdrawal_total|float) }}</h3></div>
+  <section class="td-stats">
+    <div class="td-stat">
+      <div class="td-icon">♙</div>
+      <div class="td-label">TEAM MEMBERS</div>
+      <div class="td-value">{{ team_count }}</div>
+    </div>
+    <div class="td-stat">
+      <div class="td-icon">↗</div>
+      <div class="td-label">APPROVED DEPOSITS</div>
+      <div class="td-value">{{ "{:,.2f}".format(deposit_total|float) }}</div>
+    </div>
+    <div class="td-stat">
+      <div class="td-icon">⇧</div>
+      <div class="td-label">APPROVED WITHDRAWALS</div>
+      <div class="td-value">{{ "{:,.2f}".format(withdrawal_total|float) }}</div>
+    </div>
+    <div class="td-stat">
+      <div class="td-icon">◷</div>
+      <div class="td-label">PENDING DEPOSITS</div>
+      <div class="td-value">{{ pending_deposits|length }}</div>
+    </div>
+  </section>
+
+  <section class="td-section">
+    <div class="td-heading">
+      <h3>Deposit Queue</h3>
+      <span class="td-pill">{{ pending_deposits|length }} PENDING</span>
+    </div>
+    {% if pending_deposits %}
+    <div class="td-grid">
+      {% for deposit in pending_deposits %}
+      <article class="td-card">
+        <div class="td-icon">＄</div>
+        <div class="td-person">{{ deposit["phone"] }}</div>
+        <div class="td-amount">{{ "{:,.2f}".format(deposit["amount"]|float) }}</div>
+        <div class="td-sub">REF: {{ deposit["reference"] or "-" }}</div>
+        <form method="post" action="{{ url_for('team_approve_deposit', tid=deposit['id']) }}" onsubmit="return confirm('Approve this team deposit?')">
+          <button class="td-btn primary" type="submit">✓ Approve Deposit</button>
+        </form>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="td-empty">✓ No pending deposits</div>
+    {% endif %}
+  </section>
+
+  <section class="td-section">
+    <div class="td-heading">
+      <h3>My Team</h3>
+      <span class="td-pill">{{ team_count }} MEMBERS</span>
+    </div>
+    <input class="td-search" id="tdSearch" type="search" placeholder="Search phone or invite code..." oninput="tdFilter(this.value)">
+    <div class="td-grid" id="tdMembers">
+    {% for member in members %}
+    <article class="td-card td-member" data-search="{{ (member['phone'] ~ ' ' ~ (member['invite_code'] or ''))|lower }}">
+      <div class="td-icon">♙</div>
+      <div class="td-person">{{ member["phone"] }}</div>
+      <div class="td-sub">Invite: {{ member["invite_code"] or "-" }}</div>
+      <span class="td-status {{ 'off' if member['is_blocked'] else '' }}">{{ "BLOCKED" if member["is_blocked"] else "ACTIVE" }}</span>
+
+      <form class="td-form" method="post" action="{{ url_for('team_admin_reply', uid=member['id']) }}">
+        <input name="message" maxlength="2000" placeholder="Write a private reply..." required>
+        <button class="td-btn primary" type="submit">Send Private Reply</button>
+      </form>
+
+      <form class="td-form" method="post" action="{{ url_for('team_member_action', uid=member['id'], action='block' if not member['is_blocked'] else 'unblock') }}">
+        <button class="td-btn {{ 'danger' if not member['is_blocked'] else '' }}" type="submit">{{ "Unblock Member" if member["is_blocked"] else "Block Member" }}</button>
+      </form>
+
+      <details>
+        <summary>Reset Member Password</summary>
+        <form class="td-form" method="post" action="{{ url_for('team_member_action', uid=member['id'], action='reset-password') }}">
+          <input type="password" name="new_password" minlength="8" placeholder="New password (8+ characters)" required autocomplete="new-password">
+          <button class="td-btn" type="submit">Reset Password</button>
+        </form>
+      </details>
+    </article>
+    {% else %}
+    <div class="td-empty">No team members found yet.</div>
+    {% endfor %}
+    </div>
+    <div class="td-empty" id="tdNoResults" hidden>No matching members found.</div>
+  </section>
+
+  <div class="td-footer"><a href="{{ url_for('raffle') }}">Back to Raffle</a></div>
 </div>
 
-<h3>Pending Team Deposits</h3>
-<div class="team-table-wrap">
-<table class="team-table">
-<thead><tr><th>Phone</th><th>Amount</th><th>Reference</th><th>Action</th></tr></thead>
-<tbody>
-{% for deposit in pending_deposits %}
-<tr>
-<td>{{ deposit["phone"] }}</td>
-<td>{{ "{:,.2f}".format(deposit["amount"]|float) }}</td>
-<td>{{ deposit["reference"] or "-" }}</td>
-<td>
-<form method="post" action="{{ url_for('team_approve_deposit', tid=deposit['id']) }}">
-<button type="submit">Approve Deposit</button>
-</form>
-</td>
-</tr>
-{% else %}
-<tr><td colspan="4">No pending team deposits.</td></tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
-
-<h3>My Team</h3>
-<div class="team-table-wrap">
-<table class="team-table">
-<thead>
-<tr><th>Phone</th><th>Invite Code</th><th>Status</th><th>Actions</th></tr>
-</thead>
-<tbody>
-{% for member in members %}
-<tr>
-<td>{{ member["phone"] }}</td>
-<td>{{ member["invite_code"] or "-" }}</td>
-<td>{{ "Blocked" if member["is_blocked"] else "Active" }}</td>
-<td>
-<form class="team-form" method="post" action="{{ url_for('team_admin_reply', uid=member['id']) }}">
-<input type="text" name="message" maxlength="2000" placeholder="Private reply" required>
-<button type="submit">Send Reply</button>
-</form>
-<form class="team-form" method="post" action="{{ url_for('team_member_action', uid=member['id'], action='block' if not member['is_blocked'] else 'unblock') }}">, uid=member['id'], action='block' if not member['is_blocked'] else 'unblock') }}">
-<button type="submit">{{ "Unblock" if member["is_blocked"] else "Block" }}</button>
-</form>
-<form class="team-form" method="post" action="{{ url_for('team_member_action', uid=member['id'], action='reset-password') }}">
-<input type="password" name="new_password" minlength="8" placeholder="New password" required autocomplete="new-password">
-<button type="submit">Reset Password</button>
-</form>
-</td>
-</tr>
-{% else %}
-<tr><td colspan="4">No team members found yet.</td></tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
-<p><a href="{{ url_for('raffle') }}">Back to Raffle</a></p>
-</div>
+<script>
+function tdFilter(value){
+  const q=value.trim().toLowerCase();
+  const cards=document.querySelectorAll('.td-member');
+  let shown=0;
+  cards.forEach(card=>{
+    const match=card.dataset.search.includes(q);
+    card.style.display=match?'':'none';
+    if(match) shown++;
+  });
+  const empty=document.getElementById('tdNoResults');
+  if(empty) empty.hidden=(shown!==0 || cards.length===0);
+}
+</script>
 {% endblock %}
