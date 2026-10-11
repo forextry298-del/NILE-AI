@@ -115,6 +115,9 @@
 <b>UGX {{'%.0f'|format(u.balance or 0)}}</b>
 {% if u.is_blocked %}<span style="color:red"> BLOCKED</span>{% endif %}
 {% if u.team_admin %}<span style="color:#08a"> TEAM ADMIN</span>{% endif %}
+{% if u.team_admin %}
+<a href="/admin/team/{{ u.id }}" style="display:inline-block;margin:6px;padding:8px 12px;background:#087fbd;color:white;border-radius:7px;text-decoration:none;font-weight:bold">VIEW TEAM</a>
+{% endif %}
 
 <form method="post" action="/admin/user/{{u.id}}/balance" style="margin-top:6px">
 <input name="amount" type="number" step="0.01" value="{{u.balance or 0}}" placeholder="Balance">

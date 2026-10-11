@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.atv{max-width:1000px;margin:auto;padding:16px;color:var(--text,#eef5ff)}
+.atv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.atv-card{padding:17px;border:1px solid #24465e;border-radius:14px;background:#10283d;overflow-wrap:anywhere}
+.atv-label{color:#b7cedd;font-size:13px}
+.atv-value{font-size:25px;font-weight:800;margin-top:8px;color:#fff}
+.atv-table{width:100%;border-collapse:collapse}
+.atv-table th,.atv-table td{text-align:left;padding:10px;border-bottom:1px solid #294256}
+.atv-scroll{overflow-x:auto}
+.atv a{color:#69d9ee}
+</style>
+<div class="atv">
+<a href="/admin">← Back to Admin</a>
+<h2>Team Admin: {{ manager.phone }}</h2>
+<div class="atv-grid">
+<div class="atv-card"><div class="atv-label">TOTAL TEAM USERS</div><div class="atv-value">{{ team_count }}</div></div>
+<div class="atv-card"><div class="atv-label">APPROVED TEAM DEPOSITS (UGX)</div><div class="atv-value">{{ "{:,.2f}".format(deposit_total|float) }}</div></div>
+<div class="atv-card"><div class="atv-label">APPROVED TEAM WITHDRAWALS (UGX)</div><div class="atv-value">{{ "{:,.2f}".format(withdrawal_total|float) }}</div></div>
+</div>
+<h3>Team Members</h3>
+<div class="atv-scroll">
+<table class="atv-table">
+<thead><tr><th>ID</th><th>Phone</th><th>Approved Deposits (UGX)</th><th>Approved Withdrawals (UGX)</th></tr></thead>
+<tbody>
+{% for m in members %}
+<tr><td>{{ m.id }}</td><td>{{ m.phone }}</td><td>{{ "{:,.2f}".format(m.deposits|float) }}</td><td>{{ "{:,.2f}".format(m.withdrawals|float) }}</td></tr>
+{% else %}
+<tr><td colspan="4">No team members found.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+{% endblock %}

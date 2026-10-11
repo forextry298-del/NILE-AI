@@ -2294,6 +2294,61 @@ def admin_create():
     con.commit(); con.close(); return "Admin account ready."
 
 
+
+@app.route("/admin/team/<int:uid>")
+@admin_required
+def admin_team_view(uid):
+    con = db()
+    try:
+        manager = con.execute(
+            "SELECT id, phone, team_admin FROM users WHERE id=?", (uid,)
+        ).fetchone()
+        if not manager or not manager["team_admin"]:
+            return "Team Admin not found.", 404
+
+        ids = team_member_ids(con, uid)
+        members = []
+        deposit_total = 0
+        withdrawal_total = 0
+
+        if ids:
+            marks = ",".join("?" for _ in ids)
+            members = con.execute(
+                f"""SELECT u.id, u.phone, u.invite_code,
+                    COALESCE(SUM(CASE WHEN UPPER(t.kind)='DEPOSIT'
+                        AND UPPER(t.status)='APPROVED' THEN t.amount ELSE 0 END),0)
+                        AS deposits,
+                    COALESCE(SUM(CASE WHEN UPPER(t.kind)='WITHDRAW'
+                        AND UPPER(t.status)='APPROVED' THEN t.amount ELSE 0 END),0)
+                        AS withdrawals
+                    FROM users u
+                    LEFT JOIN transactions t ON t.uid=u.id
+                    WHERE u.id IN ({marks})
+                    GROUP BY u.id, u.phone, u.invite_code
+                    ORDER BY u.id DESC""", ids
+            ).fetchall()
+
+            deposit_total = con.execute(
+                f"""SELECT COALESCE(SUM(amount),0) FROM transactions
+                    WHERE uid IN ({marks}) AND UPPER(kind)='DEPOSIT'
+                    AND UPPER(status)='APPROVED'""", ids
+            ).fetchone()[0] or 0
+
+            withdrawal_total = con.execute(
+                f"""SELECT COALESCE(SUM(amount),0) FROM transactions
+                    WHERE uid IN ({marks}) AND UPPER(kind)='WITHDRAW'
+                    AND UPPER(status)='APPROVED'""", ids
+            ).fetchone()[0] or 0
+
+        return render_template(
+            "admin_team_view.html", manager=manager, members=members,
+            team_count=len(ids), deposit_total=deposit_total,
+            withdrawal_total=withdrawal_total
+        )
+    finally:
+        con.close()
+
+
 @app.route("/team-admin")
 @team_admin_required
 def team_dashboard():
