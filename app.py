@@ -2479,6 +2479,38 @@ def admin_team_view(uid):
         con.close()
 
 
+
+@app.route("/team-admin/unread-messages")
+@team_admin_required
+def team_unread_messages():
+    admin = current_user()
+    con = db()
+    try:
+        ids = team_member_ids(con, admin["id"])
+        if not ids:
+            return jsonify(count=0, users=[])
+        marks = ",".join("?" for _ in ids)
+        rows = con.execute(f"""
+            SELECT u.id, u.phone, u.display_name, COUNT(m.id) AS unread
+            FROM users u
+            JOIN support_messages m
+              ON m.uid=u.id AND UPPER(m.sender)='USER'
+            WHERE u.id IN ({marks})
+              AND NOT EXISTS (
+                SELECT 1 FROM support_message_reads r
+                WHERE r.message_id=m.id AND r.uid=u.id
+              )
+            GROUP BY u.id, u.phone, u.display_name
+            HAVING COUNT(m.id)>0
+            ORDER BY unread DESC, u.id DESC
+        """, ids).fetchall()
+        users = [{"id":r["id"], "phone":r["phone"],
+                  "name":r["display_name"], "unread":r["unread"]}
+                 for r in rows]
+        return jsonify(count=sum(u["unread"] for u in users), users=users)
+    finally:
+        con.close()
+
 @app.route("/team-admin")
 @team_admin_required
 def team_dashboard():
@@ -2580,6 +2612,44 @@ def team_approve_deposit(tid):
     flash("Team deposit approved.", "success")
     return redirect(url_for("team_dashboard"))
 
+
+
+@app.route("/team-admin/member-chat/<int:uid>", methods=["GET", "POST"])
+@team_admin_required
+def team_member_private_chat(uid):
+    admin = current_user()
+    con = db()
+    try:
+        if uid not in team_member_ids(con, admin["id"]):
+            abort(403)
+        member = con.execute(
+            "SELECT id, phone, display_name FROM users WHERE id=?", (uid,)
+        ).fetchone()
+        if not member:
+            abort(404)
+        if request.method == "POST":
+            message = (request.form.get("message") or "").strip()
+            if message:
+                con.execute(
+                    "INSERT INTO support_messages(uid,sender,message,created_at) VALUES(?,?,?,?)",
+                    (uid, "MANAGER", message, now())
+                )
+                con.commit()
+            return redirect(url_for("team_member_private_chat", uid=uid))
+        con.execute("""
+            INSERT OR IGNORE INTO support_message_reads(message_id,uid,read_at)
+            SELECT id,uid,? FROM support_messages
+            WHERE uid=? AND UPPER(sender)='USER'
+        """, (now(), uid))
+        messages = con.execute(
+            "SELECT * FROM support_messages WHERE uid=? ORDER BY id", (uid,)
+        ).fetchall()
+        con.commit()
+        return render_template(
+            "team_private_chat.html", member=member, messages=messages
+        )
+    finally:
+        con.close()
 
 @app.route("/team-admin/support/<int:uid>", methods=["POST"])
 @team_admin_required

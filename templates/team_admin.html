@@ -66,6 +66,39 @@
     </div>
   </section>
 
+
+  <section class="td-section" id="team-unread-messages">
+    <div class="td-heading">
+      <h3>💬 Unread Messages</h3>
+      <span class="td-pill" id="team-unread-count">Loading...</span>
+    </div>
+    <div class="td-card" id="team-unread-list">Loading unread messages...</div>
+  </section>
+
+  <script>
+  fetch('/team-admin/unread-messages',{credentials:'same-origin'})
+    .then(r=>{if(!r.ok)throw Error();return r.json()})
+    .then(d=>{
+      document.getElementById('team-unread-count').textContent=d.count+' UNREAD';
+      const box=document.getElementById('team-unread-list');
+      box.replaceChildren();
+      if(!d.users.length){box.textContent='✓ No unread messages';return;}
+      d.users.forEach(u=>{
+        const row=document.createElement('div');
+        row.style='display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #194565';
+        const name=document.createElement('span');
+        name.textContent=u.name||u.phone||('User '+u.id);
+        name.style='color:white;font-weight:800;overflow-wrap:anywhere';
+        const link=document.createElement('a');
+        link.href='/team-admin/member-chat/'+u.id;
+        link.textContent=u.unread+' unread · Open chat';
+        link.style='color:#42dcff;text-decoration:none;font-weight:800';
+        row.append(name,link);box.append(row);
+      });
+    })
+    .catch(()=>{document.getElementById('team-unread-count').textContent='ERROR';document.getElementById('team-unread-list').textContent='Unable to load unread messages.';});
+  </script>
+
   <section class="td-section">
     <div class="td-heading">
       <h3>Deposit Queue</h3>

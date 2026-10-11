@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.tc{max-width:850px;margin:auto;padding:14px;color:#eff8ff}
+.tc-head,.tc-msg,.tc-compose{padding:14px;margin:10px 0;border:1px solid #194565;border-radius:14px;background:#0b2035}
+.tc-head h2{margin:0 0 6px}.tc-muted{color:#9cbdd4;font-size:12px}
+.tc-msg p{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0}
+.tc-user{border-left:4px solid #42dcff}.tc-admin{border-left:4px solid #42e0a1}
+.tc textarea{width:100%;box-sizing:border-box;padding:12px;border-radius:10px;background:#061322;color:white;border:1px solid #254a65}
+.tc button,.tc-link{display:inline-block;padding:11px 15px;border-radius:10px;background:#087ba5;color:white;border:0;text-decoration:none;font-weight:800;margin-top:8px}
+</style>
+<div class="tc">
+  <div class="tc-head">
+    <h2>Private Chat</h2>
+    <div class="tc-muted">{{ member["display_name"] or member["phone"] }}</div>
+    <a class="tc-link" href="{{ url_for('team_dashboard') }}">← Back to Team Dashboard</a>
+  </div>
+  {% for m in messages %}
+  <div class="tc-msg {{ 'tc-user' if m['sender']|upper == 'USER' else 'tc-admin' }}">
+    <strong>{{ "User" if m["sender"]|upper == "USER" else "Team Admin" }}</strong>
+    <p>{{ m["message"] }}</p>
+    <div class="tc-muted">{{ m["created_at"] }}</div>
+  </div>
+  {% else %}
+  <div class="tc-msg">No messages yet.</div>
+  {% endfor %}
+  <form class="tc-compose" method="post">
+    <textarea name="message" rows="3" maxlength="2000" placeholder="Write a private reply..." required></textarea>
+    <button type="submit">Send Reply</button>
+  </form>
+</div>
+{% endblock %}
