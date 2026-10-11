@@ -1715,7 +1715,11 @@ def income():
     ).fetchall()
     con.close()
 
-    local_now = uganda_now()
+    from datetime import datetime, timedelta
+    from zoneinfo import ZoneInfo
+
+    tz = ZoneInfo("Africa/Kampala")
+    local_now = datetime.now(tz)
     today = local_now.date()
     next_midnight = (local_now + timedelta(days=1)).replace(
         hour=0, minute=0, second=0, microsecond=0
@@ -1725,34 +1729,31 @@ def income():
     for product in products:
         item = dict(product)
         try:
-            start_day = uganda_date(item["purchased_at"])
-            days = max(0, min(
-                int(item["lock_days"]),
-                (today - start_day).days
-            ))
-            lock_days = int(item["lock_days"])
+            raw = str(item["purchased_at"])
+            try:
+                purchased = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+                if purchased.tzinfo is None:
+                    purchased = purchased.replace(tzinfo=tz)
+                purchased = purchased.astimezone(tz)
+            except Exception:
+                purchased = datetime.strptime(raw[:10], "%Y-%m-%d").replace(tzinfo=tz)
+
+            start_day = purchased.date()
+            lock_days = max(0, int(item.get("lock_days") or 0))
+            days = max(0, min(lock_days, (today - start_day).days))
             end_time = datetime.combine(
                 start_day + timedelta(days=lock_days),
-                datetime.min.time(),
-                tzinfo=ZoneInfo("Africa/Kampala")
+                datetime.min.time(), tzinfo=tz
             )
             item["display_days"] = days
             item["remaining_days"] = max(0, lock_days - days)
-            item["progress"] = min(
-                100, int(days * 100 / lock_days)
-            ) if lock_days else 100
-            item["next_income_seconds"] = max(
-                0, int((next_midnight - local_now).total_seconds())
-            )
-            item["end_seconds"] = max(
-                0, int((end_time - local_now).total_seconds())
-            )
-        except Exception:
+            item["progress"] = min(100, int(days * 100 / lock_days)) if lock_days else 100
+            item["next_income_seconds"] = max(0, int((next_midnight - local_now).total_seconds()))
+            item["end_seconds"] = max(0, int((end_time - local_now).total_seconds()))
+        except Exception as exc:
+            print("Machine countdown calculation failed:", repr(exc))
             item["display_days"] = int(item.get("earned_days") or 0)
-            item["remaining_days"] = max(
-                0, int(item.get("lock_days") or 0) -
-                item["display_days"]
-            )
+            item["remaining_days"] = max(0, int(item.get("lock_days") or 0) - item["display_days"])
             item["progress"] = 0
             item["next_income_seconds"] = 0
             item["end_seconds"] = 0
