@@ -1763,6 +1763,29 @@ def income():
         tools=tools, active="Income"
     )
 
+
+@app.context_processor
+def inject_chat_unread_count():
+    count = 0
+    uid = session.get("uid")
+    if uid:
+        con = db()
+        try:
+            count = con.execute("""
+                SELECT COUNT(*) FROM support_messages m
+                WHERE m.uid=?
+                  AND UPPER(m.sender) IN ('MANAGER','ADMIN')
+                  AND NOT EXISTS (
+                    SELECT 1 FROM support_message_reads r
+                    WHERE r.message_id=m.id AND r.uid=m.uid
+                  )
+            """, (uid,)).fetchone()[0]
+        except Exception:
+            count = 0
+        finally:
+            con.close()
+    return {"chat_unread_count": count}
+
 @app.route("/support",methods=["GET","POST"])
 @required
 def support():
@@ -1800,6 +1823,14 @@ def support():
         return redirect(url_for("support"))
 
     uid=session["uid"]
+    new_message_count=con.execute("""
+        SELECT COUNT(*) FROM support_messages m
+        WHERE m.uid=? AND UPPER(m.sender) IN ('MANAGER','ADMIN')
+        AND NOT EXISTS (
+            SELECT 1 FROM support_message_reads r
+            WHERE r.message_id=m.id AND r.uid=m.uid
+        )
+    """,(uid,)).fetchone()[0]
     con.execute("""
         INSERT OR IGNORE INTO support_message_reads(message_id,uid,read_at)
         SELECT id,?,? FROM support_messages
@@ -1808,7 +1839,10 @@ def support():
     messages=con.execute("SELECT * FROM support_messages WHERE uid=? ORDER BY id",(uid,)).fetchall()
     con.commit()
     con.close()
-    return render_template("support.html",messages=messages,active="chats")
+    return render_template(
+        "support.html", messages=messages, active="chats",
+        chat_unread_count=new_message_count
+    )
 
 @app.route("/raffle")
 @required

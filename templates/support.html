@@ -22,6 +22,12 @@
 .send{background:#08bce8;color:#001018;border:0}
 </style>
 <div class="chat">
+{% if chat_unread_count %}
+<div role="status" style="margin:8px 0 14px;padding:12px;background:#3a0710;border:1px solid #ed2939;border-radius:10px;color:white;font-weight:bold">
+🔴 You have {{ chat_unread_count }} new support message{% if chat_unread_count != 1 %}s{% endif %}.
+{% endif %}
+</div>
+
 <header class="head"><button type="button" onclick="history.back()">‹</button><h2>Support Center</h2><button type="button">♙</button></header>
 <div class="agent"><div class="avatar">AI</div><div><strong>NILE AI SUPPORT</strong><small>● Support conversation</small></div></div>
 <div class="date">NILE AI · Support conversation</div>
