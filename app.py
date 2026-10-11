@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 from functools import wraps
-from flask import Flask, request, redirect, session, render_template, flash, url_for, send_from_directory
+from flask import Flask, request, redirect, session, render_template, flash, url_for, send_from_directory, jsonify
 
 BASE=os.path.dirname(os.path.abspath(__file__))
 DB=os.path.join(BASE,"nile_ai.db")
