@@ -2026,6 +2026,29 @@ def admin():
     con.close()
     return render_template("admin.html",users=users,tx=tx,withdrawals=withdrawals,deposits=deposits,requests=requests,messages=messages,gifts=gifts,managers=managers,activity=activity,announcements=announcements,config_plans=PLANS,unread_by_user=unread_by_user,unread_total=unread_total)
 
+
+@app.route("/admin/unread-messages")
+@admin_required
+def admin_unread_messages():
+    con=db()
+    try:
+        rows=con.execute("""
+            SELECT u.id,u.phone,u.display_name,COUNT(m.id) AS unread
+            FROM users u
+            JOIN support_messages m ON m.uid=u.id AND UPPER(m.sender)='USER'
+            WHERE NOT EXISTS (
+                SELECT 1 FROM support_message_reads r
+                WHERE r.message_id=m.id AND r.uid=u.id
+            )
+            GROUP BY u.id,u.phone,u.display_name
+            HAVING COUNT(m.id)>0
+            ORDER BY unread DESC,u.id DESC
+        """).fetchall()
+        users=[{"id":r["id"],"phone":r["phone"],"name":r["display_name"],"unread":r["unread"]} for r in rows]
+        return jsonify(count=sum(u["unread"] for u in users),users=users)
+    finally:
+        con.close()
+
 @app.route("/admin/transaction/<int:tid>/<action>",methods=["POST"])
 @admin_required
 def admin_transaction(tid,action):

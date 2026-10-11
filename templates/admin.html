@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+<div id="admin-unread-messages" style="margin:18px 0;background:linear-gradient(135deg,#071b20,#102e2b);border:1px solid #28564d;border-radius:24px;overflow:hidden;color:#eafff5">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #28564d;font-size:22px;font-weight:800"><span>💬 Unread Messages</span><span id="admin-unread-count" style="background:#ed101d;color:white;border-radius:22px;padding:5px 17px">0</span></div>
+<div id="admin-unread-list" style="padding:22px;color:#a9c5bd;text-align:center">Loading unread messages…</div></div>
+<script>
+fetch('/admin/unread-messages',{credentials:'same-origin'}).then(r=>{if(!r.ok)throw Error();return r.json()}).then(d=>{
+document.getElementById('admin-unread-count').textContent=d.count;
+const l=document.getElementById('admin-unread-list');l.replaceChildren();
+if(!d.users.length){l.textContent='✓ No unread messages';return}
+d.users.forEach(u=>{const a=document.createElement('a');a.href='/admin/chat/'+u.id;a.style='display:flex;justify-content:space-between;padding:13px 4px;color:#eafff5;text-decoration:none;border-bottom:1px solid #28564d';const n=document.createElement('span');n.textContent=u.name||u.phone||('User '+u.id);const b=document.createElement('b');b.textContent=u.unread+' unread';b.style.color='#ff5360';a.append(n,b);l.append(a)})
+}).catch(()=>document.getElementById('admin-unread-list').textContent='Could not load unread messages. Refresh the page.');
+</script>
+
 <style id="nile-compact-admin">
 .admin-shell,.admin-top,.section{box-sizing:border-box;min-width:0}
 .admin-shell{width:100%;max-width:1100px;margin:0 auto;padding:10px}
