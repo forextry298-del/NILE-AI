@@ -100,6 +100,12 @@ def init_db():
 
     CREATE TABLE IF NOT EXISTS products(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,code TEXT NOT NULL,name TEXT NOT NULL,price REAL NOT NULL,daily_income REAL NOT NULL DEFAULT 0,lock_days INTEGER NOT NULL DEFAULT 30,total_income REAL NOT NULL DEFAULT 0,purchased_at TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'ACTIVE');
     CREATE TABLE IF NOT EXISTS support_messages(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,sender TEXT NOT NULL,message TEXT NOT NULL,created_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS support_message_reads(
+        message_id INTEGER NOT NULL,
+        uid INTEGER NOT NULL,
+        read_at TEXT NOT NULL,
+        PRIMARY KEY(message_id, uid)
+    );
     CREATE TABLE IF NOT EXISTS raffle_tickets(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,quantity INTEGER NOT NULL,created_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS raffle_chances(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,source_transaction_id INTEGER NOT NULL UNIQUE,reward_amount REAL NOT NULL DEFAULT 0,claimed INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,claimed_at TEXT);
     CREATE TABLE IF NOT EXISTS reward_box_claims(id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER NOT NULL,box_id INTEGER NOT NULL,amount REAL NOT NULL,created_at TEXT NOT NULL,UNIQUE(uid,box_id));
@@ -1792,7 +1798,15 @@ def support():
         con.close()
         flash("Message sent.","success")
         return redirect(url_for("support"))
-    messages=con.execute("SELECT * FROM support_messages WHERE uid=? ORDER BY id",(session["uid"],)).fetchall()
+
+    uid=session["uid"]
+    con.execute("""
+        INSERT OR IGNORE INTO support_message_reads(message_id,uid,read_at)
+        SELECT id,?,? FROM support_messages
+        WHERE uid=? AND UPPER(sender) IN ('MANAGER','ADMIN')
+    """,(uid,now(),uid))
+    messages=con.execute("SELECT * FROM support_messages WHERE uid=? ORDER BY id",(uid,)).fetchall()
+    con.commit()
     con.close()
     return render_template("support.html",messages=messages,active="chats")
 
@@ -1957,12 +1971,26 @@ def admin():
     """).fetchall()
     requests=con.execute("SELECT * FROM password_requests ORDER BY id DESC LIMIT 100").fetchall()
     messages=con.execute("SELECT * FROM support_messages ORDER BY id DESC LIMIT 200").fetchall()
+    unread_rows=con.execute("""
+        SELECT u.id, COUNT(m.id) AS unread_count
+        FROM users u
+        LEFT JOIN support_messages m
+          ON m.uid=u.id
+         AND UPPER(m.sender)='USER'
+         AND NOT EXISTS (
+             SELECT 1 FROM support_message_reads r
+             WHERE r.message_id=m.id AND r.uid=u.id
+         )
+        GROUP BY u.id
+    """).fetchall()
+    unread_by_user={r["id"]:r["unread_count"] for r in unread_rows}
+    unread_total=sum(unread_by_user.values())
     gifts=con.execute("SELECT g.*,COUNT(c.id) AS claims FROM gift_codes g LEFT JOIN gift_code_claims c ON c.code=g.code GROUP BY g.code ORDER BY g.code DESC").fetchall()
     managers=con.execute("SELECT * FROM managers ORDER BY id").fetchall()
     activity=con.execute("SELECT a.*,u.phone FROM admin_activity a LEFT JOIN users u ON u.id=a.admin_uid ORDER BY a.id DESC LIMIT 100").fetchall()
     announcements=con.execute("SELECT * FROM announcements ORDER BY id DESC LIMIT 20").fetchall()
     con.close()
-    return render_template("admin.html",users=users,tx=tx,withdrawals=withdrawals,deposits=deposits,requests=requests,messages=messages,gifts=gifts,managers=managers,activity=activity,announcements=announcements,config_plans=PLANS)
+    return render_template("admin.html",users=users,tx=tx,withdrawals=withdrawals,deposits=deposits,requests=requests,messages=messages,gifts=gifts,managers=managers,activity=activity,announcements=announcements,config_plans=PLANS,unread_by_user=unread_by_user,unread_total=unread_total)
 
 @app.route("/admin/transaction/<int:tid>/<action>",methods=["POST"])
 @admin_required
@@ -1996,6 +2024,51 @@ def admin_transaction(tid,action):
         referral_deposit_commission(t["uid"],t["amount"],tid)
         award_referral_points(t["uid"])
     return redirect(url_for("admin"))
+
+
+@app.route("/admin/chat/<int:uid>", methods=["GET", "POST"])
+@admin_required
+def admin_private_chat(uid):
+    con = db()
+    try:
+        user = con.execute(
+            "SELECT id, phone, display_name FROM users WHERE id=?", (uid,)
+        ).fetchone()
+        if not user:
+            return "User not found.", 404
+
+        cols = {r[1] for r in con.execute("PRAGMA table_info(support_messages)")}
+        if "media" not in cols:
+            con.execute("ALTER TABLE support_messages ADD COLUMN media TEXT")
+
+        if request.method == "POST":
+            message = (request.form.get("message") or "").strip()
+            if not message:
+                flash("Enter a message first.", "error")
+                return redirect(url_for("admin_private_chat", uid=uid))
+            con.execute(
+                "INSERT INTO support_messages(uid,sender,message,created_at,media) VALUES(?,?,?,?,NULL)",
+                (uid, "MANAGER", message, now())
+            )
+            con.commit()
+            return redirect(url_for("admin_private_chat", uid=uid))
+
+        con.execute("""
+            INSERT OR IGNORE INTO support_message_reads(message_id,uid,read_at)
+            SELECT id,uid,? FROM support_messages
+            WHERE uid=? AND UPPER(sender)='USER'
+        """, (now(), uid))
+
+        messages = con.execute(
+            "SELECT * FROM support_messages WHERE uid=? ORDER BY id", (uid,)
+        ).fetchall()
+        con.commit()
+        return render_template(
+            "admin_private_chat.html", user=user, messages=messages
+        )
+    finally:
+        con.close()
+
 
 @app.route("/admin/support/<int:uid>",methods=["POST"])
 @admin_required

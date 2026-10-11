@@ -51,7 +51,7 @@
 <a href="#users">Search &amp; Users</a>
 <a href="#deposits">Deposits</a>
 <a href="#withdrawals">Withdrawals</a>
-<a href="#messages">User Messages</a>
+<a href="#messages">User Messages{% if unread_total %} <span style="background:#ed2939;color:white;border-radius:12px;padding:2px 7px">{{ unread_total }}</span>{% endif %}</a>
 <a href="#broadcast">Message All</a>
 <a href="#transactions">Transactions</a>
 <a href="#gift-codes">Gift Codes</a>
@@ -115,6 +115,8 @@
 <b>UGX {{'%.0f'|format(u.balance or 0)}}</b>
 {% if u.is_blocked %}<span style="color:red"> BLOCKED</span>{% endif %}
 {% if u.team_admin %}<span style="color:#08a"> TEAM ADMIN</span>{% endif %}
+{% set unread = unread_by_user.get(u.id, 0) %}
+<a href="/admin/chat/{{ u.id }}" style="display:inline-block;margin:5px;padding:7px 10px;background:#102b3a;border:1px solid #087f9b;border-radius:8px;color:#dffaff;text-decoration:none;font-weight:bold">VIEW CHAT{% if unread %} <span style="background:#ed2939;color:white;border-radius:12px;padding:2px 7px">{{ unread }}</span>{% endif %}</a>
 {% if u.team_admin %}
 <a href="/admin/team/{{ u.id }}" style="display:inline-block;margin:6px;padding:8px 12px;background:#087fbd;color:white;border-radius:7px;text-decoration:none;font-weight:bold">VIEW TEAM</a>
 {% endif %}
