@@ -25,7 +25,7 @@
 
   <section class="nmh-grid nmh-grid-2">
     <a href="/wallet" class="nmh-stat"><strong>{{ "{:,.2f}".format(user.wallet or 0) }}</strong><span>Deposit details</span></a>
-    <a href="/withdraw" class="nmh-stat"><strong>{{ "{:,.2f}".format(user.balance or 0) }}</strong><span>Withdraw details</span></a>
+    <a href="/withdraw" class="nmh-stat"><strong>{{ "{:,.2f}".format(user.balance or 0) }}</strong><span>Balance</span></a>
     <a href="/income" class="nmh-stat"><strong>{{ "{:,.2f}".format(ai_income or 0) }}</strong><span>AI Income</span></a>
     <a href="/income" class="nmh-stat"><strong>{{ "{:,.2f}".format(today or 0) }}</strong><span>Today's earnings</span></a>
   </section>
