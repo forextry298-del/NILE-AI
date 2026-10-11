@@ -50,7 +50,7 @@ d.users.forEach(u=>{const a=document.createElement('a');a.href='/admin/chat/'+u.
     <strong>UGX {{ "{:,.2f}".format(approved_deposit_total|default(0)|float) }}</strong>
   </div>
   <div class="nile-total-card">
-    <small>Approved Withdrawals</small>
+    <small>Pending + Approved Withdrawals</small>
     <strong>UGX {{ "{:,.2f}".format(approved_withdrawal_total|default(0)|float) }}</strong>
   </div>
 </div>
