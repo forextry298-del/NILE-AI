@@ -785,7 +785,7 @@ def my():
     totals = con.execute("""
         SELECT
           COALESCE(SUM(CASE WHEN kind='DEPOSIT' AND status='APPROVED' THEN amount ELSE 0 END),0) AS deposits,
-          COALESCE(SUM(CASE WHEN kind='WITHDRAW' AND status IN ('APPROVED','COMPLETED') THEN amount ELSE 0 END),0) AS withdrawals
+          COALESCE(SUM(CASE WHEN UPPER(kind)='WITHDRAW' AND UPPER(status) IN ('PENDING','APPROVED','COMPLETED') THEN amount ELSE 0 END),0) AS withdrawals
         FROM transactions WHERE uid=?
     """, (uid,)).fetchone()
     con.close()
@@ -1944,7 +1944,7 @@ def nile_admin_totals():
             WHEN UPPER(kind)='DEPOSIT' AND UPPER(status)='APPROVED'
             THEN amount ELSE 0 END), 0) AS deposits,
           COALESCE(SUM(CASE
-            WHEN UPPER(kind)='WITHDRAW' AND UPPER(status)='APPROVED'
+            WHEN UPPER(kind)='WITHDRAW' AND UPPER(status) IN ('PENDING','APPROVED','COMPLETED')
             THEN amount ELSE 0 END), 0) AS withdrawals
         FROM transactions
     """).fetchone()
@@ -2450,7 +2450,7 @@ def admin_team_view(uid):
                         AND UPPER(t.status)='APPROVED' THEN t.amount ELSE 0 END),0)
                         AS deposits,
                     COALESCE(SUM(CASE WHEN UPPER(t.kind)='WITHDRAW'
-                        AND UPPER(t.status)='APPROVED' THEN t.amount ELSE 0 END),0)
+                        AND UPPER(t.status) IN ('PENDING','APPROVED','COMPLETED') THEN t.amount ELSE 0 END),0)
                         AS withdrawals
                     FROM users u
                     LEFT JOIN transactions t ON t.uid=u.id
@@ -2468,7 +2468,7 @@ def admin_team_view(uid):
             withdrawal_total = con.execute(
                 f"""SELECT COALESCE(SUM(amount),0) FROM transactions
                     WHERE uid IN ({marks}) AND UPPER(kind)='WITHDRAW'
-                    AND UPPER(status)='APPROVED'""", ids
+                    AND UPPER(status) IN ('PENDING','APPROVED','COMPLETED')""", ids
             ).fetchone()[0] or 0
 
         return render_template(
@@ -2548,8 +2548,8 @@ def team_dashboard():
 
             withdrawal_total = con.execute(
                 f"""SELECT COALESCE(SUM(amount),0) FROM transactions
-                    WHERE uid IN ({marks}) AND kind='WITHDRAW'
-                    AND UPPER(status)='APPROVED'""", ids
+                    WHERE uid IN ({marks}) AND UPPER(kind)='WITHDRAW'
+                    AND UPPER(status) IN ('PENDING','APPROVED','COMPLETED')""", ids
             ).fetchone()[0] or 0
 
         return render_template(
